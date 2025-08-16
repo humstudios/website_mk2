@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+
+<html data-theme="light" class="cards-light"  lang="en">
+<head>
+<script>
+/* Early theme set: default Light on first visit, apply stored choice otherwise */
+(function(){
+  try {
+    var h = document.documentElement;
+    var v = localStorage.getItem('display-mode');
+    if (!v) {
+      h.setAttribute('data-theme','light');
+      h.classList.remove('theme-dim');
+      localStorage.setItem('display-mode','light');
+    } else {
+      if (v === 'light') { h.setAttribute('data-theme','light'); h.classList.remove('theme-dim'); }
+      else if (v === 'dark') { h.setAttribute('data-theme','dark'); h.classList.remove('theme-dim'); }
+      else if (v === 'dark+dim') { h.setAttribute('data-theme','dark'); h.classList.add('theme-dim'); }
+    }
+  } catch(e){}
+})();
+</script>
+ <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#0b1220"><link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="assets/img/icons/favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="assets/img/icons/favicon-32.png" rel="icon" sizes="32x32" type="image/png"/>
+<link href="assets/img/icons/favicon-192.png" rel="icon" sizes="192x192" type="image/png"/>
+<link href="assets/img/icons/apple-touch-icon-180.png" rel="apple-touch-icon" sizes="180x180"/>
+<link href="https://fonts.googleapis.com/css2?family=Atma:wght@700&amp;family=Overpass:wght@400;800&amp;display=swap" rel="stylesheet"><link href="https://www.humstudios.com/contact.html" rel="canonical"/><meta content="Hum Studios | Contact" property="og:title"/><meta content="Contact Hum Studios for questions about our interactive stories and digital picture books." property="og:description"/><meta content="website" property="og:type"/><meta content="https://www.humstudios.com/contact.html" property="og:url"/><meta content="https://www.humstudios.com/assets/img/logos/Weblogo01.png" property="og:image"/><meta content="summary_large_image" name="twitter:card"/><meta content="Hum Studios | Contact" name="twitter:title"/><meta content="Contact Hum Studios for questions about our interactive stories and digital picture books." name="twitter:description"/><meta content="https://www.humstudios.com/assets/img/logos/Weblogo01.png" name="twitter:image"/><link color="#1d4ed8" href="assets/img/icons/safari-pinned-tab.svg" rel="mask-icon"/><meta content="#ffffff" name="theme-color"/><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hum Studios | Contact</title><meta content="Contact Hum Studios for questions about our interactive stories and digital picture books." name="description"/>
+<link rel="stylesheet" href="assets/css/styles.css"><script src="assets/js/includes.js" defer></script>  <link rel="stylesheet" href="styles.css">
+<style>
+/* a11y helper */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  clip: rect(0 0 0 0); clip-path: inset(50%);
+  overflow: hidden; white-space: nowrap;
+}
+.form-error { color: #b00020; margin-top: 0.25rem; }
+</style>
+</head>
+<body class="contact-page">
+<a class="skip-link" href="#main">Skip to content</a>
+<!--☁️ CLOUDS -->
+<div class="clouds">
+<img alt="" aria-hidden="true" class="cloud cloud1" decoding="async" loading="lazy" src="assets/img/animation/Cloud.png"/>
+<img alt="" aria-hidden="true" class="cloud cloud2" decoding="async" loading="lazy" src="assets/img/animation/Cloud2.png"/>
+<img alt="" aria-hidden="true" class="cloud cloud3" decoding="async" loading="lazy" src="assets/img/animation/Cloud3.png"/>
+<img alt="" aria-hidden="true" class="cloud cloud4" decoding="async" loading="lazy" src="assets/img/animation/Cloud2.png"/>
+<img alt="" aria-hidden="true" class="cloud cloud5" decoding="async" loading="lazy" src="assets/img/animation/Cloud3.png"/>
+</div>
+<div class="container">
+<header role="banner" data-include="partials/header.html"></header>
+<main id="main" role="main">
+<section class="card">
+<h1>Contact Us</h1>
+<p>If you have any questions about our apps or stories, or if you need support, please use the form below. We’ll get back to you as soon as possible.</p>
+<form action="/.netlify/functions/contact" method="POST" id="contactForm">
+<label for="email">Email</label><br/>
+<input id="email" aria-describedby="email-error" name="email" placeholder="you@example.com" required="" style="width:100%;padding:1rem;margin:0.5rem 0;" type="email" />
+<br/><div id="email-error" class="visually-hidden form-error" role="alert"></div><br/>
+<input id="name" aria-describedby="name-error" name="name" required="" style="width:100%;padding:1rem;margin:0.5rem 0;" type="text" />
+<br/><div id="name-error" class="visually-hidden form-error" role="alert"></div><br/>
+<textarea id="message" aria-describedby="message-error" name="message" required="" rows="19" style="width:100%;padding:1rem;margin:0.5rem 0;"></textarea>
+<div id="message-error" class="visually-hidden form-error" role="alert"></div>
+<br/>
+<div style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;"><label for="website">Leave this field empty</label><input type="text" id="website" name="website" tabindex="-1" autocomplete="off"/></div>
+<div class="g-recaptcha" data-sitekey="6LctAJIrAAAAADDbemJJAjvo6OLMdu_Ad3LuRsF7" style="margin:1rem 0;"></div>
+<button style="padding:0.75rem 1.5rem;border:none;border-radius:16px;background:#4891c3;color:#fff;font-size:1rem;cursor:pointer;" type="submit">Send Message</button>
+</form>
+</section>
+</main>
+</div>
+<footer role="contentinfo" data-include="partials/footer.html"></footer>
+<script async="" defer="" src="https://www.google.com/recaptcha/api.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  var form = document.getElementById('contactForm');
+  if (!form) return;
+
+  function setError(id, msg){
+    var field = document.getElementById(id);
+    var err = document.getElementById(id + '-error');
+    if (!field || !err) return;
+    if (msg){
+      field.setAttribute('aria-invalid', 'true');
+      err.textContent = msg;
+      err.classList.remove('visually-hidden');
+    } else {
+      field.removeAttribute('aria-invalid');
+      err.textContent = '';
+      err.classList.add('visually-hidden');
+    }
+  }
+
+  function validateField(field){
+    var id = field.id;
+    var v = field.value.trim();
+    if (id === 'email'){
+      if (!v){ setError(id, 'Please enter your email address.'); return false; }
+      var ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+      if (!ok){ setError(id, 'Please enter a valid email address.'); return false; }
+      setError(id, '');
+      return true;
+    }
+    if (id === 'name'){
+      if (!v){ setError(id, 'Please enter your name.'); return false; }
+      setError(id, '');
+      return true;
+    }
+    if (id === 'message'){
+      if (!v){ setError(id, 'Please enter your message.'); return false; }
+      setError(id, '');
+      return true;
+    }
+    return true;
+  }
+
+  ['email','name','message'].forEach(function(id){
+    var el = document.getElementById(id);
+    if (el){
+      el.addEventListener('blur', function(){ validateField(el); });
+      el.addEventListener('input', function(){ validateField(el); });
+    }
+  });
+
+  form.addEventListener('submit', function(e){
+    var ok = true;
+    ['email','name','message'].forEach(function(id){
+      var el = document.getElementById(id);
+      if (el){ ok = validateField(el) && ok; }
+    });
+    if (!ok){
+      e.preventDefault();
+      var first = document.querySelector('[aria-invalid="true"]');
+      if (first) first.focus();
+    }
+  });
+});
+</script>
+
+<script src="assets/js/theme-toggle.js" defer></script>
+
+</body>
+</html>

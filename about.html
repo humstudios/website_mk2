@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html data-theme="light" class="cards-light" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>About Hum | Hum Studios</title>
+  <meta name="description" content="About Hum Studios — writers from Disney & Universal teaming up with BAFTA-winning animators to create interactive picture books for kids.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atma:wght@700&family=Overpass:wght@400;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script src="assets/js/includes.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="container">
+    <header role="banner" data-include="partials/header.html"></header>
+    <main id="main" role="main">
+      <section class="card">
+        <h1>About Hum</h1>
+        <p>Hum Studios is a team of writers who’ve worked at Disney and Universal Studios who joined forces with a group of BAFTA award-winning animators. Together, we wanted to tell cartoon stories that merged the fun and humor of traditional cartoons with the interactive potential of modern technology.</p>
+        <p>With our kids loving pet stories and animal stories, we created an engaging interactive digital book that combines the educational value of the best preschool apps with the sheer fun of stories about pets.</p>
+     <p class="u-center-text" style="margin-top: var(--space-4)">
+  <a href="index.html" class="btn-link"><strong>← Back</strong></a>
+</p>
+      </section>
+    </main>
+  </div>
+  <footer role="contentinfo" data-include="partials/footer.html"></footer>
+  <script src="assets/js/theme-toggle.js" defer></script>
+  <script>
+    // After includes load, flag current nav item
+    window.addEventListener('DOMContentLoaded', function(){
+      document.querySelectorAll('.top-nav a[href$="about.html"], .footer-menu a[href$="about.html"]').forEach(function(a){
+        a.setAttribute('aria-current', 'page');
+      });
+    });
+  </script>
+</body>
+</html>
