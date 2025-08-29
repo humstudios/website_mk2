@@ -1,40 +1,129 @@
 <!DOCTYPE html>
-<html data-theme="light" class="cards-light" lang="en">
+
+<html class="cards-light" lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!--
+    =============================================
+    THEME (early paint) — light/dark only
+    - Uses `display-mode` in localStorage: auto | light | dark
+    - Defaults to auto (system preference) on first visit
+    - No '' mode
+    - Centralized in a single shared script to keep pages in sync
+    =============================================
+  -->
+  <script src="assets/js/early-theme.no-dim.session.js"></script>
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>About Hum | Hum Studios</title>
-  <meta name="description" content="About Hum Studios — writers from Disney & Universal teaming up with BAFTA-winning animators to create interactive picture books for kids.">
+  <meta name="description" content="About Hum Studios — writers from Disney & Universal teaming up with BAFTA-winning animators to create interactive picture books for kids." />
+
+  <!-- Color scheme & theme colors for browser UI -->
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFCF5" />
+  <meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#0b1220" />
+
+  <!-- Favicons (relative so they work on GitHub Pages, IONOS, and local) -->
+  <link rel="icon" type="image/svg+xml" href="assets/img/icons/favicon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/icons/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/img/icons/favicon-192.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icons/apple-touch-icon-180.png" />
+  <link rel="mask-icon" href="assets/img/icons/safari-pinned-tab.svg" color="#1d4ed8" />
+
+  <!-- Fonts (keep consistent with site) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Atma:wght@700&family=Overpass:wght@400;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css">
-  <script src="assets/js/includes.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Atma:wght@700&family=Overpass:wght@400;500;800&display=swap" rel="stylesheet">
+
+  <!-- Canonical + Open Graph/Twitter
+       - Dynamically set to the current origin + path so it works
+         across GitHub Pages subpaths, IONOS, and local dev without edits.
+  -->
+  <link id="canonical" rel="canonical" href="https://www.humstudios.com/about.html" />
+  <meta property="og:title" content="About Hum | Hum Studios" />
+  <meta property="og:description" content="Writers from Disney & Universal teaming up with BAFTA-winning animators to create interactive picture books for kids." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.humstudios.com/about.html" />
+
+
+
+<script>
+  // Set canonical and social URLs to the current absolute URL at runtime
+  (function () {
+    try {
+      var abs = window.location.origin + window.location.pathname;
+      var c = document.getElementById('canonical');
+      if (c) c.setAttribute('href', abs);
+      var ou = document.getElementById('og-url');
+      if (ou) ou.setAttribute('content', abs);
+      var oi = document.getElementById('og-image');
+      var ti = document.getElementById('tw-image');
+      var imgAbs = new URL('assets/img/logos/Weblogo01.png', abs).href;
+      if (oi) oi.setAttribute('content', imgAbs);
+      if (ti) ti.setAttribute('content', imgAbs);
+    } catch (e) {}
+  })();
+  </script>
+
+  <!-- Site styles -->
+  <link rel="stylesheet" href="assets/css/styles.css" />
+
+  <!-- Includes loader: injects header/footer marked with [data-include] -->
+  <script defer src="assets/js/includes.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- Decorative clouds (purely visual) -->
+  <div data-include="partials/clouds.html"></div>
+
   <div class="container">
     <header role="banner" data-include="partials/header.html"></header>
+
     <main id="main" role="main">
       <section class="card">
-        <h1>About Hum</h1>
-        <p>Hum Studios is a team of writers who’ve worked at Disney and Universal Studios who joined forces with a group of BAFTA award-winning animators. Together, we wanted to tell cartoon stories that merged the fun and humor of traditional cartoons with the interactive potential of modern technology.</p>
-        <p>With our kids loving pet stories and animal stories, we created an engaging interactive digital book that combines the educational value of the best preschool apps with the sheer fun of stories about pets.</p>
-     <p class="u-center-text" style="margin-top: var(--space-4)">
-  <a href="index.html" class="btn-link"><strong>← Back</strong></a>
-</p>
-      </section>
+  <h1>About Hum</h1>
+  
+  <img class="card-cartoon" src="assets/img/cardpics/Arnie_dance.webp" alt="Arnie dancing">
+<p>Hum Studios is a team of writers who’ve worked at Disney and Universal Studios who joined forces with a group of BAFTA award-winning animators. Together, we wanted to tell cartoon stories that merged the fun and humor of traditional cartoons with the interactive potential of modern technology.</p><p>With our kids loving pet stories and animal stories, we created an engaging interactive digital book that combines the educational value of the best preschool apps with the sheer fun of stories about pets.</p>
+  <p class="u-center-text" style="margin-top: var(--space-4)">
+    <a href="index.html" class="btn-link" aria-label="Go to Hum Studios homepage"><strong>← Back</strong></a>
+  </p>
+</section>
     </main>
   </div>
+
   <footer role="contentinfo" data-include="partials/footer.html"></footer>
-  <script src="assets/js/theme-toggle.js" defer></script>
+
   <script>
-    // After includes load, flag current nav item
-    window.addEventListener('DOMContentLoaded', function(){
-      document.querySelectorAll('.top-nav a[href$="about.html"], .footer-menu a[href$="about.html"]').forEach(function(a){
-        a.setAttribute('aria-current', 'page');
-      });
+  // After includes load, flag current nav item (run on window 'load' to ensure partials are injected)
+  window.addEventListener('load', function(){
+    document.querySelectorAll('.top-nav a[href$="about.html"], .footer-menu a[href$="about.html"]').forEach(function(a){
+      a.setAttribute('aria-current', 'page');
     });
+  });
   </script>
+
+  <script>
+  // Typography nicety: keep last two words together in headings without touching inner markup
+  document.addEventListener('DOMContentLoaded', function () {
+    function widont(selector) {
+      document.querySelectorAll(selector).forEach(function (el) {
+        if (el.childElementCount > 0) return; // avoid clobbering inline markup
+        var t = (el.textContent || '').trim();
+        var i = t.lastIndexOf(' ');
+        if (i > -1) {
+          el.innerHTML = t.slice(0, i) + '&nbsp;' + t.slice(i + 1);
+        }
+      });
+    }
+    widont('h1, h2');
+  });
+  </script>
+
+  <!-- Site scripts (deferred) -->
+  <script defer src="assets/js/theme-toggle.clean.js"></script>
+  <script defer src="assets/js/hum-menu.clean.js"></script>
+  <script defer src="assets/js/widont.js"></script>
 </body>
 </html>

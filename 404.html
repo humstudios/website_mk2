@@ -1,72 +1,86 @@
 <!DOCTYPE html>
-
-<html data-theme="light" class="cards-light"  lang="en">
+<html class="cards-light" lang="en">
 <head>
-<script>
-/* Early theme set: default Light on first visit, apply stored choice otherwise */
-(function(){
-  try {
+  <!--
+    =============================================
+    THEME (early paint) — light/dark only
+    =============================================
+  -->
+  <script>
+  (function () {
     var h = document.documentElement;
-    var v = localStorage.getItem('display-mode');
-    if (!v) {
-      h.setAttribute('data-theme','light');
-      h.classList.remove('theme-dim');
-      localStorage.setItem('display-mode','light');
-    } else {
-      if (v === 'light') { h.setAttribute('data-theme','light'); h.classList.remove('theme-dim'); }
-      else if (v === 'dark') { h.setAttribute('data-theme','dark'); h.classList.remove('theme-dim'); }
-      else if (v === 'dark+dim') { h.setAttribute('data-theme','dark'); h.classList.add('theme-dim'); }
+    var prefersDark = false;
+    try { prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches; } catch (e) {}
+    try {
+      var mode = localStorage.getItem('display-mode') || 'auto';
+      var theme = (mode === 'auto')
+        ? (prefersDark ? 'dark' : 'light')
+        : (mode === 'dark' ? 'dark' : 'light');
+      h.setAttribute('data-theme', theme);
+      h
+    } catch (e) {
+      h.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
     }
-  } catch(e){}
-})();
-</script>
- <meta name="color-scheme" content="light dark">
+  })();
+  </script>
 
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
-    <meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#0b1220"><script>
-/* Force Light on initial paint (ignore OS & stored) */
-(function(){
-  var h = document.documentElement;
-  h.setAttribute('data-theme','light');
-  h.classList.remove('theme-dim'); h.classList.remove('theme-dim-off');
-  try {
-    localStorage.setItem('display-mode','light');
-    localStorage.removeItem('theme-preference'); // legacy key
-  } catch(e){}
-})();
-</script>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>Page not found | Hum Studios</title>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Atma:wght@700&family=Overpass:wght@400;800&display=swap" rel="stylesheet"/>
-<meta content="noindex,follow" name="robots"/><link href="assets/css/styles.css" rel="stylesheet"/>
-  <script src="assets/js/includes.js" defer></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Page not found | Hum Studios</title>
+
+  <meta name="robots" content="noindex,follow" />
+
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFCF5" />
+  <meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#0b1220" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atma:wght@700&family=Overpass:wght@400;500;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <script defer src="assets/js/includes.js"></script>
 </head>
 <body>
-<a class="skip-link" href="#main">Skip to content</a>
-<div class="clouds">
-<img alt="" aria-hidden="true" class="cloud cloud1" decoding="async" loading="lazy" src="assets/img/animation/Cloud.png"/>
-<img alt="" aria-hidden="true" class="cloud cloud2" decoding="async" loading="lazy" src="assets/img/animation/Cloud2.png"/>
-<img alt="" aria-hidden="true" class="cloud cloud3" decoding="async" loading="lazy" src="assets/img/animation/Cloud3.png"/>
-<img alt="" aria-hidden="true" class="cloud cloud4" decoding="async" loading="lazy" src="assets/img/animation/Cloud2.png"/>
-<img alt="" aria-hidden="true" class="cloud cloud5" decoding="async" loading="lazy" src="assets/img/animation/Cloud3.png"/>
-<img alt="" aria-hidden="true" class="cloud cloud6" decoding="async" loading="lazy" src="assets/img/animation/Cloud3.png"/>
-<img alt="" aria-hidden="true" class="cloud cloud7" decoding="async" loading="lazy" src="assets/img/animation/Cloud2.png"/>
-</div>
-<div class="container">
-<header role="banner" data-include="partials/header.html"></header>
-<main id="main" role="main">
-<section class="card u-center-text">
-<h1>Oops — page not found</h1>
-<p>We can't find the page you're looking for. Try heading back to the homepage.</p>
-<p><a aria-label="Go to Hum Studios homepage" href="index.html">Go to Home</a></p>
-</section>
-</main>
+  <a class="skip-link" href="#main">Skip to content</a>
 
-</div>
-<footer role="contentinfo" data-include="partials/footer.html"></footer><script src="assets/js/theme-toggle.js" defer></script>
+  <div data-include="partials/clouds.html"></div>
 
+  <div class="container">
+    <header data-include="partials/header.html"></header>
+
+    <main id="main">
+      <section class="card u-center-text">
+        <h1>Oops — page not found</h1>
+        <img class="card-cartoon"
+     src="assets/img/cardpics/Liz_wave.webp"
+     alt="Liz the Penguin waves hello">
+        <p>We can't find the page you're looking for.</p>
+        <p><a href="index.html" aria-label="Back to Hum Studios homepage">Back to Home</a></p>
+      </section>
+    </main>
+  </div>
+
+  <footer data-include="partials/footer.html"></footer>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    function widont(selector) {
+      document.querySelectorAll(selector).forEach(function (el) {
+        if (el.childElementCount > 0) return;
+        var t = (el.textContent || '').trim();
+        var i = t.lastIndexOf(' ');
+        if (i > -1) {
+          el.innerHTML = t.slice(0, i) + '&nbsp;' + t.slice(i + 1);
+        }
+      });
+    }
+    widont('h1, h2');
+  });
+  </script>
+
+  <script defer src="assets/js/theme-toggle.clean.js"></script>
+  <script defer src="assets/js/hum-menu.clean.js"></script>
+  <script defer src="assets/js/widont.js"></script>
 </body>
 </html>
