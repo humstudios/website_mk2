@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <title>Speech Bubble (24x24)</title>
+  <desc>Solid silhouette for CSS mask use.</desc>
+  <path fill="#000" d="M6 5h12a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3H10l-4 4v-4H6a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3z"/>
+</svg>

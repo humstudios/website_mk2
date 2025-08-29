@@ -38,7 +38,7 @@
   --underline-thickness: 0.08em;
 
   --clouds-opacity: 0.4;                    /* slightly reduced so content stands out */
-
+  
   /* Color Palette */
   --gradient-start: #235b98;
   --gradient-mid:   #4891c3;
@@ -151,11 +151,11 @@
   --z-header: 10; 
   --z-nav-mobile: 50;
   --z-toggle: 100;
-  --z-overlay: 1000;
+  --z-popover: 1000;
 
   color-scheme: light;
 
-  /* Cartoon height tokens (scalable) */
+/* Cartoon height tokens (scalable) */
 --cartoon-scale: 0.90; /* 1 = current size; lower = smaller */
 --cartoon-h-sm-min: 9em;
 --cartoon-h-sm-ideal: 12em;
@@ -164,7 +164,6 @@
 --cartoon-h-lg-ideal: 16em;
 --cartoon-h-lg-max: 20em;
 }
-
 
 /* ============================
    PROGRESSIVE ENHANCEMENT
@@ -317,6 +316,10 @@ img, svg, video {
   row-gap: 0;
 }
 
+.top-header { position: relative; }
+@supports not (background: color-mix(in srgb, white 10%, transparent)) {
+}
+
 .top-header, .hero-area, .card, .footer-inner {
   max-width: var(--content-max); 
   width: 100%; 
@@ -456,13 +459,6 @@ body:not(.loading) .container {
   transition: all var(--transition-normal) var(--transition-ease); 
 }
 
-.top-nav a:hover,
-.top-nav a:focus-visible { 
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-  background-color: transparent;
-}
-
 /* Mobile nav trigger - always visible until desktop */
 .hamburger { 
   display: flex; 
@@ -483,7 +479,7 @@ body:not(.loading) .container {
 
 .hamburger:hover,
 .hamburger:focus-visible {
-  background-color: rgba(0,64,128,0.7);
+  background-color: color-mix(in srgb, #ffffff 18%, transparent);
 }
 
 .hamburger .bar { 
@@ -501,7 +497,7 @@ body:not(.loading) .container {
   position: absolute; 
   right: 0; 
   top: calc(100% + var(--space-2)); 
-  z-index: var(--z-overlay); 
+  z-index: var(--z-popover); 
   background: var(--light-card-bg); 
   padding: var(--nav-mobile-padding); 
   border-radius: var(--radius-small); 
@@ -643,7 +639,7 @@ body:not(.loading) .container {
 ============================ */
 h1, h2, h3 { 
   color: #004080; 
-  font-family: var(--font-sans); 
+  font-family: var(--font-display); 
   font-weight: 800; 
   text-align: center;
   text-wrap: balance; 
@@ -915,20 +911,7 @@ h3 {
   .card-float--left { 
     width: min(40%, 18em); 
   }
-
-/* Cartoon sizing using height clamp + token */
-
-
-
-
-
 }
-
-/* Card cartoon image */
-
-
-
-
 /* ============================
    FOOTER - Enhanced Mobile First
 ============================ */
@@ -1534,11 +1517,6 @@ footer {
   background-color: transparent;
 }
 
-@media (prefers-contrast: high) {
-}
-@media (forced-colors: active) {
-}
-
 /* Radii consistency */
 .btn-link,
 .hamburger,
@@ -1563,7 +1541,6 @@ footer {
   outline-offset: 12px;                 /* wider frame to match control size */
   border-radius: 16px;                  /* rounded corners */
 }
-
 
 /* =====================================================================
    HUM FIX (touch): remove iOS/Android tap highlight flash on theme toggle
@@ -1627,23 +1604,16 @@ img.card-cartoon, svg.card-cartoon {
 .btn-link { letter-spacing: 0.02em; }
 
 /* --- Glassy header polish (subtle) --- */
+
 .top-header {
-  position: sticky;
-  top: 0;
-  backdrop-filter: blur(8px) saturate(1.15);
-  -webkit-backdrop-filter: blur(8px) saturate(1.15);
-  background: color-mix(in srgb, #ffffff 12%, transparent);
-  border-bottom-left-radius: var(--radius-card);
-  border-bottom-right-radius: var(--radius-card);
-  padding-bottom: var(--space-2);
-}
-@supports not (background: color-mix(in srgb, white 10%, transparent)) {
-  .top-header { background: rgba(255,255,255,0.08); }
-}
-html[data-theme="dark"] .top-header {
-  background: color-mix(in srgb, #0b1220 35%, transparent);
+  position: relative; /* create a safe stacking context for header content */
+  z-index: 1;          
+  border-radius: 0;
+  /* keep your existing spacing — no negative margins needed */
 }
 
+@supports not (background: color-mix(in srgb, white 10%, transparent)) {
+}
 /* --- Animated gradient drift (very subtle) --- */
 html {
   background-size: 160% 160%;
@@ -1667,18 +1637,6 @@ html {
   }
 }
 
-/* --- Video presentation (framing) --- */
-.hero-video,
-.demo-video {
-  border-radius: var(--radius-small);
-  box-shadow: var(--shadow-2);
-  outline: 0.0625em solid rgba(255,255,255,0.25);
-}
-html[data-theme="dark"] .hero-video,
-html[data-theme="dark"] .demo-video {
-  outline-color: rgba(255,255,255,0.1);
-}
-
 /* --- Hero fade mask to blend media with background --- */
 .hero-image::after {
   content: "";
@@ -1695,21 +1653,6 @@ html[data-theme="dark"] .demo-video {
   mix-blend-mode: multiply;
 }
 
-/* --- Underline animation for links/buttons --- */
-.top-nav a,
-.footer-links a,
-.card a,
-.btn-link {
-  background-image: linear-gradient(currentColor, currentColor);
-  background-repeat: no-repeat;
-  background-size: 0% 0.08em;
-  background-position: 0 100%;
-  transition:
-    background-size var(--transition-normal) var(--transition-ease),
-    transform var(--transition-normal) var(--transition-ease),
-    color var(--transition-normal) var(--transition-ease),
-    text-decoration-color var(--transition-normal) var(--transition-ease);
-}
 .top-nav a:hover, .top-nav a:focus-visible,
 .footer-links a:hover, .footer-links a:focus-visible,
 .card a:hover, .card a:focus-visible,
@@ -1736,7 +1679,6 @@ html[data-theme="dark"] { --card-alt-bg: #121d30; }
   background: var(--card-alt-bg);
 }
 
-/* --- Subtle paper texture overlay on cards --- */
 .card { position: relative; }
 .card::after {
   content: "";
@@ -1790,8 +1732,6 @@ html[data-theme="light"] .theme-toggle__thumb::after {
   transform: scale(1.08);
 }
 
-
-
 /* ==========================================
    NAV ICONS — Warm Accent (2025-08-28)
    - Pure CSS (no build step required)
@@ -1800,24 +1740,38 @@ html[data-theme="light"] .theme-toggle__thumb::after {
    ========================================== */
 :root {
   --nav-icon-size: 1.1em;
-  --nav-icon-gap: 0.45em;
+  --nav-icon-gap: 0.3em;
+  --nav-icon-nudge-y: -0.13em;
   --icon-home: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3l9 7v11h-6v-6H9v6H3V10l9-7z"/></svg>');
   --icon-user: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 12c-4.418 0-8 3.134-8 7v1h16v-1c0-3.866-3.582-7-8-7zm0-2a4 4 0 100-8 4 4 0 000 8z"/></svg>');
   --icon-bubble: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 4h16v10H7l-3 4V4z"/></svg>');
   --icon-shield: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5-3.5 9.5-8 10-4.5-.5-8-5-8-10V6l8-4z"/></svg>');
-  --icon-stars: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 7l2 3-2 3-2-3 2-3zM12 5l2 3-2 3-2-3 2-3zM18 8l2 3-2 3-2-3 2-3z"/></svg>');
+  --icon-cookie: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="9" cy="9.5" r="1.2"/><circle cx="15" cy="9.3" r="1.2"/><circle cx="12.5" cy="13.5" r="1.2"/><path d="M21 12a9 9 0 01-9 9 9 9 0 110-18c.4 1.9 1.7 3 3 3 0 1.6 1.4 3 3 3 0 1.6 1.4 3 3 3z"/></svg>');
 }
 
 /* Space for icon + text */ 
 .top-nav a, .mobile-nav a { gap: var(--nav-icon-gap); }
 
+/* Icon vertical nudge */
+.top-nav a::before,
+.mobile-nav a::before { transform: translateY(var(--nav-icon-nudge-y)); }
+
 /* HOME */
+.top-nav a.home::before,
+.mobile-nav a.home::before,
+.top-nav a[data-nav="home"]::before,
+.mobile-nav a[data-nav="home"]::before,
 .top-nav a[href="/"]::before,
-.top-nav a[href$="/index"]::before,
-.top-nav a[href$="/index.html"]::before,
+.top-nav a[href$="/"]::before,
+.top-nav a[href$="index"]::before,
+.top-nav a[href$="index.html"]::before,
 .mobile-nav a[href="/"]::before,
-.mobile-nav a[href$="/index"]::before,
-.mobile-nav a[href$="/index.html"]::before {
+.mobile-nav a[href$="/"]::before,
+.mobile-nav a[href$="index"]::before,
+.mobile-nav a[href$="index.html"]::before,
+/* fallback for any URL containing 'home' */
+.top-nav a[href*="home" i]::before,
+.mobile-nav a[href*="home" i]::before {
   content: "";
   display: inline-block;
   width: var(--nav-icon-size);
@@ -1827,7 +1781,6 @@ html[data-theme="light"] .theme-toggle__thumb::after {
           mask: var(--icon-home) no-repeat 50% / contain;
   margin-right: var(--nav-icon-gap);
 }
-
 /* ABOUT */
 .top-nav a[href*="about" i]::before,
 .mobile-nav a[href*="about" i]::before {
@@ -1875,8 +1828,8 @@ html[data-theme="light"] .theme-toggle__thumb::after {
   width: var(--nav-icon-size);
   height: var(--nav-icon-size);
   background-color: var(--accent-warm, #f6c64b);
-  -webkit-mask: var(--icon-stars) no-repeat 50% / contain;
-          mask: var(--icon-stars) no-repeat 50% / contain;
+  -webkit-mask: var(--icon-cookie) no-repeat 50% / contain;
+          mask: var(--icon-cookie) no-repeat 50% / contain;
   margin-right: var(--nav-icon-gap);
 }
 
@@ -1899,4 +1852,8 @@ html[data-theme="light"] .theme-toggle__thumb::after {
   -webkit-mask: var(--icon-home) no-repeat 50% / contain;
           mask: var(--icon-home) no-repeat 50% / contain;
   margin-right: var(--nav-icon-gap);
+}
+
+:root {
+  --hero-gap-top: clamp(2rem, calc(1rem + 2.9vw), 3.5rem);
 }

@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html class="cards-light" lang="en">
 <head>
-  <!-- CHANGED: restored proper document structure and head location -->
   <script src="assets/js/early-theme.no-dim.session.js"></script>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -10,14 +9,14 @@
   <meta name="theme-color" content="#0b1220" media="(prefers-color-scheme: dark)" />
   <title>Hum Studios | Interactive Stories</title>
 
-  <!-- Fonts & Icons -->
+  <!-- Fonts & Icons (unchanged) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atma:wght@700&family=Overpass:wght@400;500;800&display=swap" />
   <link rel="icon" type="image/svg+xml" href="assets/img/icons/favicon.svg" />
   <link rel="icon" type="image/png" sizes="32x32" href="assets/img/icons/favicon-32.png" />
 
-  <!-- SEO / Social -->
+  <!-- SEO / Social (preserved) -->
   <meta name="description" content="Interactive stories for kids - Hum Studios creates ad-free, fun digital picture books for preschoolers that blend reading and entertainment." />
   <link rel="canonical" href="https://www.humstudios.com/" />
   <meta property="og:title" content="Hum Studios | Interactive Stories" />
@@ -30,8 +29,8 @@
   <meta name="twitter:description" content="Interactive stories for kids - Hum Studios creates ad-free, fun digital picture books for preschoolers that blend reading and entertainment." />
   <meta name="twitter:image" content="https://www.humstudios.com/assets/img/logos/Weblogo01.png" />
 
-  <!-- Preload poster -->
-  <link rel="preload" as="image" href="assets/img/animation/hero-poster.jpg" />
+  <!-- Preload hero poster -->
+  <link rel="preload" as="image" href="assets/img/animation/greeting-poster.jpg" />
 
   <!-- Styles -->
   <link rel="stylesheet" href="assets/css/styles.css" />
@@ -47,10 +46,10 @@
   <!-- Include partials (header/footer) -->
   <script defer src="assets/js/includes.js"></script>
 
-  <!-- Headline break helpers -->
+  <!-- Headline helpers (unchanged) -->
   <style>
-    .smart-wrap.no-balance { text-wrap: wrap; }   /* override any global balance */
-    .nb { white-space: nowrap; overflow-wrap: normal; word-break: normal; } /* keep phrase unbroken */
+    .smart-wrap.no-balance { text-wrap: wrap; }
+    .nb { white-space: nowrap; overflow-wrap: normal; word-break: normal; }
   </style>
 </head>
 <body>
@@ -63,7 +62,7 @@
     <header data-include="partials/header.html" role="banner"></header>
 
     <main id="main" role="main">
-      <!-- Hero (video with poster + noscript image) -->
+      <!-- Hero -->
       <div class="card card--hero-placeholder">
         <div class="hero-image">
           <video
@@ -76,16 +75,17 @@
             width="960"
             height="720"
             preload="metadata"
-            poster="assets/img/animation/hero-poster.jpg">
+            poster="assets/img/animation/greeting-poster.jpg" id="heroVideo" data-poster-webp="assets/img/animation/greeting-poster.webp">
+            <source src="assets/img/animation/greeting-960.webm" type="video/webm" />
             <source src="assets/img/animation/greeting-960.mp4" type="video/mp4" />
           </video>
           <noscript>
-            <img class="hero-video" src="assets/img/animation/hero-poster.jpg" alt="Cartoon elephant, crocodile, and girl looking out apartment windows" />
+            <img class="hero-video" src="assets/img/animation/greeting-poster.jpg" alt="Cartoon elephant, crocodile, and girl looking out apartment windows" />
           </noscript>
         </div>
       </div>
 
-      <!-- Intro copy -->
+      <!-- Intro -->
       <section class="card">
         <h1>Interactive stories for kids</h1>
         <p>Hum Studios creates fun, interactive picture books for preschoolers that combine reading skills and entertainment in a fresh and amusing way.</p>
@@ -97,25 +97,28 @@
 
       <!-- Product section -->
       <section class="card">
-        <h2 class="smart-wrap no-balance">Our first adventure:<wbr /> <span class="nb">No Pets Allowed!</span></h2>
-        <p>Jessie is a young girl who loves animals but lives in a building where no pets are allowed. When the local zoo closes down and an elephant and its friends turn up at Jessie’s apartment looking for a new place to live, Jessie is over the moon—but she needs to keep the animals hidden from the neighbors.</p>
+        <h2 class="smart-wrap no-balance">Our first adventure:<wbr> <span class="nb">No Pets Allowed!</span></h2>
+        <p id="adventure-desc">Jessie is a young girl who loves animals but lives in a building where no pets are allowed. When the local zoo closes down and an elephant and its friends turn up at Jessie’s apartment looking for a new place to live, Jessie is over the moon—but she needs to keep the animals hidden from the neighbors.</p>
+
         <video
-  class="demo-video"
-  autoplay
-  loop
-  muted
-  playsinline
-  preload="auto"
-  poster="assets/img/animation/your-still.webp">
-  <!-- Optional WebM first, then MP4 -->
-  <source src="assets/img/animation/your-animation.webm" type="video/webm">
-  <source src="assets/img/animation/adventure.mp4"  type="video/mp4">
-</video>
-<noscript>
-  <img class="demo-video" src="assets/img/animation/your-still.webp" alt="">
-</noscript>
+          class="demo-video"
+          aria-describedby="adventure-desc"
+          autoplay
+          loop
+          muted
+          playsinline
+          preload="none"
+          poster="assets/img/animation/adventure-poster.jpg" id="adventureVideo" data-poster-webp="assets/img/animation/adventure-poster.webp">
+          <source data-src="assets/img/animation/adventure.webm" type="video/webm">
+          <source data-src="assets/img/animation/adventure.mp4"  type="video/mp4">
+        </video>
+        <noscript>
+          <img class="demo-video" src="assets/img/animation/your-still.webp" loading="lazy" decoding="async" alt="Animated still from the 'No Pets Allowed!' demo" />
+        </noscript>
+
         <p>It's an endearing and comical adventure that’s perfect if your child likes elephant stories, crocodile stories, or even penguin stories. Download the first 10 pages for free and meet Jessie and her animal friends.</p>
-      <div class="download-row single-badge">
+
+        <div class="download-row single-badge">
           <div class="badge-wrapper">
             <a href="#">
               <img src="assets/img/logos/appstorebadge.svg" alt="Download on the App Store" loading="lazy" decoding="async" />
@@ -124,9 +127,8 @@
           </div>
         </div>
       </section>
-      
 
-      <!-- How it works + lazy video demo -->
+      <!-- How it works -->
       <section class="card">
         <h2>How our digital books work</h2>
         <p>“No Pets Allowed!” is the first in Hum Studios’ interactive book series. Our books work just like traditional ones, with the pages turning when you swipe the screen on your tablet or phone. Unlike a regular book, though, if you tap the screen, the characters come alive and play out the scene! You can have the app narrate the story or read the book aloud with your child, with a playful music soundtrack if you want it.</p>
@@ -141,7 +143,8 @@
             muted
             playsinline
             preload="none"
-            poster="assets/img/animation/howto-poster.webp">
+            poster="assets/img/animation/howto-poster.jpg" data-poster-webp="assets/img/animation/howto-poster.webp">
+            <source data-src="assets/img/animation/howto-720.webm" type="video/webm" />
             <source data-src="assets/img/animation/howto-720.mp4" type="video/mp4" />
           </video>
         </div>
@@ -150,7 +153,7 @@
         <p>Find the butterflies! Hidden within the story are five butterflies. As your child reads the adventure, they’re invited to find all of them! The great thing about the book being digital is every time your child reads it, the butterflies are hidden in different places.</p>
       </section>
 
-      <!-- Trust & pricing copy -->
+      <!-- Trust & pricing -->
       <section class="card">
         <h2>No ads, no subscriptions or hidden charges, ever!</h2>
         <p>As parents ourselves, we wanted to create a fun interactive book for kids that was also worry-free for their parents. That’s why our books are ad and subscription-free. Once you download our book, it’s yours forever, simple as that. You don’t even need to have an internet connection to use it.</p>
@@ -160,7 +163,7 @@
       <!-- Coming soon -->
       <section class="card">
         <h2>Coming Soon! The Bad Witch’s Birthday</h2>
-        <img class="card-cartoon" src="assets/img/cardpics/MsW_teapot.webp" alt="Ms Whickersnap has a nice cup of tea" />
+        <img class="card-cartoon" src="assets/img/cardpics/MsW_teapot.webp" alt="Ms Whickersnap has a nice cup of tea" loading="lazy" decoding="async" />
         <p>Next in our series of Jessie Adventures is ‘The Bad Witch’s Birthday’. When Jessie meets a wicked old witch who’s particularly miserable because no one remembered her birthday, Jessie tries to give her a fun day and teach her the meaning of kindness. And, oh dear, what a mess that turns out to be!</p>
       </section>
     </main>
@@ -168,10 +171,10 @@
 
   <footer role="contentinfo" data-include="partials/footer.html"></footer>
 
-  <!-- Theme toggle (two-mode only) -->
+  <!-- Theme toggle (two-mode) -->
   <script defer src="assets/js/theme-toggle.clean.js"></script>
 
-  <!-- Lazy-load helper for the demo video; respects reduced motion -->
+  <!-- Lazy-load helper (respects reduced motion) -->
   <script>
     (function () {
       var mq = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -192,7 +195,7 @@
         if ('IntersectionObserver' in window) {
           var io = new IntersectionObserver(function (entries, observer) {
             entries.forEach(function (entry) { if (entry.isIntersecting) { load(); observer.disconnect(); } });
-          }, { rootMargin: '250px' });
+          }, { rootMargin: '500px' });
           io.observe(v);
         } else {
           if (document.readyState === 'complete' || document.readyState === 'interactive') load();
@@ -200,13 +203,30 @@
         }
       }
       lazyLoadVideo('howToVideo');
-    })();
+    
+      lazyLoadVideo('adventureVideo');
+})();
+  
+  <!-- Poster upgrade: swap JPG -> WebP when supported -->
+  <script>
+    (function () {
+      var c = document.createElement('canvas');
+      var supportsWebP = !!(c.getContext && c.getContext('2d')) &&
+                         c.toDataURL('image/webp').indexOf('data:image/webp') === 0;
+      if (!supportsWebP) return;
+      document.querySelectorAll('video[data-poster-webp]').forEach(function (v) {
+        var webp = v.getAttribute('data-poster-webp');
+        if (webp) v.poster = webp;
+      });
+    }());
   </script>
+
+</script>
 
   <!-- Menu -->
   <script defer src="assets/js/hum-menu.clean.js"></script>
 
-  <!-- Headline Smart Wrap (with widow-fix) -->
+  <!-- Headline Smart Wrap -->
   <script
     defer
     src="assets/js/headline-smart-wrap.js"
