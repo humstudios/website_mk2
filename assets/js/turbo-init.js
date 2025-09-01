@@ -124,3 +124,4 @@ addEventListener("turbo:load", () => populateOnce(document.getElementById("cloud
   addEventListener("turbo:load", syncCloudAnimation);
   addEventListener("visibilitychange", () => { if (!document.hidden) syncCloudAnimation(); });
 })();
+
