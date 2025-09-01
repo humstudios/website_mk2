@@ -216,7 +216,11 @@ img, svg, video { max-width: 100%; height: auto; display: block; }
   container-type: inline-size;
 }
 body.loading .container { visibility: hidden; }
-body:not(.loading) .container { animation: fadeInLayout var(--transition-normal) ease-in; }
+body:not(.loading) .container { /* animation disabled on swaps; see first-load scope below */ }
+
+/* Animate the container only on the very first full page load (not on Turbo swaps) */
+body.first-load .container { animation: fadeInLayout var(--transition-normal) ease-in; }
+body:not(.first-load) .container { animation: none; }
 @keyframes fadeInLayout {
   from { opacity: 0; transform: translateY(0.625em); }
   to   { opacity: 1; transform: translateY(0); }
@@ -602,7 +606,7 @@ html[data-theme="dark"] .badge-wrapper a { background: var(--card-bg); border-co
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; animation: none !important; }
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
-  .cloud, .card:hover, body:not(.loading) .container { animation: none !important; transform: none !important; }
+  .cloud, .card:hover, body:not(.loading) .container { /* animation disabled on swaps; see first-load scope below */ }
 }
 @media (prefers-contrast: high) {
   .card, .hamburger { border-width: 0.125em; }
@@ -622,3 +626,10 @@ html[data-theme="dark"] .badge-wrapper a { background: var(--card-bg); border-co
   .hero-headline { color: #000 !important; text-shadow: none !important; }
   a[href]::after { content: " (" attr(href) ")"; font-size: 0.875em; }
 }
+
+/* =====================================================================
+   07. TURBO INTEGRATION (disable scroll/animations during page swaps)
+   ===================================================================== */
+html.turbo-scroll { scroll-behavior: auto !important; }
+body.turbo-swapping .container { animation: none !important; transform: none !important; }
+

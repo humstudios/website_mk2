@@ -50,6 +50,8 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://www.google.com">
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Atma:wght@700&family=Overpass:wght@400;500;800&display=swap" rel="stylesheet">
 
   <!-- Canonical + Open Graph/Twitter (safe for GH/local/IONOS) -->
@@ -83,6 +85,9 @@
 
   <!-- Site styles -->
   <link rel="stylesheet" href="assets/css/styles.css" />
+  
+  <!-- Turbo (ESM) -->
+  <script type="module" src="/assets/js/turbo-init.js"></script>
 
   <!-- Includes loader: injects header/footer marked with [data-include] -->
   <script defer src="assets/js/includes.js"></script>
@@ -132,11 +137,58 @@
 <body class="contact-page">
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- Decorative clouds (purely visual) -->
-  <div data-include="partials/clouds.html"></div>
+  <!-- Permanent site backdrop (replaces body::before) -->
+  <div id="site-backdrop" data-turbo-permanent aria-hidden="true"></div>
 
-  <div class="container">
-    <header role="banner" data-include="partials/header.html"></header>
+  <!-- Decorative clouds (persistent across Turbo visits) -->
+  <div id="clouds" data-turbo-permanent data-include="partials/clouds.html" aria-hidden="true"></div>
+<div class="container">
+    <header id="site-header" data-turbo-permanent>
+  <div class="top-header">
+    <a class="logo" href="index.html">
+      <img src="assets/img/logos/weblogo03.png" alt="Hum Studios Logo"
+           decoding="async" loading="eager" width="614" height="344">
+    </a>
+
+    <!-- Desktop Navigation -->
+    <nav class="top-nav desktop" aria-label="Main">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+
+    <!-- Mobile Hamburger Button -->
+    <button id="hamburgerBtn" class="hamburger" type="button"
+            aria-label="Toggle menu" aria-expanded="false" aria-controls="mobileMenu">
+      <span class="bar" aria-hidden="true"></span>
+      <span class="bar" aria-hidden="true"></span>
+      <span class="bar" aria-hidden="true"></span>
+    </button>
+
+    <!-- Mobile Navigation Menu (push-down full-width) -->
+    <nav id="mobileMenu" class="mobile-nav pushdown" aria-label="Mobile" aria-hidden="true" hidden>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="cookies.html">Cookies</a>
+    </nav>
+<!-- Theme slider toggle (icons inline; CSS controls visibility) -->
+    <button id="theme-toggle" class="theme-toggle" type="button"
+            aria-label="Toggle dark mode" aria-pressed="false" title="Light mode">
+      <span class="theme-toggle__slider">
+        <span class="theme-toggle__thumb">
+          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5.0"></circle><line x1="12" y1="7.0" x2="12" y2="4"></line><line x1="12" y1="17.0" x2="12" y2="20"></line><line x1="7.0" y1="12" x2="4" y2="12"></line><line x1="17.0" y1="12" x2="20" y2="12"></line><line x1="8.46" y1="8.46" x2="6.5" y2="6.5"></line><line x1="15.54" y1="8.46" x2="17.5" y2="6.5"></line><line x1="8.46" y1="15.54" x2="6.5" y2="17.5"></line><line x1="15.54" y1="15.54" x2="17.5" y2="17.5"></line></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path>
+          </svg>
+        </span>
+      </span>
+    </button>
+  </div>
+
+  <p aria-hidden="true" class="hero-headline">Little&nbsp;Stories,<wbr> Big&nbsp;Adventures!</p>
+</header>
 
     <main id="main" role="main">
       <section class="card">
@@ -174,7 +226,7 @@
           </div>
 
           <!-- reCAPTCHA (keep; ensure site key allows your domains) -->
-          <div class="g-recaptcha" data-sitekey="6LctAJIrAAAAADDbemJJAjvo6OLMdu_Ad3LuRsF7" style="margin:1rem 0;"></div>
+          <div class="g-recaptcha" data-sitekey="6LctAJIrAAAAADDbemJJAjvo6OLMdu_Ad3LuRsF7" style="margin:1rem 0;; min-height:78px"></div>
           <div id="recaptcha-error" class="visually-hidden form-error" role="alert" aria-live="polite"></div>
 
           <button type="submit" class="btn">Send Message</button>
@@ -186,9 +238,7 @@
   <footer role="contentinfo" data-include="partials/footer.html"></footer>
 
   <!-- External scripts -->
-  <script async defer src="https://www.google.com/recaptcha/api.js"></script>
-
-  <script>
+<script>
   // Client-side validation (accessible)
   document.addEventListener('DOMContentLoaded', function(){
     var form = document.getElementById('contactForm');
@@ -287,5 +337,21 @@
   <script defer src="assets/js/theme-toggle.clean.js"></script>
   <script defer src="assets/js/hum-menu.clean.js"></script>
   <script defer src="assets/js/widont.js"></script>
+
+  <script>
+  (function(){
+    function loadRecaptchaOnce(){
+      if (window.__grecaptchaLoading) return;
+      window.__grecaptchaLoading = true;
+      var s = document.createElement('script');
+      s.src = "https://www.google.com/recaptcha/api.js";
+      s.async = true; s.defer = true;
+      document.head.appendChild(s);
+    }
+    addEventListener("DOMContentLoaded", loadRecaptchaOnce);
+    addEventListener("turbo:load", loadRecaptchaOnce);
+  })();
+  </script>
+
 </body>
 </html>
