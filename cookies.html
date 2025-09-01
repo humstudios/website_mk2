@@ -1,37 +1,12 @@
 <!DOCTYPE html>
 <html class="cards-light" lang="en">
 <head>
-  <!--
-    =============================================
-    THEME (early paint) — light/dark only
-    - Uses `display-mode` in localStorage: auto | light | dark
-    - Defaults to auto (system preference) on first visit
-    - No '' mode
-    - Runs before paint to avoid theme flash
-    =============================================
-  -->
-  <script>
-  (function () {
-    var h = document.documentElement;
-    var prefersDark = false;
-    try { prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches; } catch (e) {}
-    try {
-      var mode = localStorage.getItem('display-mode') || 'auto';
-      var theme = (mode === 'auto')
-        ? (prefersDark ? 'dark' : 'light')
-        : (mode === 'dark' ? 'dark' : 'light');
-      h.setAttribute('data-theme', theme);
-      // Remove any legacy class from older builds
-      h.classList.remove('');
-    } catch (e) {
-      h.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
-    }
-  })();
-  </script>
-
   <meta charset="utf-8" />
+  <script src="assets/js/early-theme.no-dim.session.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  
   <title>Hum Studios | Cookie Policy</title>
+  
   <meta name="description" content="Cookie Policy for Hum Studios interactive stories and digital picture books." />
 
   <!-- Color scheme & theme colors for browser UI -->
@@ -63,31 +38,13 @@
 
 
 
-<script>
-  // Set canonical and social URLs to the current absolute URL, but skip for file:// previews
-  (function () {
-    try {
-      var isHttp = /^https?:$/.test(window.location && window.location.protocol);
-      if (!isHttp) return;
-      var abs = window.location.origin + window.location.pathname;
-      var c = document.getElementById('canonical');
-      if (c) c.setAttribute('href', abs);
-      var ou = document.getElementById('og-url');
-      if (ou) ou.setAttribute('content', abs);
-      var oi = document.getElementById('og-image');
-      var ti = document.getElementById('tw-image');
-      var imgAbs = new URL('assets/img/logos/Weblogo01.png', abs).href;
-      if (oi) oi.setAttribute('content', imgAbs);
-      if (ti) ti.setAttribute('content', imgAbs);
-    } catch (e) {}
-  })();
-  </script>
+
 
   <!-- Site styles -->
   <link rel="stylesheet" href="assets/css/styles.css" />
 
   <!-- Turbo (ESM) -->
- <script type="module" src="/assets/js/turbo-init.js"></script>
+ <script type="module" src="assets/js/turbo-init.js"></script>
 
   <!-- Includes loader: injects header/footer marked with [data-include] -->
   <script defer src="assets/js/includes.js"></script>
@@ -103,9 +60,7 @@
   <div id="clouds" data-turbo-permanent data-include="partials/clouds.html" aria-hidden="true"></div>
 
   <!-- Decorative clouds (purely visual) -->
-  <div data-include="partials/clouds.html"></div>
-
-  <div class="container">
+<div class="container">
     <header id="site-header" data-turbo-permanent>
   <div class="top-header">
     <a class="logo" href="index.html">

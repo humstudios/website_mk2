@@ -1,13 +1,14 @@
-// early-theme.no-dim.session.final.js
-// Behavior:
-// - Apply theme pre-paint from sessionStorage only (defaults to LIGHT if unset)
-// - Optional cross-tab sync: listens for 'display-mode-broadcast' storage events
-//   (toggle writes this key with value 'dark|light|timestamp'); we update sessionStorage then apply.
+// early-theme.no-dim.session.js
+// Session-scoped theme boot. Defaults to 'light' and applies before first paint.
+// Listens for cross-tab broadcasts via localStorage 'display-mode-broadcast' key.
+// Usage: include BEFORE any CSS, without defer/async.
+// Toggle contract (elsewhere in your code):
+//   sessionStorage.setItem('display-mode', mode);              // 'light' | 'dark'
+//   localStorage.setItem('display-mode-broadcast', mode + '|' + Date.now());
 (function(d, w){
   var SS = w.sessionStorage;
-  var LS = w.localStorage;
-  var KEY = 'display-mode';                  // 'light' | 'dark' (session-scoped)
-  var BROADCAST_KEY = 'display-mode-broadcast'; // 'mode|ts'
+  var KEY = 'display-mode';                     // 'light' | 'dark' (session)
+  var BROADCAST_KEY = 'display-mode-broadcast'; // 'mode|ts' via localStorage
   var root = d.documentElement;
 
   function readMode(){
@@ -15,7 +16,7 @@
     try {
       var s = SS.getItem(KEY);
       if (s === 'dark' || s === 'light') v = s;
-    } catch(e) {}
+    } catch(e){}
     return v;
   }
 
@@ -24,16 +25,18 @@
     try { root.style.colorScheme = mode; } catch(e){}
   }
 
-  // 1) Pre-paint apply (session-based, defaults to light)
+  // Pre-paint apply (session-based, defaults to light)
   apply(readMode());
 
-  // 2) Cross-tab sync (optional): respond to broadcast events
-  w.addEventListener('storage', function(ev){
-    if (!ev || ev.key !== BROADCAST_KEY || !ev.newValue) return;
-    var raw = ev.newValue + '';
-    var mode = raw.split('|')[0];
-    if (mode !== 'dark' && mode !== 'light') return;
-    try { SS.setItem(KEY, mode); } catch(e) {}
-    apply(mode);
-  });
+  // Cross-tab sync via localStorage broadcast from your toggle
+  try {
+    w.addEventListener('storage', function(ev){
+      if (!ev || ev.key !== BROADCAST_KEY || !ev.newValue) return;
+      var raw = '' + ev.newValue;
+      var mode = raw.split('|')[0];
+      if (mode !== 'dark' && mode !== 'light') return;
+      try { SS.setItem(KEY, mode); } catch(e){}
+      apply(mode);
+    });
+  } catch(e){}
 })(document, window);

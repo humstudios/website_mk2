@@ -2,20 +2,12 @@
 
 <html class="cards-light" lang="en">
 <head>
-  <!--
-    =============================================
-    THEME (early paint) — light/dark only
-    - Uses `display-mode` in localStorage: auto | light | dark
-    - Defaults to auto (system preference) on first visit
-    - No '' mode
-    - Centralized in a single shared script to keep pages in sync
-    =============================================
-  -->
+   <meta charset="utf-8" />
   <script src="assets/js/early-theme.no-dim.session.js"></script>
-
-  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
   <title>About Hum | Hum Studios</title>
+  
   <meta name="description" content="About Hum Studios — writers from Disney & Universal teaming up with BAFTA-winning animators to create interactive picture books for kids." />
 
   <!-- Color scheme & theme colors for browser UI -->
@@ -47,29 +39,13 @@
 
 
 
-<script>
-  // Set canonical and social URLs to the current absolute URL at runtime
-  (function () {
-    try {
-      var abs = window.location.origin + window.location.pathname;
-      var c = document.getElementById('canonical');
-      if (c) c.setAttribute('href', abs);
-      var ou = document.getElementById('og-url');
-      if (ou) ou.setAttribute('content', abs);
-      var oi = document.getElementById('og-image');
-      var ti = document.getElementById('tw-image');
-      var imgAbs = new URL('assets/img/logos/Weblogo01.png', abs).href;
-      if (oi) oi.setAttribute('content', imgAbs);
-      if (ti) ti.setAttribute('content', imgAbs);
-    } catch (e) {}
-  })();
-  </script>
+
 
   <!-- Site styles -->
   <link rel="stylesheet" href="assets/css/styles.css" />
   
   <!-- Turbo (ESM) -->
-  <script type="module" src="/assets/js/turbo-init.js"></script>
+  <script type="module" src="assets/js/turbo-init.js"></script>
 
   <!-- Includes loader: injects header/footer marked with [data-include] -->
   <script defer src="assets/js/includes.js"></script>
@@ -84,9 +60,7 @@
   <div id="clouds" data-turbo-permanent data-include="partials/clouds.html" aria-hidden="true"></div>
 
   <!-- Decorative clouds (purely visual) -->
-  <div data-include="partials/clouds.html"></div>
-
-  <div class="container">
+<div class="container">
     <header id="site-header" data-turbo-permanent>
   <div class="top-header">
     <a class="logo" href="index.html">

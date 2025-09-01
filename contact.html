@@ -1,38 +1,12 @@
 <!DOCTYPE html>
 <html class="cards-light" lang="en">
 <head>
-  <!--
-    =============================================
-    THEME (early paint)
-    - Respect stored 'display-mode' (auto | light | dark)
-    - Default to 'auto' (system preference) if unset
-    - Apply before first paint to avoid flash
-    =============================================
-  -->
-  <script>
-  (function () {
-    var h = document.documentElement;
-    var prefersDark = false;
-    try { prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches; } catch (e) {}
-    try {
-      var mode = localStorage.getItem('display-mode') || 'auto'; // auto|light|dark only
-      var theme = (mode === 'auto')
-        ? (prefersDark ? 'dark' : 'light')
-        : (mode === 'dark' ? 'dark' : 'light');
-      h.setAttribute('data-theme', theme);
-      // Clean up any legacy keys/classes from earlier builds
-      localStorage.removeItem('theme-preference');
-      h
-    } catch (e) {
-      // If storage is blocked, fall back to system preference
-      h.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
-    }
-  })();
-  </script>
-
   <meta charset="utf-8" />
+  <script src="assets/js/early-theme.no-dim.session.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  
   <title>Hum Studios | Contact</title>
+  
   <meta name="description" content="Contact Hum Studios for questions about our interactive stories and digital picture books." />
 
   <!-- Color scheme & theme colors for browser UI -->
@@ -50,8 +24,6 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://www.google.com">
-  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Atma:wght@700&family=Overpass:wght@400;500;800&display=swap" rel="stylesheet">
 
   <!-- Canonical + Open Graph/Twitter (safe for GH/local/IONOS) -->
@@ -63,31 +35,13 @@
 
 
 
-<script>
-  // Set canonical and social URLs to the current absolute HTTP(S) location.
-  (function () {
-    try {
-      var isHttp = /^https?:$/.test(window.location.protocol);
-      if (!isHttp) return; // avoid file:// canonicals during local file preview
-      var abs = window.location.origin + window.location.pathname;
-      var c  = document.getElementById('canonical');
-      if (c) c.setAttribute('href', abs);
-      var ou = document.getElementById('og-url');
-      if (ou) ou.setAttribute('content', abs);
-      var oi = document.getElementById('og-image');
-      var ti = document.getElementById('tw-image');
-      var imgAbs = new URL('assets/img/logos/Weblogo01.png', abs).href;
-      if (oi) oi.setAttribute('content', imgAbs);
-      if (ti) ti.setAttribute('content', imgAbs);
-    } catch (e) {}
-  })();
-  </script>
+
 
   <!-- Site styles -->
   <link rel="stylesheet" href="assets/css/styles.css" />
   
   <!-- Turbo (ESM) -->
-  <script type="module" src="/assets/js/turbo-init.js"></script>
+  <script type="module" src="assets/js/turbo-init.js"></script>
 
   <!-- Includes loader: injects header/footer marked with [data-include] -->
   <script defer src="assets/js/includes.js"></script>
