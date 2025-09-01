@@ -340,6 +340,7 @@
 
   <script>
   (function(){
+    // Load reCAPTCHA script exactly once
     function loadRecaptchaOnce(){
       if (window.__grecaptchaLoading) return;
       window.__grecaptchaLoading = true;
@@ -348,8 +349,41 @@
       s.async = true; s.defer = true;
       document.head.appendChild(s);
     }
-    addEventListener("DOMContentLoaded", loadRecaptchaOnce);
-    addEventListener("turbo:load", loadRecaptchaOnce);
+
+    // Trigger on first user interaction within the contact form (or document fallback)
+    var form = document.getElementById('contactForm');
+    var root = form || document;
+    var fired = false;
+    function triggerOnce(){
+      if (fired) return;
+      fired = true;
+      loadRecaptchaOnce();
+      root.removeEventListener('focusin', triggerOnce, true);
+      root.removeEventListener('pointerdown', triggerOnce, true);
+      root.removeEventListener('keydown', triggerOnce, true);
+      root.removeEventListener('touchstart', triggerOnce, true);
+    }
+    root.addEventListener('focusin', triggerOnce, true);
+    root.addEventListener('pointerdown', triggerOnce, true);
+    root.addEventListener('keydown', triggerOnce, true);
+    root.addEventListener('touchstart', triggerOnce, true);
+
+    // Guard submission: if user submits before reCAPTCHA has loaded/rendered, load it and block once
+    document.addEventListener('submit', function(e){
+      if (!form || e.target !== form) return;
+      var notReady = !window.grecaptcha || (typeof grecaptcha.getResponse === 'function' && grecaptcha.getResponse().length === 0);
+      if (notReady) {
+        e.preventDefault();
+        loadRecaptchaOnce();
+        // Make sure the widget gets a moment to render; focus the recaptcha error region if present
+        var err = document.getElementById('recaptcha-error');
+        if (err) {
+          err.classList.remove('visually-hidden');
+          err.textContent = "Please complete the reCAPTCHA";
+        }
+        setTimeout(function(){ try { form.querySelector('button[type="submit"]').focus(); } catch(_){} }, 0);
+      }
+    }, true);
   })();
   </script>
 
