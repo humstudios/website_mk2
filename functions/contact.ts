@@ -1,18 +1,13 @@
-export interface Env {
-  TURNSTILE_SECRET: string;
-}
+// file: functions/api/contact.ts
+export interface Env { TURNSTILE_SECRET: string }
 
-export const onRequest: PagesFunction<Env> = async (ctx) => {
-  const { request, env } = ctx;
-  const url = new URL(request.url);
-
+export const onRequest: PagesFunction<Env> = async ({ request, env }) => {
+  // Only allow POST
   if (request.method !== "POST") {
-    return new Response("Method Not Allowed", {
-      status: 405,
-      headers: { "Allow": "POST" },
-    });;
+    return new Response("Method Not Allowed", { status: 405, headers: { "Allow": "POST" } });
   }
 
+  // Parse form
   const form = await request.formData();
   const name = String(form.get("name") || "").trim();
   const email = String(form.get("email") || "").trim();
@@ -20,42 +15,37 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
   const token = String(form.get("cf-turnstile-response") || "");
 
   if (!name || !email || !message) {
-      return new Response(JSON.stringify({ ok: false, error: "Missing fields." }), {
-          status: 400,
-          headers: { "Content-Type": "application/json" }
-      })
-
+    return json({ ok: false, error: "Missing fields." }, 400);
+  }
   if (!token) {
-    return new Response(JSON.stringify({ ok: false, error: "Missing Turnstile token." }), {
-      status: 400,
-      headers: { "Content-Type": "application/json" },
-    });
+    return json({ ok: false, error: "Missing Turnstile token." }, 400);
   }
 
-  // Verify with Cloudflare Turnstile
+  // Verify Turnstile token
   const verifyRes = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({
       secret: env.TURNSTILE_SECRET || "",
       response: token,
-      remoteip: request.headers.get("CF-Connecting-IP") || "",
-    }),
+      remoteip: request.headers.get("CF-Connecting-IP") || ""
+    })
   });
 
-  const verify = await verifyRes.json().catch(() => ({} as any));
+  const verify: any = await verifyRes.json().catch(() => ({}));
   if (!verify.success) {
-    return new Response(JSON.stringify({ ok: false, error: "Turnstile verification failed." }), {
-      status: 400,
-      headers: { "Content-Type": "application/json" },
-    });
+    return json({ ok: false, error: "Turnstile verification failed." }, 400);
   }
 
-  // TODO: send the message somewhere (email, webhook, etc.). For now, just log.
+  // TODO: deliver the message (email/webhook). For now, log it.
   console.log("Contact form:", { name, email, message });
 
-  return new Response(JSON.stringify({ ok: true }), {
-    status: 200,
-    headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
-  });
+  return json({ ok: true });
 };
+
+function json(body: unknown, status = 200): Response {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { "Content-Type": "application/json", "Cache-Control": "no-store" }
+  });
+}
