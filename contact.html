@@ -1,293 +1,113 @@
 <!DOCTYPE html>
+
 <html class="cards-light" lang="en">
-<head>
-  <meta charset="utf-8" />
-  <script src="assets/js/early-theme.no-dim.session.js"></script>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  
-  <title>Hum Studios | Contact</title>
-  
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-    <script>
-        function enableSubmit() {
-            document.getElementById("submit-button").disabled = false;
-        }
-    </script>
-  
-  <meta name="description" content="Contact Hum Studios for questions about our interactive stories and digital picture books." />
-
-  <!-- Color scheme & theme colors for browser UI -->
-  <meta name="color-scheme" content="light dark" />
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFCF5" />
-  <meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#0b1220" />
-
-  <!-- Favicons (all relative for GH Pages, IONOS, and local) -->
-  <link rel="icon" type="image/svg+xml" href="assets/img/icons/favicon.svg" />
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/icons/favicon-32.png" />
-  <link rel="icon" type="image/png" sizes="192x192" href="assets/img/icons/favicon-192.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icons/apple-touch-icon-180.png" />
-  <link rel="mask-icon" href="assets/img/icons/safari-pinned-tab.svg" color="#1d4ed8" />
-
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Atma:wght@700&family=Overpass:wght@400;500;800&display=swap" rel="stylesheet">
-
-  <!-- Canonical + Open Graph/Twitter (safe for GH/local/IONOS) -->
-  <link id="canonical" rel="canonical" href="https://www.humstudios.com/contact.html" />
-  <meta property="og:title" content="Hum Studios | Contact" />
-  <meta property="og:description" content="Contact Hum Studios for questions about our interactive stories and digital picture books." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://www.humstudios.com/contact.html" />
-
-  <!-- Site styles -->
-  <link rel="stylesheet" href="assets/css/styles.css" />
-  
-  <!-- Turbo (ESM) -->
-  <script type="module" src="assets/js/turbo-init.js"></script>
-
-  <!-- Includes loader: injects header/footer marked with [data-include] -->
-  <script defer src="assets/js/includes.js"></script>
-
-  <style>
-    /* a11y helper */
-    .visually-hidden {
-      position: absolute !important;
-      width: 1px; height: 1px;
-      margin: -1px; padding: 0; border: 0;
-      clip: rect(0 0 0 0); clip-path: inset(50%);
-      overflow: hidden; white-space: nowrap;
-    }
-    .form-error { color: #b00020; margin-top: 0.25rem; }
-
-    /* Form styling (consolidated for maintainability) */
-    label { display:block; margin-top: 0.75rem; font-weight: 400; }
-    .input, .textarea {
-      width: 100%;
-      padding: 1rem;
-      margin-top: 0.5rem;
-      border-radius: 12px;
-      border: 1px solid rgba(0,0,0,.15);
-      background: rgba(255,255,255,.7);
-    }
-    [data-theme="dark"] .input, [data-theme="dark"] .textarea {
-      background: rgba(0,0,0,.3);
-      border-color: rgba(255,255,255,.2);
-    }
-    .btn {
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: 16px;
-      background: #4891c3;
-      color: #fff;
-      font-size: 1rem;
-      cursor: pointer;
-      margin-top: 1rem;
-    }
-
-    /* Respect reduced-motion preferences */
-    @media (prefers-reduced-motion: reduce) {
-      .clouds img { animation: none !important; }
-    }
-  </style>
+<head><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#000000">
+<title>Hum Studios | Contact</title>
+<script async="" defer src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script>
+<meta content="Contact Hum Studios for questions about our interactive stories and digital picture books." name="description"/>
+<!-- Color scheme & theme colors for browser UI -->
+<!-- Favicons (all relative for GH Pages, IONOS, and local) -->
+<!-- Fonts -->
+<!-- Canonical + Open Graph/Twitter (safe for GH/local/IONOS) -->
+<link href="https://www.humstudios.com/contact.html" id="canonical" rel="canonical"/>
+<meta content="Hum Studios | Contact" property="og:title"/>
+<meta content="Contact Hum Studios for questions about our interactive stories and digital picture books." property="og:description"/>
+<meta content="website" property="og:type"/>
+<meta content="https://www.humstudios.com/contact.html" property="og:url"/>
+<!-- Site styles -->
+<!-- Turbo (ESM) -->
+<!-- Includes loader: injects header/footer marked with [data-include] -->
+<link rel="stylesheet" href="/assets/css/fonts.css">
+<link href="/assets/css/styles.css?v=accentfix" rel="stylesheet"/>
 </head>
 <body class="contact-page">
-  <a class="skip-link" href="#main">Skip to content</a>
-
-  <!-- Permanent site backdrop (replaces body::before) -->
-  <div id="site-backdrop" data-turbo-permanent aria-hidden="true"></div>
-
-  <!-- Decorative clouds (persistent across Turbo visits) -->
-  <div id="clouds" data-turbo-permanent data-include="partials/clouds.html" aria-hidden="true"></div>
+<a class="skip-link" href="#main">Skip to content</a>
+<!-- Permanent site backdrop (replaces body::before) -->
+<div aria-hidden="true" id="site-backdrop"></div>
+<!-- Decorative clouds (persistent across Turbo visits) -->
+<div aria-hidden="true" data-include="/partials/clouds.html" id="clouds"></div>
 <div class="container">
-    <header id="site-header" data-turbo-permanent>
-  <div class="top-header">
-    <a class="logo" href="index.html">
-      <img src="assets/img/logos/weblogo03.png" alt="Hum Studios Logo"
-           decoding="async" loading="eager" width="614" height="344">
-    </a>
-
-    <!-- Desktop Navigation -->
-    <nav class="top-nav desktop" aria-label="Main">
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="contact.html">Contact</a>
-    </nav>
-
-    <!-- Mobile Hamburger Button -->
-    <button id="hamburgerBtn" class="hamburger" type="button"
-            aria-label="Toggle menu" aria-expanded="false" aria-controls="mobileMenu">
-      <span class="bar" aria-hidden="true"></span>
-      <span class="bar" aria-hidden="true"></span>
-      <span class="bar" aria-hidden="true"></span>
-    </button>
-
-    <!-- Mobile Navigation Menu (push-down full-width) -->
-    <nav id="mobileMenu" class="mobile-nav pushdown" aria-label="Mobile" aria-hidden="true" hidden>
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="contact.html">Contact</a>
-      <a href="privacy.html">Privacy</a>
-      <a href="cookies.html">Cookies</a>
-    </nav>
+<header id="site-header">
+<div class="top-header">
+<a class="logo" href="/">
+<img alt="Hum Studios Logo" decoding="async" height="344" loading="eager" src="/assets/img/logos/weblogo03.png" width="614" draggable="false" />
+</a>
+<!-- Desktop Navigation -->
+<nav aria-label="Main" class="top-nav desktop">
+<a href="index.html">Home</a>
+<a href="about.html">About</a>
+<a href="contact.html">Contact</a>
+</nav>
+<!-- Mobile Hamburger Button -->
+<button aria-controls="mobileMenu" aria-expanded="false" aria-label="Toggle menu" class="hamburger" id="hamburgerBtn" type="button">
+<span aria-hidden="true" class="bar"></span>
+<span aria-hidden="true" class="bar"></span>
+<span aria-hidden="true" class="bar"></span>
+</button>
+<!-- Mobile Navigation Menu (push-down full-width) -->
+<nav aria-hidden="true" aria-label="Mobile" class="mobile-nav pushdown" hidden="" id="mobileMenu">
+<a href="index.html">Home</a>
+<a href="about.html">About</a>
+<a href="contact.html">Contact</a>
+<a href="privacy.html">Privacy</a>
+<a href="cookies.html">Cookies</a>
+</nav>
 <!-- Theme slider toggle (icons inline; CSS controls visibility) -->
-    <button id="theme-toggle" class="theme-toggle" type="button"
-            aria-label="Toggle dark mode" aria-pressed="false" title="Light mode">
-      <span class="theme-toggle__slider">
-        <span class="theme-toggle__thumb">
-          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5.0"></circle><line x1="12" y1="7.0" x2="12" y2="4"></line><line x1="12" y1="17.0" x2="12" y2="20"></line><line x1="7.0" y1="12" x2="4" y2="12"></line><line x1="17.0" y1="12" x2="20" y2="12"></line><line x1="8.46" y1="8.46" x2="6.5" y2="6.5"></line><line x1="15.54" y1="8.46" x2="17.5" y2="6.5"></line><line x1="8.46" y1="15.54" x2="6.5" y2="17.5"></line><line x1="15.54" y1="15.54" x2="17.5" y2="17.5"></line></svg>
-          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path>
-          </svg>
-        </span>
-      </span>
-    </button>
-  </div>
-
-  <p aria-hidden="true" class="hero-headline">Little&nbsp;Stories,<wbr> Big&nbsp;Adventures!</p>
+<button aria-label="Toggle theme" aria-pressed="false" class="theme-toggle" id="theme-toggle" title="Toggle theme" type="button">
+<span class="theme-toggle__slider">
+<span class="theme-toggle__thumb">
+<svg aria-hidden="true" class="icon-sun" viewbox="0 0 24 24"><circle cx="12" cy="12" r="5.0"></circle><line x1="12" x2="12" y1="7.0" y2="4"></line><line x1="12" x2="12" y1="17.0" y2="20"></line><line x1="7.0" x2="4" y1="12" y2="12"></line><line x1="17.0" x2="20" y1="12" y2="12"></line><line x1="8.46" x2="6.5" y1="8.46" y2="6.5"></line><line x1="15.54" x2="17.5" y1="8.46" y2="6.5"></line><line x1="8.46" x2="6.5" y1="15.54" y2="17.5"></line><line x1="15.54" x2="17.5" y1="15.54" y2="17.5"></line></svg>
+<svg aria-hidden="true" class="icon-moon" viewbox="0 0 24 24">
+<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path>
+</svg>
+</span>
+</span>
+</button>
+</div>
+<p aria-hidden="true" class="hero-headline">Little Stories,<wbr/> Big Adventures!</p>
 </header>
-
-    <main id="main" role="main">
-      <section class="card">
-        <h1>Contact Us</h1>
-        <img class="card-cartoon"
-     src="assets/img/cardpics/Jess_wave.webp"
-     alt="Jessie waves hello">
-        <p>If you have any questions about our apps or stories, or if you need support, please use the form below. We’ll get back to you as soon as possible.</p>
-
-        <!--
+<main id="main" role="main">
+<section class="card">
+<h1>Contact Us</h1>
+<img height="1280" width="800" draggable="false" loading="lazy" decoding="async" alt="Jessie waves hello" class="card-cartoon" src="/assets/img/cardpics/Jess_wave.webp" />
+<p>If you have any questions about our apps or stories, or if you need support, please use the form below. We’ll get back to you as soon as possible.</p>
+<!--
           FORM ACTION (relative for IONOS/local; GH Pages only for testing)
           - Set to './contact' which your server maps to an email handler.
           - No mailto fallback by design (production will always have a backend).
         -->
-        <form id="contactForm" method="POST" action="/api/contact" novalidate>
-          <label for="email">Email</label>
-          <input id="email" name="email" type="email" placeholder="you@example.com"
-                 autocomplete="email" required aria-describedby="email-error" class="input">
-          <div id="email-error" class="visually-hidden form-error" role="alert" aria-live="polite"></div>
-
-          <label for="name">Name</label>
-          <input id="name" name="name" type="text" placeholder="Your name"
-                 autocomplete="name" required aria-describedby="name-error" class="input">
-          <div id="name-error" class="visually-hidden form-error" role="alert" aria-live="polite"></div>
-
-          <label for="message">Message</label>
-          <textarea id="message" name="message" rows="12" required
-                    aria-describedby="message-error" class="textarea"></textarea>
-          <div id="message-error" class="visually-hidden form-error" role="alert" aria-live="polite"></div>
-
-          <!-- Honeypot -->
-          <div style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;">
-            <label for="website">Leave this field empty</label>
-            <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
-          </div>
-
-          <!-- Cloudflare Turnstile -->
-          <div class="cf-turnstile"
-               data-sitekey="0x4AAAAAABzCutgVX0rn7kxw"
-               data-callback="enableSubmit"
-               data-theme="auto">
-          </div>
-
-          <button type="submit" class="btn" id="submit-button" disabled>Send Message</button>
-        </form>
-      </section>
-    </main>
-  </div>
-
-  <footer role="contentinfo" data-include="partials/footer.html"></footer>
-
-  <!-- External scripts -->
-  <script>
-  // Client-side validation (accessible) — captcha removed
-  document.addEventListener('DOMContentLoaded', function(){
-    var form = document.getElementById('contactForm');
-    if (!form) return;
-
-    function setError(id, msg){
-      if (!id) return;
-      var field = document.getElementById(id);
-      var err = document.getElementById(id + '-error');
-      if (id && !field) return;
-      if (!err) return;
-      if (msg){
-        if (field) field.setAttribute('aria-invalid', 'true');
-        err.textContent = msg;
-        err.classList.remove('visually-hidden');
-      } else {
-        if (field) field.removeAttribute('aria-invalid');
-        err.textContent = '';
-        err.classList.add('visually-hidden');
-      }
-    }
-
-    function validateField(field){
-      var id = field.id;
-      var v = (field.value || '').trim();
-      if (id === 'email'){
-        if (!v){ setError(id, 'Please enter your email address.'); return false; }
-        var ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-        if (!ok){ setError(id, 'Please enter a valid email address.'); return false; }
-        setError(id, ''); return true;
-      }
-      if (id === 'name'){
-        if (!v){ setError(id, 'Please enter your name.'); return false; }
-        setError(id, ''); return true;
-      }
-      if (id === 'message'){
-        if (!v){ setError(id, 'Please enter your message.'); return false; }
-        setError(id, ''); return true;
-      }
-      return true;
-    }
-
-    ['email','name','message'].forEach(function(id){
-      var el = document.getElementById(id);
-      if (el){
-        el.addEventListener('blur', function(){ validateField(el); });
-        el.addEventListener('input', function(){ validateField(el); });
-      }
-    });
-
-    form.addEventListener('submit', function(e){
-      var ok = true;
-      ['email','name','message'].forEach(function(id){
-        var el = document.getElementById(id);
-        if (el){ ok = validateField(el) && ok; }
-      });
-
-      if (!ok){
-        e.preventDefault();
-        var first = document.querySelector('[aria-invalid="true"]');
-        if (first) first.focus();
-      }
-    });
-  });
-  </script>
-
-  <script>
-  // Typography nicety: keep last two words together in headings without touching inner markup
-  document.addEventListener('DOMContentLoaded', function () {
-    function widont(selector) {
-      document.querySelectorAll(selector).forEach(function (el) {
-        if (el.childElementCount > 0) return; // avoid clobbering inline markup
-        var t = (el.textContent || '').trim();
-        var i = t.lastIndexOf(' ');
-        if (i > -1) {
-          el.innerHTML = t.slice(0, i) + '&nbsp;' + t.slice(i + 1);
-        }
-      });
-    }
-    widont('h1, h2');
-  });
-  </script>
-
-  <!-- Site scripts (deferred) -->
-  <script defer src="assets/js/theme-toggle.clean.js"></script>
-  <script defer src="assets/js/hum-menu.clean.js"></script>
-  <script defer src="assets/js/widont.js"></script>
-
-  
-  
+<form action="/api/contact" id="contactForm" method="POST" novalidate="">
+<label for="email">Email</label>
+<input aria-describedby="email-error" autocomplete="email" class="input" id="email" name="email" placeholder="you@example.com" required="" type="email"/>
+<div aria-live="polite" class="visually-hidden form-error" id="email-error" role="alert"></div>
+<label for="name">Name</label>
+<input aria-describedby="name-error" autocomplete="name" class="input" id="name" name="name" placeholder="Your name" required="" type="text"/>
+<div aria-live="polite" class="visually-hidden form-error" id="name-error" role="alert"></div>
+<label for="message">Message</label>
+<textarea aria-describedby="message-error" class="textarea" id="message" name="message" required="" rows="12"></textarea>
+<div aria-live="polite" class="visually-hidden form-error" id="message-error" role="alert"></div>
+<!-- Honeypot -->
+<div style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;">
+<label for="website">Leave this field empty</label>
+<input autocomplete="off" id="website" name="website" tabindex="-1" type="text"/>
+</div>
+<!-- Cloudflare Turnstile -->
+<div class="cf-turnstile" data-action="contact" data-callback="enableSubmit" data-sitekey="0x4AAAAAABzCutgVX0rn7kxw" data-theme="auto">
+</div>
+<button class="btn" disabled="" id="submit-button" type="submit">Send Message</button>
+</form>
+</section>
+</main>
+</div>
+<footer data-include="/partials/footer.html" role="contentinfo"></footer>
+<!-- External scripts -->
+<!-- Site scripts (deferred) -->
+<script defer src="/assets/js/theme-toggle.clean.js"></script><script defer src="/assets/js/theme-color-sync.js"></script>
+<script defer src="/assets/js/hum-menu.clean.js"></script>
+<script defer src="/assets/js/widont.js"></script>
+<script defer src="/assets/js/includes.js"></script>
+<script defer src="/assets/js/contact-form.js"></script>
 </body>
 </html>

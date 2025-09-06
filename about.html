@@ -1,157 +1,90 @@
 <!DOCTYPE html>
 
 <html class="cards-light" lang="en">
-<head>
-   <meta charset="utf-8" />
-  <script src="assets/js/early-theme.no-dim.session.js"></script>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-
-  <title>About Hum | Hum Studios</title>
-  
-  <meta name="description" content="About Hum Studios — writers from Disney & Universal teaming up with BAFTA-winning animators to create interactive picture books for kids." />
-
-  <!-- Color scheme & theme colors for browser UI -->
-  <meta name="color-scheme" content="light" />
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFCF5" />
-  <meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#0b1220" />
-
-  <!-- Favicons (relative so they work on GitHub Pages, IONOS, and local) -->
-  <link rel="icon" type="image/svg+xml" href="assets/img/icons/favicon.svg" />
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/icons/favicon-32.png" />
-  <link rel="icon" type="image/png" sizes="192x192" href="assets/img/icons/favicon-192.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icons/apple-touch-icon-180.png" />
-  <link rel="mask-icon" href="assets/img/icons/safari-pinned-tab.svg" color="#1d4ed8" />
-
-  <!-- Fonts (keep consistent with site) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Atma:wght@700&family=Overpass:wght@400;500;800&display=swap" rel="stylesheet">
-
-  <!-- Canonical + Open Graph/Twitter
+<head><link rel="stylesheet" href="/assets/css/fonts.css">
+<link href="/assets/css/styles.css" rel="stylesheet"/>
+<title>About Hum | Hum Studios</title><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#000000">
+<meta content="About Hum Studios — writers from Disney &amp; Universal teaming up with BAFTA-winning animators to create interactive picture books for kids." name="description"/>
+<!-- Color scheme & theme colors for browser UI -->
+<!-- Favicons (relative so they work on GitHub Pages, IONOS, and local) -->
+<!-- Fonts (keep consistent with site) -->
+<!-- Canonical + Open Graph/Twitter
        - Dynamically set to the current origin + path so it works
          across GitHub Pages subpaths, IONOS, and local dev without edits.
   -->
-  <link id="canonical" rel="canonical" href="https://www.humstudios.com/about.html" />
-  <meta property="og:title" content="About Hum | Hum Studios" />
-  <meta property="og:description" content="Writers from Disney & Universal teaming up with BAFTA-winning animators to create interactive picture books for kids." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://www.humstudios.com/about.html" />
-
-
-
-
-
-  <!-- Site styles -->
-  <link rel="stylesheet" href="assets/css/styles.css" />
-  
-  <!-- Turbo (ESM) -->
-  <script type="module" src="assets/js/turbo-init.js"></script>
-
-  <!-- Includes loader: injects header/footer marked with [data-include] -->
-  <script defer src="assets/js/includes.js"></script>
+<link href="https://www.humstudios.com/about.html" id="canonical" rel="canonical"/>
+<meta content="About Hum | Hum Studios" property="og:title"/>
+<meta content="Writers from Disney &amp; Universal teaming up with BAFTA-winning animators to create interactive picture books for kids." property="og:description"/>
+<meta content="website" property="og:type"/>
+<meta content="https://www.humstudios.com/about.html" property="og:url"/>
+<!-- Site styles -->
+<!-- Turbo (ESM) -->
+<!-- Includes loader: injects header/footer marked with [data-include] -->
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
-
-  <!-- Permanent site backdrop (replaces body::before) -->
-  <div id="site-backdrop" data-turbo-permanent aria-hidden="true"></div>
-
-  <!-- Decorative clouds (persistent across Turbo visits) -->
-  <div id="clouds" data-turbo-permanent data-include="partials/clouds.html" aria-hidden="true"></div>
-
-  <!-- Decorative clouds (purely visual) -->
+<a class="skip-link" href="#main">Skip to content</a>
+<!-- Permanent site backdrop (replaces body::before) -->
+<div aria-hidden="true" id="site-backdrop"></div>
+<!-- Decorative clouds (persistent across Turbo visits) -->
+<div aria-hidden="true" data-include="/partials/clouds.html" id="clouds"></div>
+<!-- Decorative clouds (purely visual) -->
 <div class="container">
-    <header id="site-header" data-turbo-permanent>
-  <div class="top-header">
-    <a class="logo" href="index.html">
-      <img src="assets/img/logos/weblogo03.png" alt="Hum Studios Logo"
-           decoding="async" loading="eager" width="614" height="344">
-    </a>
-
-    <!-- Desktop Navigation -->
-    <nav class="top-nav desktop" aria-label="Main">
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="contact.html">Contact</a>
-    </nav>
-
-    <!-- Mobile Hamburger Button -->
-    <button id="hamburgerBtn" class="hamburger" type="button"
-            aria-label="Toggle menu" aria-expanded="false" aria-controls="mobileMenu">
-      <span class="bar" aria-hidden="true"></span>
-      <span class="bar" aria-hidden="true"></span>
-      <span class="bar" aria-hidden="true"></span>
-    </button>
-
-    <!-- Mobile Navigation Menu (push-down full-width) -->
-    <nav id="mobileMenu" class="mobile-nav pushdown" aria-label="Mobile" aria-hidden="true" hidden>
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="contact.html">Contact</a>
-      <a href="privacy.html">Privacy</a>
-      <a href="cookies.html">Cookies</a>
-    </nav>
+<header id="site-header">
+<div class="top-header">
+<a class="logo" href="/">
+<img alt="Hum Studios Logo" decoding="async" height="344" loading="eager" src="/assets/img/logos/weblogo03.png" width="614"/ draggable="false">
+</a>
+<!-- Desktop Navigation -->
+<nav aria-label="Main" class="top-nav desktop">
+<a href="index.html">Home</a>
+<a href="about.html">About</a>
+<a href="contact.html">Contact</a>
+</nav>
+<!-- Mobile Hamburger Button -->
+<button aria-controls="mobileMenu" aria-expanded="false" aria-label="Toggle menu" class="hamburger" id="hamburgerBtn" type="button">
+<span aria-hidden="true" class="bar"></span>
+<span aria-hidden="true" class="bar"></span>
+<span aria-hidden="true" class="bar"></span>
+</button>
+<!-- Mobile Navigation Menu (push-down full-width) -->
+<nav aria-hidden="true" aria-label="Mobile" class="mobile-nav pushdown" hidden="" id="mobileMenu">
+<a href="index.html">Home</a>
+<a href="about.html">About</a>
+<a href="contact.html">Contact</a>
+<a href="privacy.html">Privacy</a>
+<a href="cookies.html">Cookies</a>
+</nav>
 <!-- Theme slider toggle (icons inline; CSS controls visibility) -->
-    <button id="theme-toggle" class="theme-toggle" type="button"
-            aria-label="Toggle dark mode" aria-pressed="false" title="Light mode">
-      <span class="theme-toggle__slider">
-        <span class="theme-toggle__thumb">
-          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5.0"></circle><line x1="12" y1="7.0" x2="12" y2="4"></line><line x1="12" y1="17.0" x2="12" y2="20"></line><line x1="7.0" y1="12" x2="4" y2="12"></line><line x1="17.0" y1="12" x2="20" y2="12"></line><line x1="8.46" y1="8.46" x2="6.5" y2="6.5"></line><line x1="15.54" y1="8.46" x2="17.5" y2="6.5"></line><line x1="8.46" y1="15.54" x2="6.5" y2="17.5"></line><line x1="15.54" y1="15.54" x2="17.5" y2="17.5"></line></svg>
-          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path>
-          </svg>
-        </span>
-      </span>
-    </button>
-  </div>
-
-  <p aria-hidden="true" class="hero-headline">Little&nbsp;Stories,<wbr> Big&nbsp;Adventures!</p>
+<button aria-label="Toggle theme" aria-pressed="false" class="theme-toggle" id="theme-toggle" title="Toggle theme" type="button">
+<span class="theme-toggle__slider">
+<span class="theme-toggle__thumb">
+<svg aria-hidden="true" class="icon-sun" viewbox="0 0 24 24"><circle cx="12" cy="12" r="5.0"></circle><line x1="12" x2="12" y1="7.0" y2="4"></line><line x1="12" x2="12" y1="17.0" y2="20"></line><line x1="7.0" x2="4" y1="12" y2="12"></line><line x1="17.0" x2="20" y1="12" y2="12"></line><line x1="8.46" x2="6.5" y1="8.46" y2="6.5"></line><line x1="15.54" x2="17.5" y1="8.46" y2="6.5"></line><line x1="8.46" x2="6.5" y1="15.54" y2="17.5"></line><line x1="15.54" x2="17.5" y1="15.54" y2="17.5"></line></svg>
+<svg aria-hidden="true" class="icon-moon" viewbox="0 0 24 24">
+<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path>
+</svg>
+</span>
+</span>
+</button>
+</div>
+<p aria-hidden="true" class="hero-headline">Little Stories,<wbr/> Big Adventures!</p>
 </header>
-
-    <main id="main" role="main">
-      <section class="card">
-  <h1>About Hum</h1>
-  
-  <img class="card-cartoon" src="assets/img/cardpics/Arnie_dance.webp" alt="Arnie dancing">
+<main id="main" role="main">
+<section class="card">
+<h1>About Hum</h1>
+<img alt="Arnie dancing" class="card-cartoon" src="/assets/img/cardpics/Arnie_dance.webp"/>
 <p>Hum Studios is a team of writers who’ve worked at Disney and Universal Studios who joined forces with a group of BAFTA award-winning animators. Together, we wanted to tell cartoon stories that merged the fun and humor of traditional cartoons with the interactive potential of modern technology.</p><p>With our kids loving pet stories and animal stories, we created an engaging interactive digital book that combines the educational value of the best preschool apps with the sheer fun of stories about pets.</p>
-  <p class="u-center-text" style="margin-top: var(--space-4)">
-    <a href="index.html" class="btn-link" aria-label="Go to Hum Studios homepage"><strong>← Back</strong></a>
-  </p>
+<p class="u-center-text">
+<a aria-label="Go to Hum Studios homepage" class="btn-link" href="index.html"><strong>← Back</strong></a>
+</p>
 </section>
-    </main>
-  </div>
-
-  <footer role="contentinfo" data-include="partials/footer.html"></footer>
-
-  <script>
-  // After includes load, flag current nav item (run on window 'load' to ensure partials are injected)
-  window.addEventListener('load', function(){
-    document.querySelectorAll('.top-nav a[href$="about.html"], .footer-menu a[href$="about.html"]').forEach(function(a){
-      a.setAttribute('aria-current', 'page');
-    });
-  });
-  </script>
-
-  <script>
-  // Typography nicety: keep last two words together in headings without touching inner markup
-  document.addEventListener('DOMContentLoaded', function () {
-    function widont(selector) {
-      document.querySelectorAll(selector).forEach(function (el) {
-        if (el.childElementCount > 0) return; // avoid clobbering inline markup
-        var t = (el.textContent || '').trim();
-        var i = t.lastIndexOf(' ');
-        if (i > -1) {
-          el.innerHTML = t.slice(0, i) + '&nbsp;' + t.slice(i + 1);
-        }
-      });
-    }
-    widont('h1, h2');
-  });
-  </script>
-
-  <!-- Site scripts (deferred) -->
-  <script defer src="assets/js/theme-toggle.clean.js"></script>
-  <script defer src="assets/js/hum-menu.clean.js"></script>
-  <script defer src="assets/js/widont.js"></script>
+</main>
+</div>
+<footer data-include="/partials/footer.html" role="contentinfo"></footer>
+<!-- Site scripts (deferred) -->
+<script defer src="/assets/js/includes.js"></script><script defer src="/assets/js/theme-toggle.clean.js"></script><script defer src="/assets/js/theme-color-sync.js"></script>
+<script defer src="/assets/js/hum-menu.clean.js"></script>
+<script defer src="/assets/js/widont.js"></script>
 </body>
 </html>

@@ -1,225 +1,157 @@
 <!DOCTYPE html>
+
 <html class="cards-light" lang="en">
-<head>
-  <meta charset="utf-8" />
-  <script src="assets/js/early-theme.no-dim.session.js"></script>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-
-  <title>Hum Studios | Privacy Policy</title>
-  
-  <meta name="description" content="Privacy Policy for Hum Studios interactive stories and digital picture books." />
-
-  <!-- Color scheme & theme colors for browser UI -->
-  <meta name="color-scheme" content="light" />
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFCF5" />
-  <meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#0b1220" />
-
-  <!-- Favicons (relative so they work on GitHub Pages, IONOS, and local) -->
-  <link rel="icon" type="image/svg+xml" href="assets/img/icons/favicon.svg" />
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/icons/favicon-32.png" />
-  <link rel="icon" type="image/png" sizes="192x192" href="assets/img/icons/favicon-192.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icons/apple-touch-icon-180.png" />
-  <link rel="mask-icon" href="assets/img/icons/safari-pinned-tab.svg" color="#1d4ed8" />
-
-  <!-- Fonts (keep consistent with site) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Atma:wght@700&family=Overpass:wght@400;500;800&display=swap" rel="stylesheet">
-
-  <!-- Canonical + Open Graph/Twitter
+<head><link rel="stylesheet" href="/assets/css/fonts.css">
+<link href="/assets/css/styles.css" rel="stylesheet"/>
+<title>Hum Studios | Privacy Policy</title><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#000000">
+<meta content="Privacy Policy for Hum Studios interactive stories and digital picture books." name="description"/>
+<!-- Color scheme & theme colors for browser UI -->
+<!-- Favicons (relative so they work on GitHub Pages, IONOS, and local) -->
+<!-- Fonts (keep consistent with site) -->
+<!-- Canonical + Open Graph/Twitter
        - We set these dynamically when served over HTTP(S) so the page works
          across GitHub Pages subpaths, IONOS, and local dev without edits.
   -->
-  <link rel="canonical" href="https://www.humstudios.com/privacy.html" />
-  <meta property="og:title" content="Hum Studios | Privacy Policy" />
-  <meta property="og:description" content="Privacy Policy for Hum Studios interactive stories and digital picture books." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://www.humstudios.com/privacy.html" />
-
-
-
-
-
-  <!-- Site styles (full, merged stylesheet as requested) -->
-  <link rel="stylesheet" href="assets/css/styles.css" />
-
-  <!-- Turbo (ESM) -->
-  <script type="module" src="assets/js/turbo-init.js"></script>
-
-  <!-- Includes loader: injects header/footer marked with [data-include] -->
-  <script defer src="assets/js/includes.js"></script>
-  </head>
-  
+<link href="https://www.humstudios.com/privacy.html" rel="canonical"/>
+<meta content="Hum Studios | Privacy Policy" property="og:title"/>
+<meta content="Privacy Policy for Hum Studios interactive stories and digital picture books." property="og:description"/>
+<meta content="website" property="og:type"/>
+<meta content="https://www.humstudios.com/privacy.html" property="og:url"/>
+<!-- Site styles (full, merged stylesheet as requested) -->
+<!-- Turbo (ESM) -->
+<!-- Includes loader: injects header/footer marked with [data-include] -->
+</head>
 <body class="privacy-page theme-plain">
-  <a class="skip-link" href="#main">Skip to content</a>
-
-  <!-- Permanent site backdrop (replaces body::before) -->
-  <div id="site-backdrop" data-turbo-permanent aria-hidden="true"></div>
-
-  <!-- Decorative clouds (persistent across Turbo visits) -->
-  <div id="clouds" data-turbo-permanent data-include="partials/clouds.html" aria-hidden="true"></div>
-
-  <!-- Decorative clouds (purely visual) -->
+<a class="skip-link" href="#main">Skip to content</a>
+<!-- Permanent site backdrop (replaces body::before) -->
+<div aria-hidden="true" id="site-backdrop"></div>
+<!-- Decorative clouds (persistent across Turbo visits) -->
+<div aria-hidden="true" data-include="/partials/clouds.html" id="clouds"></div>
+<!-- Decorative clouds (purely visual) -->
 <div class="container">
-    <header id="site-header" data-turbo-permanent>
-  <div class="top-header">
-    <a class="logo" href="index.html">
-      <img src="assets/img/logos/weblogo03.png" alt="Hum Studios Logo"
-           decoding="async" loading="eager" width="614" height="344">
-    </a>
-
-    <!-- Desktop Navigation -->
-    <nav class="top-nav desktop" aria-label="Main">
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="contact.html">Contact</a>
-    </nav>
-
-    <!-- Mobile Hamburger Button -->
-    <button id="hamburgerBtn" class="hamburger" type="button"
-            aria-label="Toggle menu" aria-expanded="false" aria-controls="mobileMenu">
-      <span class="bar" aria-hidden="true"></span>
-      <span class="bar" aria-hidden="true"></span>
-      <span class="bar" aria-hidden="true"></span>
-    </button>
-
-    <!-- Mobile Navigation Menu (push-down full-width) -->
-    <nav id="mobileMenu" class="mobile-nav pushdown" aria-label="Mobile" aria-hidden="true" hidden>
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="contact.html">Contact</a>
-      <a href="privacy.html">Privacy</a>
-      <a href="cookies.html">Cookies</a>
-    </nav>
+<header id="site-header">
+<div class="top-header">
+<a class="logo" href="/">
+<img alt="Hum Studios Logo" decoding="async" height="344" loading="eager" src="/assets/img/logos/weblogo03.png" width="614"/ draggable="false">
+</a>
+<!-- Desktop Navigation -->
+<nav aria-label="Main" class="top-nav desktop">
+<a href="index.html">Home</a>
+<a href="about.html">About</a>
+<a href="contact.html">Contact</a>
+</nav>
+<!-- Mobile Hamburger Button -->
+<button aria-controls="mobileMenu" aria-expanded="false" aria-label="Toggle menu" class="hamburger" id="hamburgerBtn" type="button">
+<span aria-hidden="true" class="bar"></span>
+<span aria-hidden="true" class="bar"></span>
+<span aria-hidden="true" class="bar"></span>
+</button>
+<!-- Mobile Navigation Menu (push-down full-width) -->
+<nav aria-hidden="true" aria-label="Mobile" class="mobile-nav pushdown" hidden="" id="mobileMenu">
+<a href="index.html">Home</a>
+<a href="about.html">About</a>
+<a href="contact.html">Contact</a>
+<a href="privacy.html">Privacy</a>
+<a href="cookies.html">Cookies</a>
+</nav>
 <!-- Theme slider toggle (icons inline; CSS controls visibility) -->
-    <button id="theme-toggle" class="theme-toggle" type="button"
-            aria-label="Toggle dark mode" aria-pressed="false" title="Light mode">
-      <span class="theme-toggle__slider">
-        <span class="theme-toggle__thumb">
-          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5.0"></circle><line x1="12" y1="7.0" x2="12" y2="4"></line><line x1="12" y1="17.0" x2="12" y2="20"></line><line x1="7.0" y1="12" x2="4" y2="12"></line><line x1="17.0" y1="12" x2="20" y2="12"></line><line x1="8.46" y1="8.46" x2="6.5" y2="6.5"></line><line x1="15.54" y1="8.46" x2="17.5" y2="6.5"></line><line x1="8.46" y1="15.54" x2="6.5" y2="17.5"></line><line x1="15.54" y1="15.54" x2="17.5" y2="17.5"></line></svg>
-          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path>
-          </svg>
-        </span>
-      </span>
-    </button>
-  </div>
-
-  <p aria-hidden="true" class="hero-headline">Little&nbsp;Stories,<wbr> Big&nbsp;Adventures!</p>
+<button aria-label="Toggle theme" aria-pressed="false" class="theme-toggle" id="theme-toggle" title="Toggle theme" type="button">
+<span class="theme-toggle__slider">
+<span class="theme-toggle__thumb">
+<svg aria-hidden="true" class="icon-sun" viewbox="0 0 24 24"><circle cx="12" cy="12" r="5.0"></circle><line x1="12" x2="12" y1="7.0" y2="4"></line><line x1="12" x2="12" y1="17.0" y2="20"></line><line x1="7.0" x2="4" y1="12" y2="12"></line><line x1="17.0" x2="20" y1="12" y2="12"></line><line x1="8.46" x2="6.5" y1="8.46" y2="6.5"></line><line x1="15.54" x2="17.5" y1="8.46" y2="6.5"></line><line x1="8.46" x2="6.5" y1="15.54" y2="17.5"></line><line x1="15.54" x2="17.5" y1="15.54" y2="17.5"></line></svg>
+<svg aria-hidden="true" class="icon-moon" viewbox="0 0 24 24">
+<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path>
+</svg>
+</span>
+</span>
+</button>
+</div>
+<p aria-hidden="true" class="hero-headline">Little Stories,<wbr/> Big Adventures!</p>
 </header>
-
-    <main id="main" role="main">
-      <section class="card">
-        <h1>Hum Studios Ltd Customer Privacy Notice</h1>
-        <img class="card-cartoon"
-     src="assets/img/cardpics/Sid_smile.webp"
-     alt="Sid the Crocodile">
-        <p>This privacy notice tells you what to expect us to do with your personal information.</p>
-        <ul>
-          <li><a href="#contact">Contact details</a></li>
-          <li><a href="#collect">What information we collect, use, and why</a></li>
-          <li><a href="#lawful">Lawful bases and data protection rights</a></li>
-          <li><a href="#infofrom">Where we get personal information from</a></li>
-          <li><a href="#retention">How long we keep information</a></li>
-          <li><a href="#complain">How to complain</a></li>
-        </ul>
-
-        <h2 id="collect">What information we collect and why</h2>
-        <p>We collect or use the following information to <strong>provide services and goods, including delivery:</strong></p>
-        <ul>
-          <li>Names and contact details</li>
-          <li>Account information</li>
-          <li>Information relating to compliments or complaints</li>
-        </ul>
-
-        <p>We collect or use the following information to <strong>prevent, detect, investigate or prosecute crimes:</strong></p>
-        <ul>
-          <li>Names and contact information</li>
-        </ul>
-
-        <p>We collect or use the following information to <strong>comply with legal requirements:</strong></p>
-        <ul>
-          <li>Name</li>
-          <li>Contact information</li>
-          <li>Any other personal information required to comply with legal obligations</li>
-        </ul>
-
-        <p>We collect or use the following personal information for <strong>dealing with queries, complaints or claims:</strong></p>
-        <ul>
-          <li>Names and contact details</li>
-          <li>Account information</li>
-          <li>Purchase or service history</li>
-        </ul>
-
-        <h2 id="lawful">Lawful bases and data protection rights</h2>
-        <p>Under UK data protection law, we must have a “lawful basis” for collecting and using your personal information. You can find out more about lawful bases on the ICO’s website.</p>
-        <p>Which lawful basis we rely on may affect your data protection rights which are set out below. You can find out more about your data protection rights and the exemptions which may apply on the ICO’s website:</p>
-        <ul>
-          <li><strong>Your right of access</strong> – You have the right to ask us for copies of your personal information. <a href="https://ico.org.uk/for-organisations/advice-for-small-organisations/privacy-notices-and-cookies/create-your-own-privacy-notice/your-data-protection-rights/#roa" target="_blank" rel="noopener noreferrer">Read more</a>.</li>
-          <li><strong>Your right to rectification</strong> – You can ask us to correct or delete inaccurate information. <a href="https://ico.org.uk/for-organisations/advice-for-small-organisations/privacy-notices-and-cookies/create-your-own-privacy-notice/your-data-protection-rights/#rtr" target="_blank" rel="noopener noreferrer">Read more</a>.</li>
-          <li><strong>Your right to erasure</strong> – You can ask us to delete your personal information. <a href="https://ico.org.uk/for-organisations/advice-for-small-organisations/privacy-notices-and-cookies/create-your-own-privacy-notice/your-data-protection-rights/#rte" target="_blank" rel="noopener noreferrer">Read more</a>.</li>
-          <li><strong>Your right to restriction of processing</strong> – You can ask us to limit how we use your information. <a href="https://ico.org.uk/for-organisations/advice-for-small-organisations/privacy-notices-and-cookies/create-your-own-privacy-notice/your-data-protection-rights/#rtrop" target="_blank" rel="noopener noreferrer">Read more</a>.</li>
-          <li><strong>Your right to object to processing</strong> – You can object to processing of your personal data. <a href="https://ico.org.uk/for-organisations/advice-for-small-organisations/privacy-notices-and-cookies/create-your-own-privacy-notice/your-data-protection-rights/#rto" target="_blank" rel="noopener noreferrer">Read more</a>.</li>
-          <li><strong>Your right to data portability</strong> – You can ask us to transfer your data. <a href="https://ico.org.uk/for-organisations/advice-for-small-organisations/privacy-notices-and-cookies/create-your-own-privacy-notice/your-data-protection-rights/#rtdp" target="_blank" rel="noopener noreferrer">Read more</a>.</li>
-          <li><strong>Your right to withdraw consent</strong> – When we use consent as our basis you can withdraw at any time. <a href="https://ico.org.uk/for-organisations/advice-for-small-organisations/privacy-notices-and-cookies/create-your-own-privacy-notice/your-data-protection-rights/#rtwc" target="_blank" rel="noopener noreferrer">Read more</a>.</li>
-        </ul>
-
-        <p>If you make a request, we must respond without undue delay and in any event within one month.</p>
-        <p>To make a data protection rights request, please contact us using the contact details at the top of this privacy notice.</p>
-
-        <h2 id="infofrom">Where we get personal information from</h2>
-        <p>Directly from you.</p>
-
-        <h2 id="retention">How long we keep information</h2>
-        <p>We retain this information for up to six months.</p>
-
-        <h2 id="complain">How to complain</h2>
-        <p>If you have any concerns about our use of your personal data, you can make a complaint to us using the form on our Contact page or the email address at the bottom of this privacy notice.</p>
-        <p>If you remain unhappy with how we’ve used your data after raising a complaint with us, you can also complain to the ICO:</p>
-        <p>
-          Information Commissioner’s Office<br>
-          Wycliffe House<br>
-          Water Lane<br>
-          Wilmslow<br>
-          Cheshire<br>
+<main id="main" role="main">
+<section class="card">
+<h1>Hum Studios Ltd Customer Privacy Notice</h1>
+<img height="1560" width="800" draggable="false" loading="lazy" decoding="async" alt="Sid the Crocodile" class="card-cartoon" src="/assets/img/cardpics/Sid_smile.webp"/>
+<p>This privacy notice tells you what to expect us to do with your personal information.</p>
+<ul>
+<li><a href="#contact">Contact details</a></li>
+<li><a href="#collect">What information we collect, use, and why</a></li>
+<li><a href="#lawful">Lawful bases and data protection rights</a></li>
+<li><a href="#infofrom">Where we get personal information from</a></li>
+<li><a href="#retention">How long we keep information</a></li>
+<li><a href="#complain">How to complain</a></li>
+</ul>
+<h2 id="collect">What information we collect and why</h2>
+<p>We collect or use the following information to <strong>provide services and goods, including delivery:</strong></p>
+<ul>
+<li>Names and contact details</li>
+<li>Account information</li>
+<li>Information relating to compliments or complaints</li>
+</ul>
+<p>We collect or use the following information to <strong>prevent, detect, investigate or prosecute crimes:</strong></p>
+<ul>
+<li>Names and contact information</li>
+</ul>
+<p>We collect or use the following information to <strong>comply with legal requirements:</strong></p>
+<ul>
+<li>Name</li>
+<li>Contact information</li>
+<li>Any other personal information required to comply with legal obligations</li>
+</ul>
+<p>We collect or use the following personal information for <strong>dealing with queries, complaints or claims:</strong></p>
+<ul>
+<li>Names and contact details</li>
+<li>Account information</li>
+<li>Purchase or service history</li>
+</ul>
+<h2 id="lawful">Lawful bases and data protection rights</h2>
+<p>Under UK data protection law, we must have a “lawful basis” for collecting and using your personal information. You can find out more about lawful bases on the ICO’s website.</p>
+<p>Which lawful basis we rely on may affect your data protection rights which are set out below. You can find out more about your data protection rights and the exemptions which may apply on the ICO’s website:</p>
+<ul>
+<li><strong>Your right of access</strong> – You have the right to ask us for copies of your personal information. <a href="https://ico.org.uk/for-organisations/advice-for-small-organisations/privacy-notices-and-cookies/create-your-own-privacy-notice/your-data-protection-rights/#roa" rel="noopener noreferrer" target="_blank">Read more</a>.</li>
+<li><strong>Your right to rectification</strong> – You can ask us to correct or delete inaccurate information. <a href="https://ico.org.uk/for-organisations/advice-for-small-organisations/privacy-notices-and-cookies/create-your-own-privacy-notice/your-data-protection-rights/#rtr" rel="noopener noreferrer" target="_blank">Read more</a>.</li>
+<li><strong>Your right to erasure</strong> – You can ask us to delete your personal information. <a href="https://ico.org.uk/for-organisations/advice-for-small-organisations/privacy-notices-and-cookies/create-your-own-privacy-notice/your-data-protection-rights/#rte" rel="noopener noreferrer" target="_blank">Read more</a>.</li>
+<li><strong>Your right to restriction of processing</strong> – You can ask us to limit how we use your information. <a href="https://ico.org.uk/for-organisations/advice-for-small-organisations/privacy-notices-and-cookies/create-your-own-privacy-notice/your-data-protection-rights/#rtrop" rel="noopener noreferrer" target="_blank">Read more</a>.</li>
+<li><strong>Your right to object to processing</strong> – You can object to processing of your personal data. <a href="https://ico.org.uk/for-organisations/advice-for-small-organisations/privacy-notices-and-cookies/create-your-own-privacy-notice/your-data-protection-rights/#rto" rel="noopener noreferrer" target="_blank">Read more</a>.</li>
+<li><strong>Your right to data portability</strong> – You can ask us to transfer your data. <a href="https://ico.org.uk/for-organisations/advice-for-small-organisations/privacy-notices-and-cookies/create-your-own-privacy-notice/your-data-protection-rights/#rtdp" rel="noopener noreferrer" target="_blank">Read more</a>.</li>
+<li><strong>Your right to withdraw consent</strong> – When we use consent as our basis you can withdraw at any time. <a href="https://ico.org.uk/for-organisations/advice-for-small-organisations/privacy-notices-and-cookies/create-your-own-privacy-notice/your-data-protection-rights/#rtwc" rel="noopener noreferrer" target="_blank">Read more</a>.</li>
+</ul>
+<p>If you make a request, we must respond without undue delay and in any event within one month.</p>
+<p>To make a data protection rights request, please contact us using the contact details at the top of this privacy notice.</p>
+<h2 id="infofrom">Where we get personal information from</h2>
+<p>Directly from you.</p>
+<h2 id="retention">How long we keep information</h2>
+<p>We retain this information for up to six months.</p>
+<h2 id="complain">How to complain</h2>
+<p>If you have any concerns about our use of your personal data, you can make a complaint to us using the form on our Contact page or the email address at the bottom of this privacy notice.</p>
+<p>If you remain unhappy with how we’ve used your data after raising a complaint with us, you can also complain to the ICO:</p>
+<p>
+          Information Commissioner’s Office<br/>
+          Wycliffe House<br/>
+          Water Lane<br/>
+          Wilmslow<br/>
+          Cheshire<br/>
           SK9 5AF
         </p>
-        <p>Helpline number: 0303 123 1113</p>
-        <p>Website: <a href="https://ico.org.uk/make-a-complaint/" target="_blank" rel="noopener noreferrer">https://www.ico.org.uk/make-a-complaint</a></p>
-
-        <h2 id="contact">Contact details</h2>
-        <p>If you have questions about this Privacy Policy or your personal data, please get in touch on our <a href="contact.html">contact</a> page.</p>
-        <p><strong>Last updated:</strong> 10th August 2025</p>
-      </section>
-    </main>
-  </div>
-
-  <footer role="contentinfo" data-include="partials/footer.html"></footer>
-
-  <!--
+<p>Helpline number: 0303 123 1113</p>
+<p>Website: <a href="https://ico.org.uk/make-a-complaint/" rel="noopener noreferrer" target="_blank">https://www.ico.org.uk/make-a-complaint</a></p>
+<h2 id="contact">Contact details</h2>
+<p>If you have questions about this Privacy Policy or your personal data, please get in touch on our <a href="contact.html">contact</a> page.</p>
+<p><strong>Last updated:</strong> 10th August 2025</p>
+</section>
+</main>
+</div>
+<footer data-include="/partials/footer.html" role="contentinfo"></footer>
+<!--
     Typography nicety:
     Prevent a single word from wrapping to a new line at the end of headings.
     Safer implementation: only apply when the element has no child elements.
   -->
-  <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    function widont(selector) {
-      document.querySelectorAll(selector).forEach(function (el) {
-        if (el.childElementCount > 0) return; // avoid clobbering inline markup
-        var t = (el.textContent || '').trim();
-        var i = t.lastIndexOf(' ');
-        if (i > -1) {
-          el.innerHTML = t.slice(0, i) + '&nbsp;' + t.slice(i + 1);
-        }
-      });
-    }
-    widont('h1, h2');
-  });
-  </script>
-
-  <!-- Site scripts (deferred) -->
-  <script defer src="assets/js/theme-toggle.clean.js"></script>
-  <script defer src="assets/js/hum-menu.clean.js"></script>
-  <script defer src="assets/js/widont.js"></script>
+<!-- Site scripts (deferred) -->
+<script defer src="/assets/js/includes.js"></script><script defer src="/assets/js/theme-toggle.clean.js"></script><script defer src="/assets/js/theme-color-sync.js"></script>
+<script defer src="/assets/js/hum-menu.clean.js"></script>
+<script defer src="/assets/js/widont.js"></script>
 </body>
 </html>

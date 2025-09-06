@@ -1,0 +1,73 @@
+/* Hum Studios — Local web fonts (Overpass + Atma)
+   Paths are case-sensitive in production. Files expected at:
+   /assets/fonts/Atma-Bold-700.woff2
+   /assets/fonts/Overpass-Regular-400.woff2
+   /assets/fonts/Overpass-Italic-400.woff2
+   /assets/fonts/Overpass-Medium-500.woff2
+   /assets/fonts/Overpass-SemiBold-600.woff2
+*/
+
+/* ---- Overpass ---- */
+@font-face {
+  font-family: "Overpass";
+  src: local("Overpass Regular"), local("Overpass-Regular"),
+       url("/assets/fonts/Overpass-Regular-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Overpass";
+  src: local("Overpass Italic"), local("Overpass-Italic"),
+       url("/assets/fonts/Overpass-Italic-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Overpass";
+  src: local("Overpass Medium"), local("Overpass-Medium"),
+       url("/assets/fonts/Overpass-Medium-500.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Overpass";
+  src: local("Overpass SemiBold"), local("Overpass-SemiBold"),
+       url("/assets/fonts/Overpass-SemiBold-600.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---- Atma ---- */
+@font-face {
+  font-family: "Atma";
+  src: local("Atma Bold"), local("Atma-Bold"),
+       url("/assets/fonts/Atma-Bold-700.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---- CSS variables and base usage ---- */
+:root {
+  --font-sans: "Overpass", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+               Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial,
+               "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --font-display: "Atma", var(--font-sans);
+}
+
+body {
+  font-family: var(--font-sans);
+  font-weight: 400;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700; /* Atma max weight is 700 */
+}

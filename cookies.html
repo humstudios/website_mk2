@@ -1,183 +1,114 @@
 <!DOCTYPE html>
+
 <html class="cards-light" lang="en">
-<head>
-  <meta charset="utf-8" />
-  <script src="assets/js/early-theme.no-dim.session.js"></script>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  
-  <title>Hum Studios | Cookie Policy</title>
-  
-  <meta name="description" content="Cookie Policy for Hum Studios interactive stories and digital picture books." />
-
-  <!-- Color scheme & theme colors for browser UI -->
-  <meta name="color-scheme" content="light" />
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFCF5" />
-  <meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#0b1220" />
-
-  <!-- Favicons (relative so they work on GitHub Pages, IONOS, and local) -->
-  <link rel="icon" type="image/svg+xml" href="assets/img/icons/favicon.svg" />
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/icons/favicon-32.png" />
-  <link rel="icon" type="image/png" sizes="192x192" href="assets/img/icons/favicon-192.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icons/apple-touch-icon-180.png" />
-  <link rel="mask-icon" href="assets/img/icons/safari-pinned-tab.svg" color="#1d4ed8" />
-
-  <!-- Fonts (keep consistent with site) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Atma:wght@700&family=Overpass:wght@400;500;800&display=swap" rel="stylesheet">
-
-  <!-- Canonical + Open Graph/Twitter
+<head><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Hum Studios | Cookie Policy</title>
+<meta content="Cookie Policy for Hum Studios interactive stories and digital picture books." name="description"/>
+<!-- Color scheme & theme colors for browser UI -->
+<!-- Favicons (relative so they work on GitHub Pages, IONOS, and local) -->
+<!-- Fonts (keep consistent with site) -->
+<!-- Canonical + Open Graph/Twitter
        - Dynamically set to the current origin + path so it works
          across GitHub Pages subpaths, IONOS, and local dev without edits.
   -->
-  <link id="canonical" rel="canonical" href="https://www.humstudios.com/cookies.html" />
-  <meta property="og:title" content="Hum Studios | Cookie Policy" />
-  <meta property="og:description" content="Cookie Policy for Hum Studios interactive stories and digital picture books." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://www.humstudios.com/cookies.html" />
-
-
-
-
-
-  <!-- Site styles -->
-  <link rel="stylesheet" href="assets/css/styles.css" />
-
-  <!-- Turbo (ESM) -->
- <script type="module" src="assets/js/turbo-init.js"></script>
-
-  <!-- Includes loader: injects header/footer marked with [data-include] -->
-  <script defer src="assets/js/includes.js"></script>
-  </head>
-  
+<link href="https://www.humstudios.com/cookies.html" id="canonical" rel="canonical"/>
+<meta content="Hum Studios | Cookie Policy" property="og:title"/>
+<meta content="Cookie Policy for Hum Studios interactive stories and digital picture books." property="og:description"/>
+<meta content="website" property="og:type"/>
+<meta content="https://www.humstudios.com/cookies.html" property="og:url"/>
+<!-- Site styles -->
+<!-- Turbo (ESM) -->
+<!-- Includes loader: injects header/footer marked with [data-include] -->
+<link href="/assets/css/styles.css" rel="stylesheet"/></head>
 <body class="cookies-page theme-plain">
-  <a class="skip-link" href="#main">Skip to content</a>
-
-  <!-- Permanent site backdrop (replaces body::before) -->
-  <div id="site-backdrop" data-turbo-permanent aria-hidden="true"></div>
-
-  <!-- Decorative clouds (persistent across Turbo visits) -->
-  <div id="clouds" data-turbo-permanent data-include="partials/clouds.html" aria-hidden="true"></div>
-
-  <!-- Decorative clouds (purely visual) -->
+<a class="skip-link" href="#main">Skip to content</a>
+<!-- Permanent site backdrop (replaces body::before) -->
+<div aria-hidden="true" id="site-backdrop"></div>
+<!-- Decorative clouds (persistent across Turbo visits) -->
+<div aria-hidden="true" data-include="partials/clouds.html" id="clouds"></div>
+<!-- Decorative clouds (purely visual) -->
 <div class="container">
-    <header id="site-header" data-turbo-permanent>
-  <div class="top-header">
-    <a class="logo" href="index.html">
-      <img src="assets/img/logos/weblogo03.png" alt="Hum Studios Logo"
-           decoding="async" loading="eager" width="614" height="344">
-    </a>
-
-    <!-- Desktop Navigation -->
-    <nav class="top-nav desktop" aria-label="Main">
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="contact.html">Contact</a>
-    </nav>
-
-    <!-- Mobile Hamburger Button -->
-    <button id="hamburgerBtn" class="hamburger" type="button"
-            aria-label="Toggle menu" aria-expanded="false" aria-controls="mobileMenu">
-      <span class="bar" aria-hidden="true"></span>
-      <span class="bar" aria-hidden="true"></span>
-      <span class="bar" aria-hidden="true"></span>
-    </button>
-
-    <!-- Mobile Navigation Menu (push-down full-width) -->
-    <nav id="mobileMenu" class="mobile-nav pushdown" aria-label="Mobile" aria-hidden="true" hidden>
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="contact.html">Contact</a>
-      <a href="privacy.html">Privacy</a>
-      <a href="cookies.html">Cookies</a>
-    </nav>
+<header id="site-header">
+<div class="top-header">
+<a class="logo" href="index.html">
+<img alt="Hum Studios Logo" decoding="async" height="344" loading="eager" src="assets/img/logos/weblogo03.png" width="614"/>
+</a>
+<!-- Desktop Navigation -->
+<nav aria-label="Main" class="top-nav desktop">
+<a href="index.html">Home</a>
+<a href="about.html">About</a>
+<a href="contact.html">Contact</a>
+</nav>
+<!-- Mobile Hamburger Button -->
+<button aria-controls="mobileMenu" aria-expanded="false" aria-label="Toggle menu" class="hamburger" id="hamburgerBtn" type="button">
+<span aria-hidden="true" class="bar"></span>
+<span aria-hidden="true" class="bar"></span>
+<span aria-hidden="true" class="bar"></span>
+</button>
+<!-- Mobile Navigation Menu (push-down full-width) -->
+<nav aria-hidden="true" aria-label="Mobile" class="mobile-nav pushdown" hidden="" id="mobileMenu">
+<a href="index.html">Home</a>
+<a href="about.html">About</a>
+<a href="contact.html">Contact</a>
+<a href="privacy.html">Privacy</a>
+<a href="cookies.html">Cookies</a>
+</nav>
 <!-- Theme slider toggle (icons inline; CSS controls visibility) -->
-    <button id="theme-toggle" class="theme-toggle" type="button"
-            aria-label="Toggle dark mode" aria-pressed="false" title="Light mode">
-      <span class="theme-toggle__slider">
-        <span class="theme-toggle__thumb">
-          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5.0"></circle><line x1="12" y1="7.0" x2="12" y2="4"></line><line x1="12" y1="17.0" x2="12" y2="20"></line><line x1="7.0" y1="12" x2="4" y2="12"></line><line x1="17.0" y1="12" x2="20" y2="12"></line><line x1="8.46" y1="8.46" x2="6.5" y2="6.5"></line><line x1="15.54" y1="8.46" x2="17.5" y2="6.5"></line><line x1="8.46" y1="15.54" x2="6.5" y2="17.5"></line><line x1="15.54" y1="15.54" x2="17.5" y2="17.5"></line></svg>
-          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path>
-          </svg>
-        </span>
-      </span>
-    </button>
-  </div>
-
-  <p aria-hidden="true" class="hero-headline">Little&nbsp;Stories,<wbr> Big&nbsp;Adventures!</p>
+<button aria-label="Toggle theme" aria-pressed="false" class="theme-toggle" id="theme-toggle" title="Toggle theme" type="button">
+<span class="theme-toggle__slider">
+<span class="theme-toggle__thumb">
+<svg aria-hidden="true" class="icon-sun" viewbox="0 0 24 24"><circle cx="12" cy="12" r="5.0"></circle><line x1="12" x2="12" y1="7.0" y2="4"></line><line x1="12" x2="12" y1="17.0" y2="20"></line><line x1="7.0" x2="4" y1="12" y2="12"></line><line x1="17.0" x2="20" y1="12" y2="12"></line><line x1="8.46" x2="6.5" y1="8.46" y2="6.5"></line><line x1="15.54" x2="17.5" y1="8.46" y2="6.5"></line><line x1="8.46" x2="6.5" y1="15.54" y2="17.5"></line><line x1="15.54" x2="17.5" y1="15.54" y2="17.5"></line></svg>
+<svg aria-hidden="true" class="icon-moon" viewbox="0 0 24 24">
+<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path>
+</svg>
+</span>
+</span>
+</button>
+</div>
+<p aria-hidden="true" class="hero-headline">Little Stories,<wbr/> Big Adventures!</p>
 </header>
-
-    <main id="main" role="main">
-      <section class="card">
-        <h1>Hum Studios Ltd Cookie Policy</h1>
-        <img class="card-cartoon"
-     src="assets/img/cardpics/MsW_baguettes.webp"
-     alt="Ms Whickersnap brandishes her baguettes">
-        <p><strong>Effective Date:</strong> 10th August 2025.</p>
-        <p>This Cookie Policy explains how Hum Studios ("we", "our", or "us") uses cookies and similar technologies on our website (“the Website”). We are committed to protecting your privacy and being transparent about how and why we use cookies.</p>
-
-        <h2>What Are Cookies?</h2>
-        <p>Cookies are small text files that are placed on your device when you visit a website. They are widely used to ensure websites work efficiently, as well as to provide information to the website owner.</p>
-
-        <h2>How We Use Cookies</h2>
-        <p>We use only the minimum number of cookies necessary to ensure our website functions properly. We also make limited use of Google Analytics to count page views, helping us understand how visitors interact with our site so we can improve usability and performance.</p>
-        <p>We do not use cookies for advertising, profiling, or personal tracking purposes.</p>
-
-        <h2>Types of Cookies We Use</h2>
-        <ul>
-          <li><strong>Strictly Necessary:</strong> Required for basic website functionality and security. <em>Duration: Session or short‑term.</em></li>
-          <li><strong>Analytics (Google Analytics):</strong> Used to anonymously measure page views and usage patterns. <em>Duration: Persistent.</em></li>
-        </ul>
-
-        <h2>About Google Analytics</h2>
-        <p>We use Google Analytics with IP anonymisation enabled. This means no personally identifiable information is stored or shared with Google. The data we collect through Google Analytics is used solely for the purpose of improving our website’s performance and user experience.</p>
-        <p>Learn more: <a href="https://support.google.com/analytics/answer/6004245" target="_blank" rel="noopener noreferrer">Google Analytics – Safeguarding your data</a>.</p>
-
-        <h2>Managing Your Cookie Preferences</h2>
-        <p>
+<main id="main" role="main">
+<section class="card">
+<h1>Hum Studios Ltd Cookie Policy</h1>
+<img alt="Ms Whickersnap brandishes her baguettes" class="card-cartoon" src="assets/img/cardpics/MsW_baguettes.webp"/>
+<p><strong>Effective Date:</strong> 10th August 2025.</p>
+<p>This Cookie Policy explains how Hum Studios ("we", "our", or "us") uses cookies and similar technologies on our website (“the Website”). We are committed to protecting your privacy and being transparent about how and why we use cookies.</p>
+<h2>What Are Cookies?</h2>
+<p>Cookies are small text files that are placed on your device when you visit a website. They are widely used to ensure websites work efficiently, as well as to provide information to the website owner.</p>
+<h2>How We Use Cookies</h2>
+<p>We use only the minimum number of cookies necessary to ensure our website functions properly. We also make limited use of Google Analytics to count page views, helping us understand how visitors interact with our site so we can improve usability and performance.</p>
+<p>We do not use cookies for advertising, profiling, or personal tracking purposes.</p>
+<h2>Types of Cookies We Use</h2>
+<ul>
+<li><strong>Strictly Necessary:</strong> Required for basic website functionality and security. <em>Duration: Session or short‑term.</em></li>
+<li><strong>Analytics (Google Analytics):</strong> Used to anonymously measure page views and usage patterns. <em>Duration: Persistent.</em></li>
+</ul>
+<h2>About Google Analytics</h2>
+<p>We use Google Analytics with IP anonymisation enabled. This means no personally identifiable information is stored or shared with Google. The data we collect through Google Analytics is used solely for the purpose of improving our website’s performance and user experience.</p>
+<p>Learn more: <a href="https://support.google.com/analytics/answer/6004245" rel="noopener noreferrer" target="_blank">Google Analytics – Safeguarding your data</a>.</p>
+<h2>Managing Your Cookie Preferences</h2>
+<p>
       On your first visit to our site, you may be asked to accept or decline analytics (optional) cookies. You can change your preferences at any time by adjusting your browser settings or clearing your cookies.
      </p>
 <p>
       Most web browsers allow some control of cookies through browser settings. Please note that blocking strictly necessary cookies may affect your ability to use parts of our site.
      </p>
-
-
-        <h2>Changes to this Policy</h2>
-        <p>We may update this Cookie Policy from time to time to reflect changes in technology, legal requirements, or our services. The “Effective Date” at the top of this page indicates when it was last revised.</p>
-
-        <h2>Contact Us</h2>
-        <p>If you have any questions about our use of Cookies or this Policy, please get in touch on our <a href="contact.html">contact</a> page.</p>
-      </section>
-    </main>
-  </div>
-
-  <footer role="contentinfo" data-include="partials/footer.html"></footer>
-
-  <!--
+<h2>Changes to this Policy</h2>
+<p>We may update this Cookie Policy from time to time to reflect changes in technology, legal requirements, or our services. The “Effective Date” at the top of this page indicates when it was last revised.</p>
+<h2>Contact Us</h2>
+<p>If you have any questions about our use of Cookies or this Policy, please get in touch on our <a href="contact.html">contact</a> page.</p>
+</section>
+</main>
+</div>
+<footer data-include="partials/footer.html" role="contentinfo"></footer>
+<!--
     Typography nicety:
     Prevent a single word from wrapping to a new line at the end of headings.
     Safer implementation: only apply when the element has no child elements.
   -->
-  <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    function widont(selector) {
-      document.querySelectorAll(selector).forEach(function (el) {
-        if (el.childElementCount > 0) return; // avoid clobbering inline markup
-        var t = (el.textContent || '').trim();
-        var i = t.lastIndexOf(' ');
-        if (i > -1) {
-          el.innerHTML = t.slice(0, i) + '&nbsp;' + t.slice(i + 1);
-        }
-      });
-    }
-    widont('h1, h2');
-  });
-  </script>
-
-  <!-- Site scripts (deferred) -->
-  <script defer src="assets/js/theme-toggle.clean.js"></script>
-  <script defer src="assets/js/hum-menu.clean.js"></script>
-  <script defer src="assets/js/widont.js"></script>
+<!-- Site scripts (deferred) -->
+<script defer="True" src="assets/js/includes.js"></script><script defer="True" src="assets/js/theme-toggle.clean.js"></script><script defer="True" src="assets/js/theme-color-sync.js"></script>
+<script defer="True" src="assets/js/hum-menu.clean.js"></script>
+<script defer="True" src="assets/js/widont.js"></script>
 </body>
 </html>

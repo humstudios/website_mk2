@@ -132,11 +132,57 @@
       if (best.classList) best.classList.add('is-active');
     }
   }
+  // -------- GitHub Pages project-site home link fix --------
+  function fixLogoHomeLinkForGithubPages(){
+    try {
+      if (!/github\.io$/i.test(location.hostname)) return;
+      var segs = location.pathname.split('/').filter(Boolean);
+      if (!segs.length) return;
+      var repo = segs[0];
+      document.querySelectorAll('a.logo[href="/"]').forEach(function(a){
+        a.setAttribute('href', '/' + repo + '/');
+      });
+    } catch (e) {}
+  }
+  // -------- GitHub Pages project-site absolute /assets/ rewriter --------
+  function rewriteAbsoluteAssetPathsForGithubPages(){
+    try {
+      if (!/github\.io$/i.test(location.hostname)) return;
+      var segs = location.pathname.split('/').filter(Boolean);
+      if (!segs.length) return; // user/org root site
+      var repo = segs[0];
+      var prefix = '/' + repo + '/assets/';
+      var list = document.querySelectorAll('[src^="/assets/"], [href^="/assets/"], [poster^="/assets/"], link[rel="preload"][href^="/assets/"]');
+      list.forEach(function(el){
+        ['src','href','poster'].forEach(function(attr){
+          if (el.hasAttribute && el.hasAttribute(attr)) {
+            var v = el.getAttribute(attr);
+            if (v && v.indexOf('/assets/') === 0) {
+              el.setAttribute(attr, v.replace('/assets/', prefix));
+            }
+          }
+        });
+        // Handle srcset (images)
+        if (el.hasAttribute && el.hasAttribute('srcset')){
+          var ss = el.getAttribute('srcset').split(',').map(function(part){
+            var t = part.trim();
+            var url = t.split(/\s+/)[0];
+            var rest = t.slice(url.length);
+            if (url.indexOf('/assets/') === 0) url = url.replace('/assets/', prefix);
+            return url + rest;
+          }).join(', ');
+          el.setAttribute('srcset', ss);
+        }
+      });
+    } catch (e) {}
+  }
 
   function run(){
     ensureCloudsPlaceholder();
     var nodes = Array.from(document.querySelectorAll('[data-include]'));
     if (nodes.length === 0){
+      rewriteAbsoluteAssetPathsForGithubPages();
+      fixLogoHomeLinkForGithubPages();
       setActiveNav();
       return;
     }
@@ -149,6 +195,8 @@
        .then(function(){
          document.dispatchEvent(new CustomEvent('partials:loaded'));
          // header is now in DOM → we can safely set the active state
+         rewriteAbsoluteAssetPathsForGithubPages();
+         fixLogoHomeLinkForGithubPages();
          setActiveNav();
        });
   }
