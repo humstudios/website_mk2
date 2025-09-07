@@ -11,7 +11,7 @@
 @font-face {
   font-family: "Overpass";
   src: local("Overpass Regular"), local("Overpass-Regular"),
-       url("/assets/fonts/Overpass-Regular-400.woff2") format("woff2");
+       url("assets/fonts/Overpass-Regular-400.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -20,7 +20,7 @@
 @font-face {
   font-family: "Overpass";
   src: local("Overpass Italic"), local("Overpass-Italic"),
-       url("/assets/fonts/Overpass-Italic-400.woff2") format("woff2");
+       url("assets/fonts/Overpass-Italic-400.woff2") format("woff2");
   font-weight: 400;
   font-style: italic;
   font-display: swap;
@@ -29,7 +29,7 @@
 @font-face {
   font-family: "Overpass";
   src: local("Overpass Medium"), local("Overpass-Medium"),
-       url("/assets/fonts/Overpass-Medium-500.woff2") format("woff2");
+       url("assets/fonts/Overpass-Medium-500.woff2") format("woff2");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -38,7 +38,7 @@
 @font-face {
   font-family: "Overpass";
   src: local("Overpass SemiBold"), local("Overpass-SemiBold"),
-       url("/assets/fonts/Overpass-SemiBold-600.woff2") format("woff2");
+       url("assets/fonts/Overpass-SemiBold-600.woff2") format("woff2");
   font-weight: 600;
   font-style: normal;
   font-display: swap;
@@ -48,7 +48,7 @@
 @font-face {
   font-family: "Atma";
   src: local("Atma Bold"), local("Atma-Bold"),
-       url("/assets/fonts/Atma-Bold-700.woff2") format("woff2");
+       url("assets/fonts/Atma-Bold-700.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
