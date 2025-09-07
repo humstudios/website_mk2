@@ -800,3 +800,22 @@ body.turbo-swapping .container { animation: none !important; transform: none !im
 
 /* Homepage: extra space under the iPad animation */
 .ipad-embed.tuned { margin-block-end: var(--ipad-gap-bottom, 2rem); }
+
+
+
+/* =====================================================================
+   HOW‑TO VIDEO (single file target)
+   Apply radius + shadow ONLY to the video that contains
+   `assets/img/animation/howto-720-cropped.webm`. Other videos unaffected.
+   ===================================================================== */
+video:has(> source[src$="howto-720-cropped.webm"]) {
+  display: block;
+  width: 100%;
+  margin-inline: auto;
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-1);
+  background: #000;
+  
+  margin-block-end: 2em;
+  margin-bottom: 2em;
+}
