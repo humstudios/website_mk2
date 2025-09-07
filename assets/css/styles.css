@@ -11,6 +11,18 @@
  * while maintaining a clean, token-driven, mobile-first structure.
  */
 
+/* Mobile: hide desktop nav */
+@media (max-width: 47.999em) {
+  .top-nav { display: none !important; }
+}
+
+
+
+/* Stabilize layout width when vertical scrollbar appears (no left gutter) */
+html { scrollbar-gutter: stable; }
+
+
+
 /* =====================================================================
    01. TOKENS (CSS Custom Properties)
    ===================================================================== */
@@ -374,7 +386,7 @@ body.contact-page .registered-address { display: block; }
   width: var(--hamburger-size); height: var(--hamburger-bar-height); background-color: var(--nav-link);
   display: block; border-radius: 0.0625em; transition: all var(--transition-normal) var(--transition-ease);
 }
-.top-nav, .mobile-nav { display: none; }
+.mobile-nav { display: none; }
 .top-nav a, .mobile-nav a {
   display: flex; align-items: center; min-height: var(--min-touch-target); padding: var(--space-2);
   font-family: var(--font-sans); font-weight: 500; font-size: var(--font-size-nav); color: var(--nav-link);

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <html class="cards-light" lang="en">
-<head><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link rel="preload" as="image" href="assets/img/cardpics/Jess_wave.webp"><meta content="width=device-width, initial-scale=1" name="viewport"/>
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#000000">
 <title>Hum Studios | Contact</title>
@@ -19,20 +19,20 @@
 <!-- Site styles -->
 <!-- Turbo (ESM) -->
 <!-- Includes loader: injects header/footer marked with [data-include] -->
-<link rel="stylesheet" href="/assets/css/fonts.css">
-<link href="/assets/css/styles.css?v=accentfix" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/css/fonts.css">
+<link href="assets/css/styles.css?v=accentfix" rel="stylesheet"/>
 </head>
 <body class="contact-page">
 <a class="skip-link" href="#main">Skip to content</a>
 <!-- Permanent site backdrop (replaces body::before) -->
 <div aria-hidden="true" id="site-backdrop"></div>
 <!-- Decorative clouds (persistent across Turbo visits) -->
-<div aria-hidden="true" data-include="/partials/clouds.html" id="clouds"></div>
+<div aria-hidden="true" data-include="partials/clouds.html" id="clouds"></div>
 <div class="container">
 <header id="site-header">
 <div class="top-header">
-<a class="logo" href="/">
-<img alt="Hum Studios Logo" decoding="async" height="344" loading="eager" src="/assets/img/logos/weblogo03.png" width="614" draggable="false" />
+<a class="logo" href="index.html" >
+<img alt="Hum Studios Logo" decoding="async" height="344" loading="eager" src="assets/img/logos/weblogo03.png" width="614" draggable="false" />
 </a>
 <!-- Desktop Navigation -->
 <nav aria-label="Main" class="top-nav desktop">
@@ -71,14 +71,14 @@
 <main id="main" role="main">
 <section class="card">
 <h1>Contact Us</h1>
-<img height="1280" width="800" draggable="false" loading="lazy" decoding="async" alt="Jessie waves hello" class="card-cartoon" src="/assets/img/cardpics/Jess_wave.webp" />
+<img height="1280" width="800" draggable="false" decoding="async" alt="Jessie waves hello" class="card-cartoon" src="assets/img/cardpics/Jess_wave.webp" / loading="eager" fetchpriority="high" decoding="sync">
 <p>If you have any questions about our apps or stories, or if you need support, please use the form below. We’ll get back to you as soon as possible.</p>
 <!--
           FORM ACTION (relative for IONOS/local; GH Pages only for testing)
           - Set to './contact' which your server maps to an email handler.
           - No mailto fallback by design (production will always have a backend).
         -->
-<form action="/api/contact" id="contactForm" method="POST" novalidate="">
+<form action="api/contact" id="contactForm" method="POST" novalidate="">
 <label for="email">Email</label>
 <input aria-describedby="email-error" autocomplete="email" class="input" id="email" name="email" placeholder="you@example.com" required="" type="email"/>
 <div aria-live="polite" class="visually-hidden form-error" id="email-error" role="alert"></div>
@@ -101,13 +101,13 @@
 </section>
 </main>
 </div>
-<footer data-include="/partials/footer.html" role="contentinfo"></footer>
+<footer data-include="partials/footer.html" role="contentinfo"></footer>
 <!-- External scripts -->
 <!-- Site scripts (deferred) -->
-<script defer src="/assets/js/theme-toggle.clean.js"></script><script defer src="/assets/js/theme-color-sync.js"></script>
-<script defer src="/assets/js/hum-menu.clean.js"></script>
-<script defer src="/assets/js/widont.js"></script>
-<script defer src="/assets/js/includes.js"></script>
-<script defer src="/assets/js/contact-form.js"></script>
+<script defer src="assets/js/theme-toggle.clean.js"></script><script defer src="assets/js/theme-color-sync.js"></script>
+<script defer src="assets/js/hum-menu.clean.js"></script>
+<script defer src="assets/js/widont.js"></script>
+<script defer src="assets/js/includes.js"></script>
+<script defer src="assets/js/contact-form.js"></script>
 </body>
 </html>
