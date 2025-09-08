@@ -13,32 +13,52 @@ var onRequest = /* @__PURE__ */ __name2(async ({ request, env }) => {
   const email = String(form.get("email") || "").trim();
   const message = String(form.get("message") || "").trim();
   const token = String(form.get("cf-turnstile-response") || "");
+  const website = String(form.get("website") || "").trim();
+  if (website) {
+    return json({ ok: false, error: "bot-detected" }, 400);
+  }
   if (!name || !email || !message) {
-    return json({ ok: false, error: "Missing fields." }, 400);
+    return json({ ok: false, error: "missing-fields" }, 422);
   }
   if (!token) {
-    return json({ ok: false, error: "Missing Turnstile token." }, 400);
+    return json({ ok: false, error: "missing-token" }, 400);
   }
+  const ip = request.headers.get("CF-Connecting-IP") || "";
   const verifyRes = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({
       secret: env.TURNSTILE_SECRET || "",
       response: token,
-      remoteip: request.headers.get("CF-Connecting-IP") || ""
+      remoteip: ip
     })
   });
   const verify = await verifyRes.json().catch(() => ({}));
-  if (!verify.success) {
-    return json({ ok: false, error: "Turnstile verification failed." }, 400);
+  const expectedAction = "contact";
+  const requestHost = new URL(request.url).hostname;
+  const actionOk = !verify.action || verify.action === expectedAction;
+  const hostOk = !verify.hostname || verify.hostname === requestHost || verify.hostname.endsWith(".pages.dev");
+  if (!verify.success || !actionOk || !hostOk) {
+    return json({
+      ok: false,
+      error: "turnstile-failed",
+      data: {
+        success: verify.success ?? false,
+        action: verify.action ?? null,
+        hostname: verify.hostname ?? null,
+        "error-codes": verify["error-codes"] ?? null
+      }
+    }, 400);
   }
-  console.log("Contact form:", { name, email, message });
   return json({ ok: true });
 }, "onRequest");
 function json(body, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { "Content-Type": "application/json", "Cache-Control": "no-store" }
+    headers: {
+      "Content-Type": "application/json",
+      "Cache-Control": "no-store"
+    }
   });
 }
 __name(json, "json");

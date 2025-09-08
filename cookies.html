@@ -24,7 +24,6 @@
 <!-- Includes loader: injects header/footer marked with [data-include] -->
 <link rel="preload" as="font" href="assets/fonts/Overpass-Regular-400.woff2" type="font/woff2" crossorigin>
 <link rel="preload" as="font" href="assets/fonts/Atma-Bold-700.woff2"      type="font/woff2" crossorigin>
-<script src="assets/js/early-theme.session.js"></script>
 <link href="assets/css/styles.css?v=20250907" rel="stylesheet"/>
 </head>
 <body class="cookies-page theme-plain">
@@ -78,6 +77,9 @@
 <section class="card">
 <h1>Hum Studios Ltd Cookie Policy</h1>
 <img alt="Ms Whickersnap brandishes her baguettes" class="card-cartoon" src="assets/img/cardpics/MsW_baguettes.webp"/>
+<div id="manage-cookies" class="centered-cta">
+  <a href="#" id="manage-cookies-btn" class="btn">Change cookie settings</a>
+</div>
 <p><strong>Effective Date:</strong> 10th August 2025.</p>
 <p>This Cookie Policy explains how Hum Studios ("we", "our", or "us") uses cookies and similar technologies on our website (“the Website”). We are committed to protecting your privacy and being transparent about how and why we use cookies.</p>
 <h2>What Are Cookies?</h2>
@@ -114,8 +116,10 @@
     Safer implementation: only apply when the element has no child elements.
   -->
 <!-- Site scripts (deferred) -->
-<script defer="True" src="assets/js/includes.js"></script><script defer="True" src="assets/js/theme-toggle.session.js"></script><script defer="True" src="assets/js/theme-color-sync.js"></script>
-<script defer="True" src="assets/js/hum-menu.clean.js"></script>
+<script defer src="assets/js/includes.js"></script><script defer src="assets/js/theme-toggle.clean.js"></script><script defer src="assets/js/theme-color-sync.js"></script>
+<script defer src="assets/js/hum-menu.clean.js"></script>
 <script defer src="assets/js/headline-smart-wrap.js" data-selector=".card h1, .card h2, .card h3" data-glue="a|an|the|to|of|in|on|at|for|and|or|vs" data-wbr-after="/–—:"></script>
+  <script defer src="assets/js/consent.js"></script>
+  <script defer src="assets/js/consent-bind.js"></script>
 </body>
 </html>

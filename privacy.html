@@ -24,7 +24,6 @@
 <!-- Includes loader: injects header/footer marked with [data-include] -->
 <link rel="preload" as="font" href="assets/fonts/Overpass-Regular-400.woff2" type="font/woff2" crossorigin>
 <link rel="preload" as="font" href="assets/fonts/Atma-Bold-700.woff2"      type="font/woff2" crossorigin>
-<script src="assets/js/early-theme.session.js"></script>
 <link href="assets/css/styles.css?v=20250907" rel="stylesheet"/>
 </head>
 <body class="privacy-page theme-plain">
@@ -38,7 +37,7 @@
 <header id="site-header">
 <div class="top-header">
 <a class="logo" href="index.html" >
-<img alt="Hum Studios Logo" decoding="async" height="344" loading="eager" src="assets/img/logos/weblogo03.png" width="614"/ draggable="false">
+<img alt="Hum Studios Logo" decoding="async" height="344" loading="eager" src="assets/img/logos/weblogo03.png" width="614" draggable="false">
 </a>
 <!-- Desktop Navigation -->
 <nav aria-label="Main" class="top-nav desktop">
@@ -154,8 +153,9 @@
     Safer implementation: only apply when the element has no child elements.
   -->
 <!-- Site scripts (deferred) -->
-<script defer src="assets/js/includes.js"></script><script defer src="assets/js/theme-toggle.session.js"></script><script defer src="assets/js/theme-color-sync.js"></script>
+<script defer src="assets/js/includes.js"></script><script defer src="assets/js/theme-toggle.clean.js"></script><script defer src="assets/js/theme-color-sync.js"></script>
 <script defer src="assets/js/hum-menu.clean.js"></script>
 <script defer src="assets/js/headline-smart-wrap.js" data-selector=".card h1, .card h2, .card h3" data-glue="a|an|the|to|of|in|on|at|for|and|or|vs" data-wbr-after="/–—:"></script>
+  <script defer src="assets/js/consent.js"></script>
 </body>
 </html>
