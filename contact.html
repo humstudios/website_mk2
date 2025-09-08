@@ -74,7 +74,7 @@
 <main id="main" role="main">
 <section class="card">
 <h1>Contact Us</h1>
-<img height="1280" width="800" draggable="false" decoding="async" alt="Jessie waves hello" class="card-cartoon" src="assets/img/cardpics/Jess_wave.webp" / loading="eager" fetchpriority="high" decoding="sync">
+<img height="1280" width="800" draggable="false" alt="Jessie waves hello" class="card-cartoon" src="assets/img/cardpics/Jess_wave.webp" decoding="async" loading="eager" fetchpriority="high">
 <p>If you have any questions about our apps or stories, or if you need support, please use the form below. We’ll get back to you as soon as possible.</p>
 <!--
           FORM ACTION (relative for IONOS/local; GH Pages only for testing)
@@ -109,8 +109,9 @@
 <!-- Site scripts (deferred) -->
 <script defer src="assets/js/theme-toggle.clean.js"></script><script defer src="assets/js/theme-color-sync.js"></script>
 <script defer src="assets/js/hum-menu.clean.js"></script>
-<script defer src="assets/js/widont.js"></script>
+<script defer src="assets/js/headline-smart-wrap.js" data-selector=".card h1, .card h2, .card h3" data-glue="a|an|the|to|of|in|on|at|for|and|or|vs" data-wbr-after="/–—:"></script>
 <script defer src="assets/js/includes.js"></script>
 <script defer src="assets/js/contact-form.js"></script>
+  <script defer src="assets/js/consent.js"></script>
 </body>
 </html>

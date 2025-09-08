@@ -1,7 +1,7 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
 
-// ../.wrangler/tmp/pages-RhaABp/functionsWorker-0.45405070594466124.mjs
+// ../.wrangler/tmp/pages-lvqdKN/functionsWorker-0.45065947724549993.mjs
 var __defProp2 = Object.defineProperty;
 var __name2 = /* @__PURE__ */ __name((target, value) => __defProp2(target, "name", { value, configurable: true }), "__name");
 var onRequest = /* @__PURE__ */ __name2(async ({ request, env }) => {
@@ -13,32 +13,52 @@ var onRequest = /* @__PURE__ */ __name2(async ({ request, env }) => {
   const email = String(form.get("email") || "").trim();
   const message = String(form.get("message") || "").trim();
   const token = String(form.get("cf-turnstile-response") || "");
+  const website = String(form.get("website") || "").trim();
+  if (website) {
+    return json({ ok: false, error: "bot-detected" }, 400);
+  }
   if (!name || !email || !message) {
-    return json({ ok: false, error: "Missing fields." }, 400);
+    return json({ ok: false, error: "missing-fields" }, 422);
   }
   if (!token) {
-    return json({ ok: false, error: "Missing Turnstile token." }, 400);
+    return json({ ok: false, error: "missing-token" }, 400);
   }
+  const ip = request.headers.get("CF-Connecting-IP") || "";
   const verifyRes = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({
       secret: env.TURNSTILE_SECRET || "",
       response: token,
-      remoteip: request.headers.get("CF-Connecting-IP") || ""
+      remoteip: ip
     })
   });
   const verify = await verifyRes.json().catch(() => ({}));
-  if (!verify.success) {
-    return json({ ok: false, error: "Turnstile verification failed." }, 400);
+  const expectedAction = "contact";
+  const requestHost = new URL(request.url).hostname;
+  const actionOk = !verify.action || verify.action === expectedAction;
+  const hostOk = !verify.hostname || verify.hostname === requestHost || verify.hostname.endsWith(".pages.dev");
+  if (!verify.success || !actionOk || !hostOk) {
+    return json({
+      ok: false,
+      error: "turnstile-failed",
+      data: {
+        success: verify.success ?? false,
+        action: verify.action ?? null,
+        hostname: verify.hostname ?? null,
+        "error-codes": verify["error-codes"] ?? null
+      }
+    }, 400);
   }
-  console.log("Contact form:", { name, email, message });
   return json({ ok: true });
 }, "onRequest");
 function json(body, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { "Content-Type": "application/json", "Cache-Control": "no-store" }
+    headers: {
+      "Content-Type": "application/json",
+      "Cache-Control": "no-store"
+    }
   });
 }
 __name(json, "json");
@@ -754,7 +774,7 @@ var jsonError2 = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx
 }, "jsonError");
 var middleware_miniflare3_json_error_default2 = jsonError2;
 
-// .wrangler/tmp/bundle-m9eOBj/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-KUSUIh/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__2 = [
   middleware_ensure_req_body_drained_default2,
   middleware_miniflare3_json_error_default2
@@ -786,7 +806,7 @@ function __facade_invoke__2(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__2, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-m9eOBj/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-KUSUIh/middleware-loader.entry.ts
 var __Facade_ScheduledController__2 = class ___Facade_ScheduledController__2 {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
@@ -886,4 +906,4 @@ export {
   __INTERNAL_WRANGLER_MIDDLEWARE__2 as __INTERNAL_WRANGLER_MIDDLEWARE__,
   middleware_loader_entry_default2 as default
 };
-//# sourceMappingURL=functionsWorker-0.45405070594466124.js.map
+//# sourceMappingURL=functionsWorker-0.45065947724549993.js.map

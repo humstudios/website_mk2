@@ -29,7 +29,7 @@
 
   // Build regex helpers
   // Inline glue pattern: (start|space)(word-from-list)(spaces+) → keep $1 then word + NBSP
-  const GLUE_INLINE_RE = new RegExp('(\\b(?:' + GLUE_LIST + ')\\b)\s+', 'gi');
+  const GLUE_INLINE_RE = new RegExp('(\\b(?:' + GLUE_LIST + ')\\b)\\s+', 'gi');
   // We also use this for strict per-token checks if needed
   const GLUE_WORDS_RE = new RegExp('^(?:' + GLUE_LIST + ')$', 'i');
   // Character class for <wbr> insertion
