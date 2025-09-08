@@ -826,7 +826,9 @@ video:has(> source[src$="howto-720-cropped.webm"]) {
 
 
 /* Cookie banner: ensure buttons above the text (robust to markup order) */
-.cookie-banner__inner { flex-direction: column; }
+.cookie-banner__inner {
+  margin-inline: auto;
+  width: min(var(--content-max), 95%); flex-direction: column; }
 .cookie-banner__actions { order: -1; }
 .cookie-banner__inner p { order: 0; margin: 0;   color: #FFFCF5 !important;
 }
@@ -845,8 +847,9 @@ video:has(> source[src$="howto-720-cropped.webm"]) {
   box-shadow: 0 -8px 24px rgba(0,0,0,0.18);
  color: #FFFCF5 !important; }
 
-.cookie-banner__inner { 
-  max-width: var(--container-max, 72rem);
+.cookie-banner__inner {
+  margin-inline: auto; 
+  max-width: min(var(--content-max), 95%);
   margin: 0 auto;
   padding: var(--space-3, .75rem) var(--container-padding-x, 1rem);
   display: flex;
@@ -898,7 +901,8 @@ html[data-theme="dark"] .cookie-banner {
  color: #FFFCF5 !important; }
 
 .cookie-banner__inner {
-  max-width: var(--container-max, 72rem);
+  margin-inline: auto;
+  max-width: min(var(--content-max), 95%);
   margin: 0 auto;
   display: flex;
   flex-direction: column;      /* buttons on top, text below */
