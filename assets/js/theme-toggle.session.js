@@ -1,83 +1,75 @@
-// theme-toggle.session.js
-// Accessible theme toggle that **does not persist across visits**.
-// - Default is 'light' on every new visit.
-// - Stores choice in sessionStorage('display-mode') only.
-// - Applies html[data-theme="light"|"dark"].
-// - Broadcasts via BroadcastChannel for cross-tab sync (no persistence).
+/* Theme toggle (idempotent + GH Pages + async header)
+   - Default to light; persist manual choice (localStorage)
+   - Delegated click handler (works even if header is injected later)
+   - Syncs <meta name="color-scheme"> and button UI
+   - Safe if included multiple times (guards against double-binding)
+*/
 (function () {
+  'use strict';
+  if (window.__themeToggleInit) return;
+  window.__themeToggleInit = true;
+
+  var KEY = 'theme';
   var root = document.documentElement;
-  var BTN_ID = 'theme-toggle';
-  var KEY = 'display-mode'; // 'light' | 'dark'
+  var meta = document.querySelector('meta[name="color-scheme"]');
 
-  // Clear any old localStorage preference on init (we only use session)
-  try { localStorage.removeItem(KEY); } catch (e) {}
-
-  var bc = null;
-  try { bc = new BroadcastChannel('theme'); } catch (e) {}
-
-  function apply(mode, btn) {
-    var m = (mode === 'dark') ? 'dark' : 'light';
-    root.setAttribute('data-theme', m);
-    if (btn) {
-      btn.setAttribute('aria-pressed', String(m === 'dark'));
-      btn.title = m === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
-    }
-    try { document.dispatchEvent(new CustomEvent('theme:changed', { detail: { mode: m } })); } catch(e){}
+  function apply(theme) {
+    root.setAttribute('data-theme', theme);
+    if (meta) meta.setAttribute('content', theme === 'dark' ? 'dark light' : 'light dark');
+    syncButtons(theme);
   }
 
-  function save(mode) {
-    try { sessionStorage.setItem(KEY, mode); } catch(e) {}
-    if (bc) { try { bc.postMessage(mode); } catch(e) {} }
-  }
-
-  function current() {
-    return (root.getAttribute('data-theme') === 'dark') ? 'dark' : 'light';
-  }
-
-  function readSaved() {
+  function getSaved() {
     try {
-      var v = sessionStorage.getItem(KEY);
+      var v = localStorage.getItem(KEY);
       if (v === 'dark' || v === 'light') return v;
-    } catch(e){}
-    return 'light';
+    } catch (e) {}
+    return 'light'; // default on first visit
   }
 
-  function toggle() {
-    var next = current() === 'dark' ? 'light' : 'dark';
-    save(next);
-    apply(next, document.getElementById(BTN_ID));
-  }
-
-  function init() {
-    var btn = document.getElementById(BTN_ID);
-    // Reflect any session choice (defaults to light)
-    apply(readSaved(), btn);
-    if (btn && !btn.__themeBound) {
-      btn.addEventListener('click', toggle);
-      btn.__themeBound = true;
-    }
-    if (bc) {
-      bc.onmessage = function (ev) {
-        var mode = ev && ev.data;
-        if (mode === 'dark' || mode === 'light') {
-          apply(mode, document.getElementById(BTN_ID));
+  function syncButtons(theme) {
+    var pressed = theme === 'dark';
+    var title = pressed ? 'Dark mode' : 'Light mode';
+    var nodes = document.querySelectorAll('[data-theme-toggle], #theme-toggle');
+    nodes.forEach(function (btn) {
+      try {
+        if (btn.tagName === 'INPUT' && btn.type && btn.type.toLowerCase() === 'checkbox') {
+          btn.checked = pressed;
         }
-      };
+        btn.setAttribute('aria-pressed', String(pressed));
+        btn.setAttribute('title', title);
+        btn.dataset.themeState = theme;
+        btn.classList.toggle('is-dark', pressed);
+        btn.classList.toggle('is-light', !pressed);
+      } catch (e) {}
+    });
+  }
+
+  // Apply saved theme immediately and sync controls
+  apply(getSaved());
+
+  // Delegated click handler (survives async includes/header injection)
+  function onClick(e) {
+    var btn = e.target && e.target.closest && (e.target.closest('[data-theme-toggle]') || e.target.closest('#theme-toggle'));
+    if (!btn) return;
+    var next = (root.getAttribute('data-theme') === 'dark') ? 'light' : 'dark';
+    apply(next);
+    try { localStorage.setItem(KEY, next); } catch (e) {}
+  }
+  document.addEventListener('click', onClick, true);
+
+  // Keep multiple tabs in sync
+  window.addEventListener('storage', function (ev) {
+    if (ev && ev.key === KEY && (ev.newValue === 'light' || ev.newValue === 'dark')) {
+      apply(ev.newValue);
     }
-  }
+  });
 
-  // Public API
-  window.Theme = {
-    init: init,
-    toggle: toggle,
-    set: function(m){ save(m); apply(m, document.getElementById(BTN_ID)); },
-    get: current,
-    reset: function(){ try { sessionStorage.removeItem(KEY); } catch(e){} apply('light', document.getElementById(BTN_ID)); }
-  };
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
+  // If the header/toggle is injected later, keep the UI in sync
+  var mo = new MutationObserver(function () {
+    if (document.querySelector('[data-theme-toggle], #theme-toggle')) {
+      syncButtons(root.getAttribute('data-theme') || 'light');
+    }
+  });
+  mo.observe(document.documentElement, { subtree: true, childList: true });
 })();
