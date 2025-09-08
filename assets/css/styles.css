@@ -818,4 +818,13 @@ video:has(> source[src$="howto-720-cropped.webm"]) {
   
   margin-block-end: 2em;
   margin-bottom: 2em;
+
+  max-width: 75%; /* shrink to ~75% on larger screens */
+}
+
+
+@media (max-width: 40em) {
+  video:has(> source[src$="howto-720-cropped.webm"]) {
+    max-width: 100%; /* full width on small screens */
+  }
 }
