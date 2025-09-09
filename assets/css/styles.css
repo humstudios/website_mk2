@@ -397,6 +397,40 @@ footer::before {
 .registered-address { display: none; font-style: normal; }
 body.contact-page .registered-address { display: block; }
 
+
+/* --- Footer sizing tweaks (mobile) ---------------------------------------
+   Reduce overall footer height on small screens without harming tap targets.
+   Applies only at <=480px. Desktop/tablet remain unchanged.
+--------------------------------------------------------------------------- */
+@media (max-width: 480px) {
+  footer {
+    padding-top: var(--space-3);
+    padding-bottom: var(--space-4);
+  }
+  .footer-inner {
+    gap: var(--space-1);
+  }
+  .footer-links a {
+    padding: var(--space-1);
+    min-height: 2.25em; /* was var(--min-touch-target) ~2.75em */
+  }
+  .footer-social {
+    gap: var(--space-1);
+  }
+  .footer-social a {
+    padding: var(--space-1);
+    min-width: 2.25em;
+    min-height: 2.25em;
+  }
+  .footer-social img {
+    width: clamp(2.1em, 6vw, 2.5em);
+    height: auto;
+  }
+  .footer-legal {
+    margin-top: var(--space-2);
+  }
+}
+
 /* =====================================================================
    04. COMPONENTS
    ===================================================================== */
