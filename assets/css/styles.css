@@ -397,40 +397,6 @@ footer::before {
 .registered-address { display: none; font-style: normal; }
 body.contact-page .registered-address { display: block; }
 
-
-/* --- Footer sizing tweaks (mobile) ---------------------------------------
-   Reduce overall footer height on small screens without harming tap targets.
-   Applies only at <=480px. Desktop/tablet remain unchanged.
---------------------------------------------------------------------------- */
-@media (max-width: 480px) {
-  footer {
-    padding-top: var(--space-3);
-    padding-bottom: var(--space-4);
-  }
-  .footer-inner {
-    gap: var(--space-1);
-  }
-  .footer-links a {
-    padding: var(--space-1);
-    min-height: 2.25em; /* was var(--min-touch-target) ~2.75em */
-  }
-  .footer-social {
-    gap: var(--space-1);
-  }
-  .footer-social a {
-    padding: var(--space-1);
-    min-width: 2.25em;
-    min-height: 2.25em;
-  }
-  .footer-social img {
-    width: clamp(2.1em, 6vw, 2.5em);
-    height: auto;
-  }
-  .footer-legal {
-    margin-top: var(--space-2);
-  }
-}
-
 /* =====================================================================
    04. COMPONENTS
    ===================================================================== */
@@ -549,37 +515,6 @@ body.contact-page .registered-address { display: block; }
 .top-nav a[href*="privacy" i]::before, .mobile-nav a[href*="privacy" i]::before, .top-nav a[data-nav="privacy"]::before, .mobile-nav a[data-nav="privacy"]::before { -webkit-mask: var(--icon-shield) no-repeat 50% / contain; mask: var(--icon-shield) no-repeat 50% / contain; }
 .top-nav a[href*="cookie" i]::before, .mobile-nav a[href*="cookie" i]::before, .top-nav a[data-nav="cookies"]::before, .mobile-nav a[data-nav="cookies"]::before { -webkit-mask: var(--icon-cookie) no-repeat 50% / contain; mask: var(--icon-cookie) no-repeat 50% / contain; }
 :dir(rtl) .top-nav a[href*="home" i]::before, :dir(rtl) .mobile-nav a[href*="home" i]::before { margin-left: var(--nav-icon-gap); margin-right: 0; }
-
-
-/* --- iOS Safari pushdown menu blue-line fix (touch-only) -------------------
-   Prevents the transient blue underline that appears after tapping a nav link
-   on iPhone by neutralizing focus/active decorations on *touch* devices only.
-   Keyboard users (desktop) still see proper :focus-visible styles.
----------------------------------------------------------------------------- */
-.top-nav a,
-.mobile-nav a {
-  -webkit-tap-highlight-color: transparent;
-}
-@media (hover: none) and (pointer: coarse) {
-  .top-nav a:focus,
-  .top-nav a:active,
-  .mobile-nav a:focus,
-  .mobile-nav a:active,
-  .mobile-nav:is(.pushdown, [data-behavior="pushdown"]) a:focus,
-  .mobile-nav:is(.pushdown, [data-behavior="pushdown"]) a:active {
-    outline: none !important;
-    box-shadow: none !important;
-    text-decoration: none !important;
-    border: 0 !important;
-    background: transparent !important;
-  }
-  .top-nav a:focus::after,
-  .top-nav a:active::after,
-  .mobile-nav a:focus::after,
-  .mobile-nav a:active::after {
-    content: none !important;
-  }
-}
 
 /* --- Hero Section --- */
 .hero-headline {
@@ -1013,4 +948,37 @@ html[data-theme="dark"] .cookie-banner {
 }
 .cookie-banner .btn:hover,
 .cookie-banner .btn:focus-visible { filter: brightness(0.82); }
+
+
+/* === Footer compact spacing (strong override) ============================
+   Halve the space above/below footer content. Uses !important to beat any
+   earlier media-query padding rules and preserves iPhone safe-area.
+=========================================================================== */
+footer { 
+  padding-top: var(--space-1) !important;
+  padding-bottom: max(var(--space-2), env(safe-area-inset-bottom)) !important;
+}
+@media (min-width: 48em) {
+  footer { 
+    padding-top: var(--space-2) !important;
+    padding-bottom: var(--space-3) !important;
+  }
+}
+
+/* Bring the legal line closer to links/icons */
+.footer-legal { margin-top: var(--space-1) !important; }
+
+
+/* === Footer footprint reductions (desktop priority) ======================
+   Shrink row heights for links/icons on wider screens, keep mobile accessible.
+=========================================================================== */
+@media (min-width: 48em) {
+  /* Smaller row height baseline inside footer */
+  footer { --min-touch-target: 2.0em; } /* ~32–36px depending on base size */
+  /* Trim link paddings */
+  .footer-links a { padding: var(--space-1) !important; }
+  .footer-social a { padding: var(--space-1) !important; }
+  /* Bring legal closer */
+  .footer-legal { margin-top: var(--space-1) !important; }
+}
 

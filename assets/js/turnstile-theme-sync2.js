@@ -11,22 +11,10 @@
     return (root.getAttribute('data-theme') === 'dark') ? 'dark' : 'light';
   }
 
-  function desiredSize(el){
-    try {
-      var w = Math.max(0, el.getBoundingClientRect().width || 0);
-      var vw = Math.max(0, document.documentElement.clientWidth || window.innerWidth || 0);
-      // Use compact if the space we have (or the viewport) is tight.
-      if (w && w < 300) return 'compact';
-      if (vw && vw <= 360) return 'compact';
-    } catch(e){}
-    return 'normal';
-  }
-
   function getOptionsFrom(el) {
     var opts = {
       sitekey: el.getAttribute('data-sitekey') || '',
-      theme: currentTheme(),
-      size: desiredSize(el)
+      theme: currentTheme()
     };
     var action = el.getAttribute('data-action');
     if (action) opts.action = action;
@@ -98,14 +86,7 @@
 
     // Custom event hook (dispatchEvent(new Event('theme:changed')))
     document.addEventListener('theme:changed', renderAll);
-    
-    // Re-render on viewport size changes
-    var _rsTimer; 
-    function _queueResize(){ clearTimeout(_rsTimer); _rsTimer = setTimeout(renderAll, 150); }
-    window.addEventListener('resize', _queueResize);
-    window.addEventListener('orientationchange', _queueResize);
-    
-  window.addEventListener('pageshow', renderAll);
+    window.addEventListener('pageshow', renderAll);
   }
 
   // Start once Turnstile API is ready (explicit mode)
