@@ -7,7 +7,7 @@
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFCF5">
 <meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#0b1220">
 <title>Hum Studios | Contact</title>
-<script async="" defer src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script>
+<script async="" defer src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"></script>
 <meta content="Contact Hum Studios for questions about our interactive stories and digital picture books." name="description"/>
 <!-- Color scheme & theme colors for browser UI -->
 <!-- Favicons (all relative for GH Pages, IONOS, and local) -->
@@ -97,7 +97,7 @@
 <input autocomplete="off" id="website" name="website" tabindex="-1" type="text"/>
 </div>
 <!-- Cloudflare Turnstile -->
-<div class="cf-turnstile" data-action="contact" data-callback="enableSubmit" data-sitekey="0x4AAAAAABzCutgVX0rn7kxw" data-theme="light">
+<div class="cf-turnstile" data-action="contact" data-callback="enableSubmit" data-sitekey="0x4AAAAAABzCutgVX0rn7kxw">
 </div>
 <button class="btn" disabled="" id="submit-button" type="submit">Send Message</button>
 </form>
@@ -107,7 +107,9 @@
 <footer data-include="partials/footer.html" role="contentinfo"></footer>
 <!-- External scripts -->
 <!-- Site scripts (deferred) -->
-<script defer src="assets/js/theme-toggle.session.js"></script><script defer src="assets/js/theme-color-sync.js"></script>
+<script defer src="assets/js/theme-toggle.session.js"></script><script defer src="assets/js/theme-color-sync.js">
+<script defer src="assets/js/turnstile-theme-sync.js"></script>
+</script>
 <script defer src="assets/js/hum-menu.clean.js"></script>
 <script defer src="assets/js/headline-smart-wrap.js" data-selector=".card h1, .card h2, .card h3" data-glue="a|an|the|to|of|in|on|at|for|and|or|vs" data-wbr-after="/–—:"></script>
 <script defer src="assets/js/includes.js"></script>
