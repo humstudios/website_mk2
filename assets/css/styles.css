@@ -516,6 +516,37 @@ body.contact-page .registered-address { display: block; }
 .top-nav a[href*="cookie" i]::before, .mobile-nav a[href*="cookie" i]::before, .top-nav a[data-nav="cookies"]::before, .mobile-nav a[data-nav="cookies"]::before { -webkit-mask: var(--icon-cookie) no-repeat 50% / contain; mask: var(--icon-cookie) no-repeat 50% / contain; }
 :dir(rtl) .top-nav a[href*="home" i]::before, :dir(rtl) .mobile-nav a[href*="home" i]::before { margin-left: var(--nav-icon-gap); margin-right: 0; }
 
+
+/* --- iOS Safari pushdown menu blue-line fix (touch-only) -------------------
+   Prevents the transient blue underline that appears after tapping a nav link
+   on iPhone by neutralizing focus/active decorations on *touch* devices only.
+   Keyboard users (desktop) still see proper :focus-visible styles.
+---------------------------------------------------------------------------- */
+.top-nav a,
+.mobile-nav a {
+  -webkit-tap-highlight-color: transparent;
+}
+@media (hover: none) and (pointer: coarse) {
+  .top-nav a:focus,
+  .top-nav a:active,
+  .mobile-nav a:focus,
+  .mobile-nav a:active,
+  .mobile-nav:is(.pushdown, [data-behavior="pushdown"]) a:focus,
+  .mobile-nav:is(.pushdown, [data-behavior="pushdown"]) a:active {
+    outline: none !important;
+    box-shadow: none !important;
+    text-decoration: none !important;
+    border: 0 !important;
+    background: transparent !important;
+  }
+  .top-nav a:focus::after,
+  .top-nav a:active::after,
+  .mobile-nav a:focus::after,
+  .mobile-nav a:active::after {
+    content: none !important;
+  }
+}
+
 /* --- Hero Section --- */
 .hero-headline {
   max-width: 28ch; margin: 0 auto var(--hero-gap-bottom); font-family: var(--font-display); font-size: var(--font-size-hero);
