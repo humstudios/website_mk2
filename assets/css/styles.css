@@ -659,9 +659,7 @@ html[data-theme="dark"] {
 }
 html[data-theme="dark"] .card { background: var(--card-bg); border-color: var(--card-border); color: var(--text-strong); }
 html[data-theme="dark"] .card:nth-of-type(even):not(.card--hero-placeholder) { background: var(--card-alt-bg); }
-html[data-theme="dark"] .card h1,
-html[data-theme="dark"] .card h2,
-html[data-theme="dark"] .card h3 { color: inherit; }
+
 html[data-theme="dark"] .card::after { opacity: 0.25; mix-blend-mode: soft-light; }
 html[data-theme="dark"] .card--light { background: var(--light-card-bg); border-color: var(--light-card-border); color: var(--light-card-fg); color-scheme: light; }
 html[data-theme="dark"] .mobile-nav:not(:is(.pushdown, [data-behavior="pushdown"])) { background: var(--card-bg); border-color: var(--card-border); }
@@ -950,35 +948,59 @@ html[data-theme="dark"] .cookie-banner {
 .cookie-banner .btn:focus-visible { filter: brightness(0.82); }
 
 
-/* === Footer compact spacing (strong override) ============================
-   Halve the space above/below footer content. Uses !important to beat any
-   earlier media-query padding rules and preserves iPhone safe-area.
+/* === AUTHORITATIVE OVERRIDES [2025-09-09 18:37:45] ================================
+   - Enforce dark-mode text + heading colours (brand values)
+   - Ensure bigger spacing when body text is followed by next heading
+   These appear last and use !important to defeat earlier conflicts.
 =========================================================================== */
-footer { 
-  padding-top: var(--space-1) !important;
-  padding-bottom: max(var(--space-2), env(safe-area-inset-bottom)) !important;
+
+/* Dark mode colours */
+html[data-theme="dark"] {
+  --text: #F3EFE6;
+  --text-strong: #F3EFE6;
+  --color-heading: #FFFCF5;
+  --text-muted: #CFCAC0;
+}
+html[data-theme="dark"] body { color: var(--text-strong) !important; }
+
+/* Headings (global and inside cards) */
+html[data-theme="dark"] h1,
+html[data-theme="dark"] h2,
+html[data-theme="dark"] h3,
+html[data-theme="dark"] h4 { color: var(--color-heading) !important; }
+html[data-theme="dark"] .card h1,
+html[data-theme="dark"] .card h2,
+html[data-theme="dark"] .card h3,
+html[data-theme="dark"] .card h4 { color: var(--color-heading) !important; }
+
+/* Bigger gap when body text is followed by a heading */
+:where(.card, .section-content, .prose) :is(p, ul, ol, blockquote, figure) + :is(h1, h2, h3, h4) {
+  margin-block-start: calc(var(--flow-space, var(--space-3)) + var(--space-1)) !important;
 }
 @media (min-width: 48em) {
-  footer { 
-    padding-top: var(--space-2) !important;
-    padding-bottom: var(--space-3) !important;
+  :where(.card, .section-content, .prose) :is(p, ul, ol, blockquote, figure) + :is(h1, h2, h3, h4) {
+    margin-block-start: calc(var(--flow-space, var(--space-4)) + var(--space-1)) !important;
   }
 }
 
-/* Bring the legal line closer to links/icons */
-.footer-legal { margin-top: var(--space-1) !important; }
 
+/* === THEMES: Dark mode text & headings (no !important) — 2025-09-09 18:44:21 ======== */
+html[data-theme="dark"] {
+  --text: #F3EFE6;
+  --text-strong: #F3EFE6;
+  --color-heading: #FFFCF5;
+  --text-muted: #CFCAC0;
+}
+html[data-theme="dark"] :is(h1,h2,h3,h4) { color: var(--color-heading); }
+html[data-theme="dark"] .card :is(h1,h2,h3,h4) { color: var(--color-heading); }
 
-/* === Footer footprint reductions (desktop priority) ======================
-   Shrink row heights for links/icons on wider screens, keep mobile accessible.
-=========================================================================== */
+/* === TYPOGRAPHY: bigger gap when body text is followed by a heading ====== */
+:where(.card, .section-content, .prose) :is(p, ul, ol, blockquote, figure) + :is(h1, h2, h3, h4) {
+  margin-block-start: calc(var(--flow-space, var(--space-3)) + var(--space-1));
+}
 @media (min-width: 48em) {
-  /* Smaller row height baseline inside footer */
-  footer { --min-touch-target: 2.0em; } /* ~32–36px depending on base size */
-  /* Trim link paddings */
-  .footer-links a { padding: var(--space-1) !important; }
-  .footer-social a { padding: var(--space-1) !important; }
-  /* Bring legal closer */
-  .footer-legal { margin-top: var(--space-1) !important; }
+  :where(.card, .section-content, .prose) :is(p, ul, ol, blockquote, figure) + :is(h1, h2, h3, h4) {
+    margin-block-start: calc(var(--flow-space, var(--space-4)) + var(--space-1));
+  }
 }
 
