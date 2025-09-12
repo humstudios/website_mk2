@@ -1,6 +1,15 @@
 (function(){
   'use strict';
 
+// --- animation hold to prevent first-paint flash ---
+try {
+  var __root = document.documentElement;
+  if (!__root.hasAttribute('data-anim')) {
+    __root.setAttribute('data-anim', 'hold');
+  }
+} catch (e) {}
+
+
   // -------- path helpers --------
   function normalizePath(href){
     try {
@@ -177,6 +186,14 @@
     } catch (e) {}
   }
 
+function __startAnimationsSoon(){
+  try {
+    requestAnimationFrame(function(){
+      document.documentElement.setAttribute('data-anim', 'run');
+    });
+  } catch (e) {}
+}
+
   function run(){
     ensureCloudsPlaceholder();
     var nodes = Array.from(document.querySelectorAll('[data-include]'));
@@ -184,6 +201,7 @@
       rewriteAbsoluteAssetPathsForGithubPages();
       fixLogoHomeLinkForGithubPages();
       setActiveNav();
+      __startAnimationsSoon();
       return;
     }
     var headerNodes = nodes.filter(function(n){ return /header\.html$/i.test(n.getAttribute('data-include')||''); });
@@ -198,6 +216,7 @@
          rewriteAbsoluteAssetPathsForGithubPages();
          fixLogoHomeLinkForGithubPages();
          setActiveNav();
+         __startAnimationsSoon();
        });
   }
 

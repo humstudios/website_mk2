@@ -1,48 +1,66 @@
+/*! consent-bind.js — Hum Studios (2025-09-12)
+ *  Binds page controls to the Consent API provided by consent.js.
+ *  - Wires "Change settings" buttons/links
+ *  - Auto-opens the banner on cookies.html
+ *  - Supports ?consent=open for quick testing
+ */
 (function(){
-  function openBanner(){
-    try {
-      if (window.Consent && typeof window.Consent.show === 'function') {
-        window.Consent.show();
-        return true;
-      }
-    } catch (e) {}
-    return false;
-  }
+  'use strict';
 
-  function invokeWithRetry(){
-    if (openBanner()) return;
-    var start = Date.now();
-    (function retry(){
-      if (openBanner() || Date.now() - start > 3000) return;
-      setTimeout(retry, 100);
-    })();
-  }
-
-  function onClick(e){
-    var target = e.target && (e.target.closest ? e.target.closest('#manage-cookies-btn, [data-action="open-cookies"]') : null);
-    if (!target) return;
-    e.preventDefault();
-    invokeWithRetry();
-  }
-
-  // Event delegation covers SPA swaps and late-loaded DOM
-  document.addEventListener('click', onClick, true);
-
-  // Also bind directly when possible (MPA + faster response)
-  function bindDirect(){
-    var el = document.getElementById('manage-cookies-btn');
-    if (el && !el.__cookiesBound){
-      el.__cookiesBound = true;
-      el.addEventListener('click', function(e){ e.preventDefault(); invokeWithRetry(); }, true);
+  function openConsent() {
+    if (window.Consent && typeof window.Consent.show === 'function') {
+      window.Consent.show();
+    } else {
+      // Defer until consent.js is ready
+      document.addEventListener('consent:ready', function(){ 
+        try { window.Consent && window.Consent.show && window.Consent.show(); } catch(e){} 
+      }, { once: true });
+      // As a fallback, fire the event hook consent.js listens for
+      try { document.dispatchEvent(new Event('consent:show')); } catch(e){}
     }
   }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', bindDirect);
-  } else {
-    bindDirect();
+
+  function bind() {
+    // Click targets that should open the banner
+    var sel = [
+      '#manage-cookies-btn',
+      '#change-settings',
+      '#cookie-settings',
+      '[data-action="open-consent"]',
+      'a[href="#manage-cookies"]'
+    ].join(',');
+
+    document.querySelectorAll(sel).forEach(function(el){
+      el.addEventListener('click', function(ev){
+        ev.preventDefault();
+        openConsent();
+      }, { passive: false });
+    });
+
+    // Auto-open on the dedicated cookies policy page
+    if (document.body && document.body.classList.contains('cookies-page')) {
+      // Open after the layout has settled so banner styles apply cleanly
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', openConsent, { once: true });
+      } else {
+        // Give includes.js a tick to inject header/footer
+        requestAnimationFrame(openConsent);
+      }
+    }
+
+    // Support manual testing via ?consent=open
+    if (/\bconsent=open\b/i.test(location.search)) {
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', openConsent, { once: true });
+      } else {
+        requestAnimationFrame(openConsent);
+      }
+    }
   }
-  // Handle Turbo / bfcache / SPA-ish events too
-  ['pageshow','turbo:load','turbo:frame-load'].forEach(function(evt){
-    addEventListener(evt, bindDirect, { once:false });
-  });
-})();
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bind, { once: true });
+  } else {
+    bind();
+  }
+})(); 

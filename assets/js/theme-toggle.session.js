@@ -1,75 +1,60 @@
-/* Theme toggle (idempotent + GH Pages + async header)
-   - Default to light; persist manual choice (localStorage)
-   - Delegated click handler (works even if header is injected later)
-   - Syncs <meta name="color-scheme"> and button UI
-   - Safe if included multiple times (guards against double-binding)
-*/
+// theme-toggle.session.js (patched 2025-09-12)
+// Two-state (Light/Dark) toggle. Preserves button inner markup (no text replacement).
+// Updates: aria-pressed, title, and <html data-theme>. Uses sessionStorage('theme.session').
+
 (function () {
-  'use strict';
   if (window.__themeToggleInit) return;
   window.__themeToggleInit = true;
 
-  var KEY = 'theme';
+  var KEY = "theme.session";
   var root = document.documentElement;
-  var meta = document.querySelector('meta[name="color-scheme"]');
 
-  function apply(theme) {
-    root.setAttribute('data-theme', theme);
-    if (meta) meta.setAttribute('content', theme === 'dark' ? 'dark light' : 'light dark');
-    syncButtons(theme);
-  }
-
-  function getSaved() {
+  function getStored() {
     try {
-      var v = localStorage.getItem(KEY);
-      if (v === 'dark' || v === 'light') return v;
+      var v = sessionStorage.getItem(KEY);
+      if (v === "light" || v === "dark") return v;
     } catch (e) {}
-    return 'light'; // default on first visit
+    return null;
   }
 
-  function syncButtons(theme) {
-    var pressed = theme === 'dark';
-    var title = pressed ? 'Dark mode' : 'Light mode';
-    var nodes = document.querySelectorAll('[data-theme-toggle], #theme-toggle');
-    nodes.forEach(function (btn) {
-      try {
-        if (btn.tagName === 'INPUT' && btn.type && btn.type.toLowerCase() === 'checkbox') {
-          btn.checked = pressed;
-        }
-        btn.setAttribute('aria-pressed', String(pressed));
-        btn.setAttribute('title', title);
-        btn.dataset.themeState = theme;
-        btn.classList.toggle('is-dark', pressed);
-        btn.classList.toggle('is-light', !pressed);
-      } catch (e) {}
-    });
+  function current() {
+    var stored = getStored();
+    if (stored) return stored;
+    var attr = root.getAttribute("data-theme");
+    if (attr === "light" || attr === "dark") return attr;
+    return "light";
   }
 
-  // Apply saved theme immediately and sync controls
-  apply(getSaved());
+  function label(btn, t) {
+    // Don't touch inner markup; just update a11y + tooltip.
+    btn.setAttribute("aria-pressed", t === "dark" ? "true" : "false");
+    btn.setAttribute("title", t === "dark" ? "Dark mode" : "Light mode");
+  }
 
-  // Delegated click handler (survives async includes/header injection)
-  function onClick(e) {
-    var btn = e.target && e.target.closest && (e.target.closest('[data-theme-toggle]') || e.target.closest('#theme-toggle'));
+  function apply(t) {
+    var theme = (t === "dark") ? "dark" : "light";
+    root.setAttribute("data-theme", theme);
+    try { sessionStorage.setItem(KEY, theme); } catch (e) {}
+    var btn = document.getElementById("theme-toggle");
+    if (btn) label(btn, theme);
+  }
+
+  function init() {
+    apply(current());
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init, { once: true });
+  } else {
+    init();
+  }
+
+  document.addEventListener("click", function (e) {
+    var btn = e.target && (e.target.id === "theme-toggle" ? e.target :
+                 (e.target.closest && e.target.closest("#theme-toggle")));
     if (!btn) return;
-    var next = (root.getAttribute('data-theme') === 'dark') ? 'light' : 'dark';
+    e.preventDefault();
+    var next = (current() === "light") ? "dark" : "light";
     apply(next);
-    try { localStorage.setItem(KEY, next); } catch (e) {}
-  }
-  document.addEventListener('click', onClick, true);
-
-  // Keep multiple tabs in sync
-  window.addEventListener('storage', function (ev) {
-    if (ev && ev.key === KEY && (ev.newValue === 'light' || ev.newValue === 'dark')) {
-      apply(ev.newValue);
-    }
-  });
-
-  // If the header/toggle is injected later, keep the UI in sync
-  var mo = new MutationObserver(function () {
-    if (document.querySelector('[data-theme-toggle], #theme-toggle')) {
-      syncButtons(root.getAttribute('data-theme') || 'light');
-    }
-  });
-  mo.observe(document.documentElement, { subtree: true, childList: true });
+  }, true);
 })();

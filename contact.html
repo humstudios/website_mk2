@@ -100,6 +100,8 @@
 <div class="cf-turnstile" data-action="contact" data-callback="enableSubmit" data-sitekey="0x4AAAAAABzCutgVX0rn7kxw">
 </div>
 <button class="btn" disabled="" id="submit-button" type="submit">Send Message</button>
+
+<p id="contact-status" role="status" aria-live="polite" class="form-status"></p>
 </form>
 </section>
 </main>
@@ -108,7 +110,8 @@
 <!-- External scripts -->
 <!-- Site scripts (deferred) -->
 <script defer src="assets/js/theme-toggle.session.js"></script><script defer src="assets/js/theme-color-sync.js"></script>
-<script defer src="assets/js/turnstile-theme-sync.js"></script>
+<script type="module" src="assets/js/turnstile-init.js"></script>
+<script type="module" src="assets/js/contact.js"></script>
 <script defer src="assets/js/hum-menu.clean.js"></script>
 <script defer src="assets/js/headline-smart-wrap.js" data-selector=".card h1, .card h2, .card h3" data-glue="a|an|the|to|of|in|on|at|for|and|or|vs" data-wbr-after="/–—:"></script>
 <script defer src="assets/js/includes.js"></script>
