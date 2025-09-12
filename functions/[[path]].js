@@ -1,5 +1,20 @@
 // Inject /partials/head.html on every page and add extra font preloads on the homepage only.
-export async function onRequest(context) {
+\1
+// --- safety guard: bypass non-HTML + assets; handle only GET/HEAD ---
+const { request, next } = context;
+const url = new URL(request.url);
+
+if (request.method !== 'GET' && request.method !== 'HEAD') {
+  return next();
+}
+
+if (
+  url.pathname.startsWith('/assets/') ||
+  /\.(css|js|mjs|map|json|svg|png|jpg|jpeg|gif|webp|ico|woff2?|ttf|mp4|webm)$/i.test(url.pathname)
+) {
+  return next();
+}
+
   const res = await context.next();
   const type = res.headers.get("content-type") || "";
   if (!type.includes("text/html")) return res;
