@@ -955,6 +955,24 @@ html[data-theme="dark"] .cookie-banner {
 .cookie-banner .btn:hover,
 .cookie-banner .btn:focus-visible { filter: brightness(0.82); }
 
+/* Cookie banner: force equal-sized, centered buttons */
+.cookie-banner__actions .btn {
+  --consent-btn-w: clamp(18ch, 42vw, 22ch);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--consent-btn-w);
+  width: var(--consent-btn-w);        /* width fallback for older engines */
+  flex: 0 0 var(--consent-btn-w);     /* lock flex-basis so both are identical */
+  min-height: var(--min-touch-target);
+  text-align: center;
+  padding-block: 0.6rem;
+  padding-inline: 1rem;
+  white-space: normal;                 /* allow wrapping if needed */
+  box-sizing: border-box;
+}
+
+
 
 /* === AUTHORITATIVE OVERRIDES [2025-09-09 18:37:45] ================================
    - Enforce dark-mode text + heading colours (brand values)
