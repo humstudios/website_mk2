@@ -37,18 +37,7 @@
       }, { passive: false });
     });
 
-    // Auto-open on the dedicated cookies policy page
-    if (document.body && document.body.classList.contains('cookies-page')) {
-      // Open after the layout has settled so banner styles apply cleanly
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', openConsent, { once: true });
-      } else {
-        // Give includes.js a tick to inject header/footer
-        requestAnimationFrame(openConsent);
-      }
-    }
-
-    // Support manual testing via ?consent=open
+   // Support manual testing via ?consent=open
     if (/\bconsent=open\b/i.test(location.search)) {
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', openConsent, { once: true });
