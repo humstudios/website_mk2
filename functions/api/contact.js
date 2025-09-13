@@ -1,74 +1,93 @@
-// file: functions/api/contact.js
-// Notes:
-// - Keeps your onRequest handler (POST only).
-// - Adds honeypot check (`website`), Turnstile `action` and `hostname` checks.
-// - Removes PII console logging.
-// - Returns structured JSON errors with no-store caching.
+// /functions/api/contact.js
 
-export const onRequest = async ({ request, env }) => {
-  if (request.method !== "POST") {
-    return new Response("Method Not Allowed", { status: 405, headers: { "Allow": "POST" } });
+export async function onRequest({ request, env }) {
+  if (request.method !== 'POST') {
+    return json({ ok: false, error: 'Method not allowed' }, 405);
   }
 
-  const form = await request.formData();
-  const name = String(form.get("name") || "").trim();
-  const email = String(form.get("email") || "").trim();
-  const message = String(form.get("message") || "").trim();
-  const token = String(form.get("cf-turnstile-response") || "");
-  const website = String(form.get("website") || "").trim(); // honeypot
-
-  if (website) {
-    return json({ ok: false, error: "bot-detected" }, 400);
-  }
-  if (!name || !email || !message) {
-    return json({ ok: false, error: "missing-fields" }, 422);
-  }
-  if (!token) {
-    return json({ ok: false, error: "missing-token" }, 400);
+  // --- Parse body (FormData or JSON) ---
+  const ct = request.headers.get('content-type') || '';
+  let form;
+  if (ct.includes('form')) {
+    form = await request.formData();
+  } else if (ct.includes('json')) {
+    const body = await request.json().catch(() => ({}));
+    form = new Map(Object.entries(body));
+    form.get = (k) => body[k];
+  } else {
+    return json({ ok: false, error: 'Unsupported content type' }, 415);
   }
 
-  // Turnstile verify
-  const ip = request.headers.get("CF-Connecting-IP") || "";
-  const verifyRes = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({
-      secret: env.TURNSTILE_SECRET || "",
-      response: token,
-      remoteip: ip
-    })
-  });
-  const verify = await verifyRes.json().catch(() => ({}));
+  // --- Turnstile token ---
+  const token = form.get('cf-turnstile-response');
+  console.log('contact: token?', !!token, 'len:', token?.length);
 
-  // Extra hardening: ensure the widget action/hostname match expectations
-  const expectedAction = "contact"; // must match data-action on your widget
-  const requestHost = new URL(request.url).hostname;
-  const actionOk = !verify.action || verify.action === expectedAction;
-  const hostOk = !verify.hostname || verify.hostname === requestHost || verify.hostname.endsWith(".pages.dev");
+  // --- Verify with Turnstile ---
+  let verify = { success: false };
+  try {
+    const vRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        secret: env.TURNSTILE_SECRET || '',
+        response: token || '',
+        remoteip: request.headers.get('CF-Connecting-IP') || ''
+      })
+    });
+    verify = await vRes.json();
+  } catch (err) {
+    console.error('contact: verify fetch error', String(err));
+  }
+  console.log('contact: turnstile verify', verify.success, verify['error-codes']);
 
-  if (!verify.success || !actionOk || !hostOk) {
-    return json({
-      ok: false,
-      error: "turnstile-failed",
-      data: {
-        success: verify.success ?? false,
-        action: verify.action ?? null,
-        hostname: verify.hostname ?? null,
-        "error-codes": verify["error-codes"] ?? null
-      }
-    }, 400);
+  if (!verify.success) {
+    return json({ ok: false, error: 'Turnstile failed', detail: verify['error-codes'] || [] }, 403);
   }
 
-  // TODO: send email or queue a job here (avoid logging PII)
-  return json({ ok: true });
-};
+  // --- Compose message ---
+  const name    = (form.get('name')    || 'Anonymous').toString();
+  const email   = (form.get('email')   || '').toString();
+  const website = (form.get('website') || '').toString();
+  const message = (form.get('message') || '').toString();
 
-function json(body, status = 200) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: {
-      "Content-Type": "application/json",
-      "Cache-Control": "no-store"
+  const text = `Name: ${name}
+Email: ${email}
+Website: ${website}
+
+Message:
+${message}
+`;
+
+  // --- Send email via MailChannels (no extra libs) ---
+  try {
+    const mailResp = await fetch('https://api.mailchannels.net/tx/v1/send', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        personalizations: [{ to: [{ email: env.CONTACT_TO, name: 'Hum Studios' }] }],
+        from: { email: env.CONTACT_FROM || 'noreply@humstudios.com', name: 'Hum Studios Website' },
+        headers: email ? { 'Reply-To': email } : undefined,
+        subject: 'New website contact',
+        content: [{ type: 'text/plain', value: text }]
+      })
+    });
+    console.log('contact: mail status', mailResp.status);
+    if (!mailResp.ok) {
+      const errTxt = await mailResp.text();
+      console.error('contact: mail error', errTxt.slice(0, 500));
+      return json({ ok: false, error: 'Email send failed' }, 502);
     }
+  } catch (err) {
+    console.error('contact: mail fetch error', String(err));
+    return json({ ok: false, error: 'Email send error' }, 502);
+  }
+
+  return json({ ok: true });
+}
+
+function json(obj, status = 200) {
+  return new Response(JSON.stringify(obj), {
+    status,
+    headers: { 'content-type': 'application/json' }
   });
 }
