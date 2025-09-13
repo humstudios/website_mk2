@@ -1,75 +1,93 @@
-// File: assets/js/contact.js
-(function () {
-  const form = document.querySelector("#contactForm");
-  if (!form) return;
-  const submitBtn = document.getElementById("submit-button");
-  const statusEl = document.getElementById("contact-status");
+// /functions/api/contact.js
 
-  window.enableSubmit = function () {
-    try { if (submitBtn) submitBtn.disabled = false; } catch {}
-  };
-
-  function setStatus(msg, isError) {
-    if (!statusEl) return;
-    statusEl.textContent = msg || "";
-    statusEl.classList.toggle("error", !!isError);
-    statusEl.classList.toggle("success", !isError);
+export async function onRequest({ request, env }) {
+  if (request.method !== 'POST') {
+    return json({ ok: false, error: 'Method not allowed' }, 405);
   }
 
-  const endpointAttr = form.getAttribute("action") || "api/contact";
-  let base = "";
-  if (location.hostname.endsWith("github.io")) base = "https://www.humstudios.com/";
-  const endpointUrl = new URL(endpointAttr, base || window.location.origin).toString();
+  // --- Parse body (FormData or JSON) ---
+  const ct = request.headers.get('content-type') || '';
+  let form;
+  if (ct.includes('form')) {
+    form = await request.formData();
+  } else if (ct.includes('json')) {
+    const body = await request.json().catch(() => ({}));
+    form = new Map(Object.entries(body));
+    form.get = (k) => body[k];
+  } else {
+    return json({ ok: false, error: 'Unsupported content type' }, 415);
+  }
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    setStatus("");
-    const tsInput = form.querySelector('input[name="cf-turnstile-response"]');
-    if (tsInput && !tsInput.value) { setStatus("Please complete the Turnstile check.", true); return; }
-    const name = (form.querySelector('#name')?.value || "").trim();
-    const email = (form.querySelector('#email')?.value || "").trim();
-    const message = (form.querySelector('#message')?.value || "").trim();
-    if (!name || !email || !message) { setStatus("Please fill out your name, email, and message.", true); return; }
+  // --- Turnstile token ---
+  const token = form.get('cf-turnstile-response');
+  console.log('contact: token?', !!token, 'len:', token?.length);
 
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.dataset.originalText = submitBtn.textContent || submitBtn.value || "";
-      if (submitBtn.tagName === "BUTTON") submitBtn.textContent = "Sending…";
-      if (submitBtn.tagName === "INPUT") submitBtn.value = "Sending…";
+  // --- Verify with Turnstile ---
+  let verify = { success: false };
+  try {
+    const vRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        secret: env.TURNSTILE_SECRET || '',
+        response: token || '',
+        remoteip: request.headers.get('CF-Connecting-IP') || ''
+      })
+    });
+    verify = await vRes.json();
+  } catch (err) {
+    console.error('contact: verify fetch error', String(err));
+  }
+  console.log('contact: turnstile verify', verify.success, verify['error-codes']);
+
+  if (!verify.success) {
+    return json({ ok: false, error: 'Turnstile failed', detail: verify['error-codes'] || [] }, 403);
+  }
+
+  // --- Compose message ---
+  const name    = (form.get('name')    || 'Anonymous').toString();
+  const email   = (form.get('email')   || '').toString();
+  const website = (form.get('website') || '').toString();
+  const message = (form.get('message') || '').toString();
+
+  const text = `Name: ${name}
+Email: ${email}
+Website: ${website}
+
+Message:
+${message}
+`;
+
+  // --- Send email via MailChannels (no extra libs) ---
+  try {
+    const mailResp = await fetch('https://api.mailchannels.net/tx/v1/send', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        personalizations: [{ to: [{ email: env.CONTACT_TO, name: 'Hum Studios' }] }],
+        from: { email: env.CONTACT_FROM || 'noreply@humstudios.com', name: 'Hum Studios Website' },
+        headers: email ? { 'Reply-To': email } : undefined,
+        subject: 'New website contact',
+        content: [{ type: 'text/plain', value: text }]
+      })
+    });
+    console.log('contact: mail status', mailResp.status);
+    if (!mailResp.ok) {
+      const errTxt = await mailResp.text();
+      console.error('contact: mail error', errTxt.slice(0, 500));
+      return json({ ok: false, error: 'Email send failed' }, 502);
     }
+  } catch (err) {
+    console.error('contact: mail fetch error', String(err));
+    return json({ ok: false, error: 'Email send error' }, 502);
+  }
 
-    try {
-      const fd = new FormData(form);
-      const res = await fetch(endpointUrl, {
-        method: "POST",
-        mode: "cors",
-        headers: { "Accept": "application/json", "X-Requested-With": "hum-contact" },
-        body: fd,
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok || !data.ok) {
-        const err = (data && (data.error || data.detail)) || res.statusText;
-        setStatus("Sorry, that didn’t send. " + (err || "Please try again."), true);
-        if (submitBtn) submitBtn.disabled = false;
-      } else {
-        setStatus("Thanks! Your message has been sent.", false);
-        form.reset();
-        if (window.turnstile) {
-          try {
-            const widget = form.querySelector(".cf-turnstile");
-            if (widget) window.turnstile.reset(widget);
-          } catch {}
-        }
-        if (submitBtn) submitBtn.disabled = true;
-      }
-    } catch (err) {
-      setStatus("Network error. Please try again.", true);
-      if (submitBtn) submitBtn.disabled = false;
-    } finally {
-      if (submitBtn && submitBtn.dataset.originalText) {
-        if (submitBtn.tagName === "BUTTON") submitBtn.textContent = submitBtn.dataset.originalText;
-        if (submitBtn.tagName === "INPUT") submitBtn.value = submitBtn.dataset.originalText;
-      }
-    }
+  return json({ ok: true });
+}
+
+function json(obj, status = 200) {
+  return new Response(JSON.stringify(obj), {
+    status,
+    headers: { 'content-type': 'application/json' }
   });
-})();
+}
