@@ -1,0 +1,21 @@
+name: Sync preview from main
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write  # allow pushing
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Mirror main -> preview
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Push current main commit to preview
+          git push --force-with-lease origin HEAD:preview
