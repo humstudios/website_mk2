@@ -1,116 +1,95 @@
-// /functions/api/contact.js
+export async function onRequestPost({ request, env }) {
+  const log = (...a) => console.log("contact:", ...a);
 
-export async function onRequest({ request, env }) {
-  // Only POST
-  if (request.method !== "POST") {
-    return json({ ok: false, error: "Method not allowed" }, 405);
-  }
-
-  // ---- Parse body (FormData or JSON) ----
-  const ct = (request.headers.get("content-type") || "").toLowerCase();
-  let form;
-
-  if (ct.includes("form")) {
-    form = await request.formData();
-  } else if (ct.includes("json")) {
-    const body = await request.json().catch(() => ({}));
-    form = new Map(Object.entries(body));
-    form.get = (k) => body[k];
-  } else {
-    return json({ ok: false, error: "Unsupported content type" }, 415);
-  }
-
-  // ---- Turnstile token ----
+  // --- parse form ---
+  const form = await request.formData();
+  const name = (form.get("name") || "").toString().trim();
+  const email = (form.get("email") || "").toString().trim();
+  const message = (form.get("message") || "").toString().trim();
+  const honeypot = (form.get("website") || "").toString().trim();
   const token = (form.get("cf-turnstile-response") || "").toString();
-  console.log("contact: token?", !!token, "len:", token.length);
 
-  // ---- Verify Turnstile ----
-  let verify = { success: false };
-  try {
-    const vRes = await fetch(
-      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
-      {
-        method: "POST",
-        headers: { "content-type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({
-          secret: env.TURNSTILE_SECRET || "",
-          response: token,
-          remoteip: request.headers.get("CF-Connecting-IP") || "",
-        }),
-      }
-    );
-    verify = await vRes.json();
-  } catch (err) {
-    console.error("contact: verify fetch error", String(err));
-  }
-  console.log("contact: turnstile verify", verify.success, verify["error-codes"] || []);
+  if (honeypot) return json({ ok: true }); // silent drop
 
-  if (!verify.success) {
-    return json(
-      { ok: false, error: "Turnstile failed", detail: verify["error-codes"] || [] },
-      403
-    );
-  }
+  // --- Turnstile verify ---
+  const secret = env.TURNSTILE_SECRET;
+  const verifyRes = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+    method: "POST",
+    body: new URLSearchParams({ secret, response: token }),
+  });
+  const verify = await verifyRes.json().catch(() => ({}));
+  log("turnstile", verify.success, verify["error-codes"] || []);
+  if (!verify.success) return json({ ok: false, error: "turnstile" }, 403);
 
-  // ---- Extract fields ----
-  const safe = (v) => (v == null ? "" : String(v)).slice(0, 50000);
-  const name    = safe(form.get("name") || "Anonymous");
-  const email   = safe(form.get("email"));
-  const website = safe(form.get("website"));
-  const message = safe(form.get("message"));
+  // --- basic validation ---
+  if (!name || !email || !message) return json({ ok: false, error: "missing_fields" }, 400);
 
-  const text = `Name: ${name}
-Email: ${email}
-Website: ${website}
+  // --- compose email ---
+  const CONTACT_TO = env.CONTACT_TO;                 // your Gmail
+  const CONTACT_FROM = env.CONTACT_FROM || `no-reply@${new URL(request.url).hostname}`;
+  const subject = `New contact from ${name}`;
+  const text = `From: ${name} <${email}>\n\n${message}`;
+  const html = `
+    <div style="font-family:system-ui,Segoe UI,Arial,sans-serif">
+      <p><strong>From:</strong> ${escape(name)} &lt;${escape(email)}&gt;</p>
+      <pre style="white-space:pre-wrap">${escape(message)}</pre>
+    </div>`;
 
-Message:
-${message}
-`;
-
-  console.log("contact: from ->", env.CONTACT_FROM || "FALLBACK");
-
-  // ---- Send email via MailChannels ----
-  try {
-    const payload = {
-      personalizations: [
-        { to: [{ email: env.CONTACT_TO, name: "Hum Studios" }] },
-      ],
-      from: {
-        // Must be an address on a domain you control (ideally the same as your site)
-        email: env.CONTACT_FROM || "noreply@humstudios.com",
-        name: "Hum Studios Website",
-      },
-      headers: email ? { "Reply-To": email } : undefined,
-      subject: "New website contact",
-      content: [{ type: "text/plain", value: text }],
-    };
-
-    const mailResp = await fetch("https://api.mailchannels.net/tx/v1/send", {
+  // --- try RESEND first if key present (easy & reliable) ---
+  if (env.RESEND_API_KEY) {
+    const r = await fetch("https://api.resend.com/emails", {
       method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(payload),
+      headers: {
+        Authorization: `Bearer ${env.RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: `Hum Studios <${CONTACT_FROM}>`,
+        to: [CONTACT_TO],
+        subject,
+        text,
+        html,
+        reply_to: email,
+      }),
     });
-
-    console.log("contact: mail status", mailResp.status);
-
-    if (!mailResp.ok) {
-      const errTxt = await mailResp.text();
-      console.error("contact: mail error", errTxt.slice(0, 600));
-      // Bubble up a failure so the page shows the error popup
-      return json({ ok: false, error: "Email send failed" }, 502);
-    }
-  } catch (err) {
-    console.error("contact: mail fetch error", String(err));
-    return json({ ok: false, error: "Email send error" }, 502);
+    const body = await safeText(r);
+    log("resend status", r.status, body.slice(0, 200));
+    if (r.ok) return json({ ok: true });
+    return json({ ok: false, provider: "resend", status: r.status, body }, 502);
   }
 
-  // All good
-  return json({ ok: true });
+  // --- otherwise use MailChannels (works best when CONTACT_FROM domain is in your Cloudflare account) ---
+  const mcPayload = {
+    personalizations: [{ to: [{ email: CONTACT_TO }] }],
+    from: { email: CONTACT_FROM, name: "Hum Studios" },
+    subject,
+    content: [
+      { type: "text/plain", value: text },
+      { type: "text/html", value: html },
+    ],
+    reply_to: { email, name },
+  };
+
+  const mcUrl = "https://api.mailchannels.net/tx/v1/send";
+  const mcRes = await fetch(mcUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(mcPayload),
+  });
+  const mcBody = await safeText(mcRes);
+  log("mailchannels status", mcRes.status, mcBody.slice(0, 200));
+
+  if (mcRes.status === 202 || mcRes.status === 200) return json({ ok: true });
+  return json({ ok: false, provider: "mailchannels", status: mcRes.status, body: mcBody }, 502);
 }
 
-function json(obj, status = 200) {
-  return new Response(JSON.stringify(obj), {
+function json(data, status = 200) {
+  return new Response(JSON.stringify(data), {
     status,
-    headers: { "content-type": "application/json" },
+    headers: { "Content-Type": "application/json; charset=utf-8" },
   });
 }
+function escape(s) {
+  return s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+}
+async function safeText(r) { try { return await r.text(); } catch { return ""; } }
