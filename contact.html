@@ -78,10 +78,10 @@
 <p>If you have any questions about our apps or stories, or if you need support, please use the form below. We’ll get back to you as soon as possible.</p>
 <!--
           FORM ACTION (relative for IONOS/local; GH Pages only for testing)
-          - Set to 'api/contact' (Cloudflare Pages Functions route).
+          - Set to './contact' which your server maps to an email handler.
           - No mailto fallback by design (production will always have a backend).
         -->
-<form action="api/contact" id="contactForm" method="POST" enctype="multipart/form-data" novalidate data-contact>
+<form action="/api/contact" id="contactForm" method="POST" enctype="multipart/form-data" novalidate>
 <label for="email">Email</label>
 <input aria-describedby="email-error" autocomplete="email" class="input" id="email" name="email" placeholder="you@example.com" required="" type="email"/>
 <div aria-live="polite" class="visually-hidden form-error" id="email-error" role="alert"></div>
@@ -97,11 +97,11 @@
 <input autocomplete="off" id="website" name="website" tabindex="-1" type="text"/>
 </div>
 <!-- Cloudflare Turnstile -->
-<div class="cf-turnstile" data-action="contact" data-callback="enableSubmit" data-sitekey="0x4AAAAAABzCutgVX0rn7kxw">
+<div class="cf-turnstile" data-action="contact" data-sitekey="0x4AAAAAABzCutgVX0rn7kxw">
 </div>
 <button class="btn" disabled="" id="submit-button" type="submit">Send Message</button>
 
-<p id="contact-status" role="status" aria-live="polite" class="form-status" data-status></p>
+<p id="contact-status" role="status" aria-live="polite" class="form-status"></p>
 </form>
 </section>
 </main>
@@ -109,22 +109,13 @@
 <footer data-include="partials/footer.html" role="contentinfo"></footer>
 <!-- External scripts -->
 <!-- Site scripts (deferred) -->
-<script defer src="assets/js/theme-toggle.session.js"></script>
-<script defer src="assets/js/theme-color-sync.js"></script>
-<script type="module" src="assets/js/turnstile-init.js"></script>
-<script>
-  (function(){
-    var isGh = /\.github\.io$/.test(location.hostname);
-    if (isGh && window.CONTACT_FALLBACK_URL) {
-      var f = document.getElementById('contactForm');
-      if (f) f.action = window.CONTACT_FALLBACK_URL;
-    }
-  })();
-</script>
-<script defer src="assets/js/contact.js"></script>
-<script defer src="assets/js/hum-menu.clean.js"></script>
-<script defer src="assets/js/headline-smart-wrap.js" data-selector=".card h1, .card h2, .card h3" data-glue="a|an|the|to|of|in|on|at|for|and|or|vs" data-wbr-after="/–—:"></script>
-<script defer src="assets/js/includes.js"></script>
-<script defer src="assets/js/consent.js"></script>
+<script defer src="/assets/js/theme-toggle.session.js"></script>
+<script defer src="/assets/js/theme-color-sync.js"></script>
+<script type="module" src="/assets/js/turnstile-init.js"></script>
+<script defer src="/assets/js/contact.js"></script>
+<script defer src="/assets/js/hum-menu.clean.js"></script>
+<script defer src="/assets/js/headline-smart-wrap.js" data-selector=".card h1, .card h2, .card h3" data-glue="a|an|the|to|of|in|on|at|for|and|or|vs" data-wbr-after="/–—:"></script>
+<script defer src="/assets/js/includes.js"></script>
+<script defer src="/assets/js/consent.js"></script>
 </body>
 </html>
