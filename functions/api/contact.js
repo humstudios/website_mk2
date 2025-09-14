@@ -58,6 +58,9 @@ Message:
 ${message}
 `;
 
+console.log('contact: from ->', env.CONTACT_FROM || 'FALLBACK');
+
+
   // --- Send email via MailChannels (no extra libs) ---
   try {
     const mailResp = await fetch('https://api.mailchannels.net/tx/v1/send', {
