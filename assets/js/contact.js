@@ -1,52 +1,79 @@
-// /assets/js/contact.js (client-side, progressive enhancement)
-// Keeps native form POST as a fallback; enhances with fetch when available.
+// Progressive enhancement for the contact form.
+// - Submits to relative 'api/contact' (Pages Function) with fetch
+// - Gracefully falls back to normal form POST if JS fails
+// - Reads Turnstile token from the auto-inserted hidden input
 (() => {
-  const f   = document.getElementById('contactForm');
-  const btn = document.getElementById('submit-button');
-  if (!f || !btn || !window.fetch) return;
+  const form = document.querySelector('form[data-contact]');
+  if (!form) return;
 
-  // Turnstile callback hook: enable submit when token is ready
-  window.enableSubmit = function () { try { btn.disabled = false; } catch (e) {} };
- // fallback to native submit if missing
+  const endpoint = form.getAttribute('action') || 'api/contact';
+  const submitBtn = form.querySelector('[type="submit"]');
+  const statusEl = form.querySelector('[data-status]');
 
-  f.addEventListener('submit', async (e) => {
-    // If the form has no action/method, let native submit happen.
-    const action = f.getAttribute('action') || '';
-    const method = (f.getAttribute('method') || 'post').toLowerCase();
-    if (!action || method !== 'post') return;
+  const setBusy = (busy) => {
+    if (!submitBtn) return;
+    submitBtn.disabled = busy;
+    submitBtn.setAttribute('aria-busy', busy ? 'true' : 'false');
+  };
+  const setStatus = (msg, ok = true) => {
+    if (!statusEl) return;
+    statusEl.textContent = msg;
+    statusEl.dataset.state = ok ? 'success' : 'error';
+  };
 
-    e.preventDefault();               // switch to AJAX
-    btn.disabled = true;
+  form.addEventListener('submit', async (e) => {
+    // If the page is running on GitHub Pages, allow any existing fallback (action) to proceed.
+    const host = location.hostname;
+    const isGithubPages = /\.github\.io$/.test(host) || host === '127.0.0.1' || host === 'localhost';
+    const fallbackUrl = window.CONTACT_FALLBACK_URL;
+    if (isGithubPages && fallbackUrl) {
+      form.action = fallbackUrl;
+      return; // let the browser submit normally
+    }
+
+    e.preventDefault();
+    setBusy(true);
 
     try {
-      const fd = new FormData(f);
-
-      // Guard: ensure Turnstile token exists
-      const token = fd.get('cf-turnstile-response');
-      if (!token) {
-        alert('Please complete the security check and try again.');
+      const formData = new FormData(form);
+      // Ensure Turnstile token is present (hidden field name usually 'cf-turnstile-response')
+      const ts = formData.get('cf-turnstile-response') || formData.get('turnstile_token');
+      if (!ts) {
+        setBusy(false);
+        setStatus('Please complete the verification.', false);
         return;
       }
 
-      const res  = await fetch(action, {
-        method: 'POST',
-        body: fd,
-        headers: { 'X-Requested-With': 'hum-contact' }
-      });
-      const data = await res.json().catch(() => ({}));
+      // Support redirect after success via a hidden <input name="redirect" value="/thanks.html">
+      const redirectTo = formData.get('redirect');
 
-      if (res.ok && data && (data.ok === true || data.status === 'ok')) {
-        f.reset();
-        alert('Thanks! Your message has been sent.');
-      } else {
-        console.error('send failed', res.status, data);
-        alert('Sorry, that didn’t send. Please try again.');
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        body: formData,
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || 'Send failed');
+      }
+
+      if (redirectTo) {
+        location.href = redirectTo;
+        return;
+      }
+
+      setStatus('Thanks — your message was sent!');
+      form.reset();
+      // Reset Turnstile widget if present
+      if (window.turnstile && typeof window.turnstile.reset === 'function') {
+        try { window.turnstile.reset(); } catch {}
       }
     } catch (err) {
-      console.error('send error', err);
-      alert('Network error. Please try again.');
+      console.error(err);
+      setStatus('Sorry, something went wrong. Please try again.', false);
     } finally {
-      btn.disabled = false;
+      setBusy(false);
     }
-  }, { passive: false });
+  });
 })();
