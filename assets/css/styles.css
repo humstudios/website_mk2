@@ -671,13 +671,12 @@ html[data-theme="dark"] .card:nth-of-type(even):not(.card--hero-placeholder) { b
 html[data-theme="dark"] .card::after { opacity: 0.25; mix-blend-mode: soft-light; }
 html[data-theme="dark"] .card--light { background: var(--light-card-bg); border-color: var(--light-card-border); color: var(--light-card-fg); color-scheme: light; }
 html[data-theme="dark"] .mobile-nav:not(:is(.pushdown, [data-behavior="pushdown"])) { background: var(--card-bg); border-color: var(--card-border); }
-html[data-theme="dark"]
 html[data-theme="dark"] footer { background-color: var(--gradient-mid); }
 html[data-theme="dark"] .badge-wrapper a { background: var(--card-bg); border-color: var(--card-border); }
 
-@supports (padding: max(0px)) {
+@supports (padding: max(1px)) {
   .container { padding-left: max(var(--container-padding-x), env(safe-area-inset-left)); padding-right: max(var(--container-padding-x), env(safe-area-inset-right)); }
-  footer { padding-left: max(var(--container-padding-x), env(safe-area-inset-left)); padding-right: max(var(--container-padding-x), env(safe-area-inset-right)); padding-bottom: max(env(safe-area-inset-bottom), 0px); }
+  footer { padding-left: max(var(--container-padding-x), env(safe-area-inset-left)); padding-right: max(var(--container-padding-x), env(safe-area-inset-right)); padding-bottom: max(env(safe-area-inset-bottom), 1px); }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; animation: none !important; }
@@ -725,17 +724,8 @@ body.turbo-swapping .container { animation: none !important; transform: none !im
 .form-error { color: #b00020; margin-top: 0.25rem; }
 
 /* Base form element styling */
-/* a11y helper */
-    .visually-hidden {
-      position: absolute !important;
-      width: 1px; height: 1px;
-      margin: -1px; padding: 0; border: 0;
-      clip: rect(0 0 0 0); clip-path: inset(50%);
-      overflow: hidden; white-space: nowrap;
-    }
-    .form-error { color: #b00020; margin-top: 0.25rem; }
+/* Base form element styling */
 
-    /* Form styling (consolidated for maintainability) */
     label { display:block; margin-top: var(--space-3); font-weight: 400; }
     .input, .textarea {
       width: 100%;
@@ -764,10 +754,7 @@ body.turbo-swapping .container { animation: none !important; transform: none !im
     @media (prefers-reduced-motion: reduce) {
       .clouds img { animation: none !important; }
     }
-
-/* Reduced-motion: hard-disable cloud image animation just in case */
-@media (prefers-reduced-motion: reduce) {
-  .clouds img { animation: none !important; }
+/* Reduced-motion block kept below */
 }
 
 
@@ -823,7 +810,6 @@ video:has(> source[src$="howto-720-cropped.webm"]) {
   background: #000;
   
   margin-block-end: 2em;
-  margin-bottom: 2em;
 }
 
 @media (min-width: 64em) {
@@ -831,10 +817,6 @@ video:has(> source[src$="howto-720-cropped.webm"]) {
 }
 
 
-/* Cookie banner: ensure buttons above the text (robust to markup order) */
-.cookie-banner__inner {
-  margin-inline: auto;
-  width: min(var(--content-max), 95%); flex-direction: column; }
 .cookie-banner__actions { order: -1; }
 .cookie-banner__inner p { order: 0; margin: 0;   color: #FFFCF5 !important;
 }
@@ -854,7 +836,6 @@ video:has(> source[src$="howto-720-cropped.webm"]) {
  color: #FFFCF5 !important; }
 
 .cookie-banner__inner {
-  margin-inline: auto; 
   max-width: min(var(--content-max), 95%);
   margin: 0 auto;
   padding: var(--space-3, .75rem) var(--container-padding-x, 1rem);
@@ -880,8 +861,8 @@ video:has(> source[src$="howto-720-cropped.webm"]) {
 
 /* Slightly darker buttons inside the banner only */
 .cookie-banner .btn {
-  background: var(--btn-primary-bg);
-  border-color: var(--btn-primary-bg);
+  background: var(--btn-primary-bg, var(--gradient-start));
+  border-color: var(--btn-primary-bg, var(--gradient-start));
   color: #fff;
   filter: brightness(0.88);
 }
@@ -890,7 +871,7 @@ video:has(> source[src$="howto-720-cropped.webm"]) {
 
 /* Dark theme text contrast (inherits your tokens) */
 html[data-theme="dark"] .cookie-banner {
-  color: #FFFCF5 !important; color: #FFFCF5 !important; border-top-color: var(--card-border); }
+  color: #FFFCF5 !important;  border-top-color: var(--card-border); }
 
 /* === Cookie banner: authoritative placement & layout === */
 #cookie-banner.cookie-banner,
@@ -907,7 +888,6 @@ html[data-theme="dark"] .cookie-banner {
  color: #FFFCF5 !important; }
 
 .cookie-banner__inner {
-  margin-inline: auto;
   max-width: min(var(--content-max), 95%);
   margin: 0 auto;
   display: flex;
@@ -927,8 +907,8 @@ html[data-theme="dark"] .cookie-banner {
 }
 
 .cookie-banner .btn {
-  background: var(--btn-primary-bg);
-  border-color: var(--btn-primary-bg);
+  background: var(--btn-primary-bg, var(--gradient-start));
+  border-color: var(--btn-primary-bg, var(--gradient-start));
   color: #fff;
   filter: brightness(0.88);
 }
@@ -1010,53 +990,5 @@ html[data-theme="dark"] .card h4 { color: var(--color-heading) !important; }
 }
 
 
-/* === THEMES: Dark mode text & headings (no !important) — 2025-09-09 18:44:21 ======== */
-html[data-theme="dark"] {
-  --text: #F3EFE6;
-  --text-strong: #F3EFE6;
-  --color-heading: #FFFCF5;
-  --text-muted: #CFCAC0;
-}
-html[data-theme="dark"] :is(h1,h2,h3,h4) { color: var(--color-heading); }
-html[data-theme="dark"] .card :is(h1,h2,h3,h4) { color: var(--color-heading); }
-
-/* === TYPOGRAPHY: bigger gap when body text is followed by a heading ====== */
-:where(.card, .section-content, .prose) :is(p, ul, ol, blockquote, figure) + :is(h1, h2, h3, h4) {
-  margin-block-start: calc(var(--flow-space, var(--space-3)) + var(--space-1));
-}
-@media (min-width: 48em) {
-  :where(.card, .section-content, .prose) :is(p, ul, ol, blockquote, figure) + :is(h1, h2, h3, h4) {
-    margin-block-start: calc(var(--flow-space, var(--space-4)) + var(--space-1));
-  }
 }
 
-/* =====================================================================
-   09. LAYERED REWRITE SCAFFOLD (non-invasive)
-   - Date: 2025-09-10
-   - Purpose: enable a v2 scope with safe overrides under <html data-version="v2">
-   - Notes: existing (unlayered) rules remain authoritative; v2 rules use the
-     extra ancestor to override without !important.
-   ===================================================================== */
-@layer compat, v2;
-
-/* Optional: token overrides while you migrate (only apply when data-version="v2") */
-:root[data-version="v2"] {
-  /* Example: --radius-card: 1.5em; */
-  /* Keep this empty until you intentionally override tokens for v2. */
-}
-
-/* Shims / adapters (fill as needed to keep legacy hooks stable during the rewrite) */
-@layer compat {
-  /* e.g., .old-class { all: unset; }  — add only when you actually need it */
-}
-
-/* v2 rules live here, fully scoped to the root attribute */
-@layer v2 {
-  html[data-version="v2"] .card {
-    /* Start by copying current .card rules and iterate component-by-component. */
-    /* Leaving empty makes this scaffold a pure no-op. */
-  }
-  html[data-version="v2"] .top-nav a {
-    /* Example target for future v2-only adjustments */
-  }
-}
