@@ -1,4 +1,4 @@
-// Improved diagnostic function for POST /api/contact
+// Diagnostic variant: logs config presence booleans before checks
 type Env = {
   TURNSTILE_SECRET: string;
   RESEND_API_KEY: string;
@@ -56,6 +56,14 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
       return jerr('MISSING_TURNSTILE', 400, 'Missing Turnstile token');
     }
 
+    // Config presence log (booleans only)
+    stage('config_presence', {
+      hasTurnstileSecret: !!env.TURNSTILE_SECRET,
+      hasResendApiKey: !!env.RESEND_API_KEY,
+      hasResendFrom: !!env.RESEND_FROM,
+      hasResendTo: !!env.RESEND_TO
+    });
+
     // Config check
     if (!env.TURNSTILE_SECRET) return jerr('CONFIG_TURNSTILE_SECRET', 500, 'TURNSTILE_SECRET missing');
     if (!env.RESEND_API_KEY)   return jerr('CONFIG_RESEND_API_KEY', 500, 'RESEND_API_KEY missing');
@@ -70,7 +78,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
       return jerr('TURNSTILE_FAIL', 400, 'Turnstile verification failed', verifyOk.details || null);
     }
 
-    // Compose email
+    // Compose email & send via Resend (identical to previous file)
     const prefix = (env.RESEND_SUBJECT_PREFIX || '').trim();
     const subject = `${prefix ? `[${prefix}] ` : ''}New contact from ${name}`.slice(0, 200);
     const text = `Name: ${name}\nEmail: ${email}\n\n${message}`;
@@ -83,7 +91,6 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
       </div>
     `;
 
-    // Send via Resend
     stage('resend_begin');
     const resendRes = await fetch('https://api.resend.com/emails', {
       method: 'POST',
