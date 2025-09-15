@@ -1,17 +1,4 @@
-// Cloudflare Pages Function: POST /api/contact
-// Accepts either multipart/form-data or application/json
-// Verifies Cloudflare Turnstile and sends the message via Resend
-// Required environment variables (Cloudflare Pages → Settings → Environment variables):
-//   TURNSTILE_SECRET = <your turnstile secret>
-//   RESEND_API_KEY   = <your resend api key>
-//   RESEND_FROM      = 'Hum Studios <hello@yourdomain.com>'
-//   RESEND_TO        = 'hello@yourdomain.com'  (comma-separated list supported)
-// Optional:
-//   RESEND_SUBJECT_PREFIX = 'Hum Studios'
-// Notes:
-// - Keep your frontend posting as-is. This handler supports both multipart and JSON bodies.
-// - Avoid logging PII in production.
-
+// Improved diagnostic function for POST /api/contact
 type Env = {
   TURNSTILE_SECRET: string;
   RESEND_API_KEY: string;
@@ -22,48 +9,65 @@ type Env = {
 
 export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   const { request, env } = ctx;
+  const stage = (s: string, extra?: Record<string, unknown>) => console.log('CONTACT_STAGE', s, extra || {});
 
   try {
+    stage('start', { contentType: request.headers.get('content-type') });
+
     const contentType = (request.headers.get('content-type') || '').toLowerCase();
 
     // Parse input
     let name = '', email = '', message = '', turnstileToken = '';
+
     if (contentType.includes('application/json')) {
       const body = await request.json().catch(() => ({}));
+      stage('parsed_json');
       name = (body.name || '').toString().trim();
       email = (body.email || '').toString().trim();
       message = (body.message || '').toString();
-      // Accept both our custom key and Turnstile default
-      turnstileToken = (body.turnstileToken || body['cf-turnstile-response'] || body['g-recaptcha-response'] || '').toString();
+      const t = flatArray([body.turnstileToken, body['cf-turnstile-response'], body['g-recaptcha-response']]);
+      turnstileToken = lastNonEmpty(t);
     } else if (contentType.includes('application/x-www-form-urlencoded') || contentType.includes('multipart/form-data')) {
       const form = await request.formData();
+      stage('parsed_form', { keys: Array.from(form.keys()) });
       name = String(form.get('name') || '').trim();
       email = String(form.get('email') || '').trim();
       message = String(form.get('message') || '');
-      // Turnstile default hidden input name is cf-turnstile-response
-      const tokens = form.getAll('cf-turnstile-response');
-      const last = tokens.length ? tokens[tokens.length - 1] : '';
-      turnstileToken = String(last || form.get('turnstileToken') || form.get('g-recaptcha-response') || '');
+      const tokens = formAll(form, 'cf-turnstile-response')
+        .concat(formAll(form, 'turnstileToken'))
+        .concat(formAll(form, 'g-recaptcha-response'));
+      turnstileToken = lastNonEmpty(tokens);
     } else {
-      return json({ ok: false, error: 'Unsupported content type' }, 415);
+      stage('unsupported_content_type');
+      return jerr('UNSUPPORTED_CONTENT_TYPE', 415, 'Unsupported content type');
     }
 
     // Basic validation
     if (!name || !email || !message) {
-      return json({ ok: false, error: 'Missing name, email, or message' }, 400);
+      stage('validation_fail', { name: !!name, email: !!email, message: !!message });
+      return jerr('MISSING_FIELDS', 400, 'Missing name, email, or message');
     }
     if (!isValidEmail(email)) {
-      return json({ ok: false, error: 'Invalid email address' }, 400);
+      stage('validation_fail_email', { email });
+      return jerr('INVALID_EMAIL', 400, 'Invalid email address');
     }
     if (!turnstileToken) {
-      return json({ ok: false, error: 'Missing Turnstile token' }, 400);
+      stage('missing_turnstile');
+      return jerr('MISSING_TURNSTILE', 400, 'Missing Turnstile token');
     }
 
-    // Verify Turnstile token
+    // Config check
+    if (!env.TURNSTILE_SECRET) return jerr('CONFIG_TURNSTILE_SECRET', 500, 'TURNSTILE_SECRET missing');
+    if (!env.RESEND_API_KEY)   return jerr('CONFIG_RESEND_API_KEY', 500, 'RESEND_API_KEY missing');
+    if (!env.RESEND_FROM)      return jerr('CONFIG_RESEND_FROM', 500, 'RESEND_FROM missing');
+    if (!env.RESEND_TO)        return jerr('CONFIG_RESEND_TO', 500, 'RESEND_TO missing');
+
+    // Verify Turnstile
+    stage('verify_turnstile_begin');
     const verifyOk = await verifyTurnstile(turnstileToken, env.TURNSTILE_SECRET, request);
+    stage('verify_turnstile_end', verifyOk);
     if (!verifyOk.ok) {
-      console.warn('TURNSTILE_FAIL', verifyOk.details || null);
-      return json({ ok: false, error: 'Turnstile verification failed', details: verifyOk.details || null }, 400);
+      return jerr('TURNSTILE_FAIL', 400, 'Turnstile verification failed', verifyOk.details || null);
     }
 
     // Compose email
@@ -80,11 +84,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
     `;
 
     // Send via Resend
-    const to = splitEmails(env.RESEND_TO);
-    if (!env.RESEND_API_KEY || !env.RESEND_FROM || to.length === 0) {
-      return json({ ok: false, error: 'Email not configured on server' }, 500);
-    }
-
+    stage('resend_begin');
     const resendRes = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
@@ -93,29 +93,47 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
       },
       body: JSON.stringify({
         from: env.RESEND_FROM,
-        to,
+        to: splitEmails(env.RESEND_TO),
         subject,
         text,
         html,
         reply_to: email,
       }),
     });
-
     const resendData = await safeJson(resendRes);
+    stage('resend_end', { status: resendRes.status, ok: resendRes.ok, id: resendData && resendData.id });
+
     if (!resendRes.ok) {
-      return json({ ok: false, error: 'Resend API error', details: resendData || null }, 502);
+      return jerr('RESEND_API_ERROR', 502, 'Resend API error', resendData || null);
     }
 
-    // Minimal, privacy-conscious log
     const maskedEmail = maskEmail(email);
     console.log('CONTACT_SENT', { name, email: maskedEmail, len: message.length });
 
     return json({ ok: true, id: resendData.id || null });
   } catch (err: any) {
     console.error('CONTACT_ERROR', err?.stack || String(err));
-    return json({ ok: false, error: 'Server error' }, 500);
+    return jerr('SERVER_ERROR', 500, 'Server error');
   }
 };
+
+function flatArray(x: any): string[] {
+  const arr = Array.isArray(x) ? x : [x];
+  return arr.filter(v => v !== undefined && v !== null).map(v => String(v));
+}
+
+function lastNonEmpty(arr: string[]): string {
+  for (let i = arr.length - 1; i >= 0; i--) {
+    const v = (arr[i] || '').trim();
+    if (v) return v;
+  }
+  return '';
+}
+
+function formAll(form: FormData, key: string): string[] {
+  const vals = form.getAll(key);
+  return vals.map(v => String(v || ''));
+}
 
 async function verifyTurnstile(token: string, secret: string, request: Request): Promise<{ ok: boolean; details?: unknown }> {
   const formData = new FormData();
@@ -125,30 +143,23 @@ async function verifyTurnstile(token: string, secret: string, request: Request):
 
   const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', { method: 'POST', body: formData });
   const data = await res.json().catch(() => null);
-  return { ok: Boolean(data && data.success), details: data && data['error-codes'] };
+  return { ok: Boolean(data && (data as any).success), details: data && (data as any)['error-codes'] };
 }
 
 function isValidEmail(v: string): boolean {
-  // Lightweight email check
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 }
 
 function splitEmails(v: string): string[] {
-  return (v || '')
-    .split(',')
-    .map(s => s.trim())
-    .filter(Boolean);
+  return (v || '').split(',').map(s => s.trim()).filter(Boolean);
 }
 
 function escapeHtml(s: string): string {
-  return s
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 function maskEmail(e: string): string {
-  return e.replace(/(.{2}).+(@.+)/, '$1***$2');
+  return String(e).replace(/(.{2}).+(@.+)/, '$1***$2');
 }
 
 async function safeJson(res: Response): Promise<any> {
@@ -163,4 +174,8 @@ function json(data: any, status = 200): Response {
       'cache-control': 'no-store',
     },
   });
+}
+
+function jerr(code: string, status: number, error: string, details?: unknown): Response {
+  return json({ ok: false, code, error, details: details || null }, status);
 }
