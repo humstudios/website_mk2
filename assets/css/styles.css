@@ -755,7 +755,7 @@ body.turbo-swapping .container { animation: none !important; transform: none !im
       .clouds img { animation: none !important; }
     }
 /* Reduced-motion block kept below */
-}
+
 
 
 /* iPad overlay: lock positioning with CSS variables so stacking changes won't move it */
@@ -990,5 +990,5 @@ html[data-theme="dark"] .card h4 { color: var(--color-heading) !important; }
 }
 
 
-}
+
 
