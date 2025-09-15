@@ -794,27 +794,40 @@ body.turbo-swapping .container { animation: none !important; transform: none !im
 /* Homepage: extra space under the iPad animation */
 .ipad-embed.tuned { margin-block-end: var(--ipad-gap-bottom, 2rem); }
 
+/* HOW-TO animation (index.html .media-spot)
+   - Mobile/tablet: full body-text width
+   - ≥64em: 3/4 of body-text width
+   - No letterboxing: crop to fill with tasteful radius + shadow
+*/
 
-
-/* =====================================================================
-   HOW‑TO VIDEO (single file target)
-   Apply radius + shadow ONLY to the video that contains
-   `assets/img/animation/howto-720-cropped.webm`. Other videos unaffected.
-   ===================================================================== */
-video:has(> source[src$="howto-720-cropped.webm"]) {
-  display: block;
+/* Make the wrapper align with paragraph measure and add rhythm spacing */
+.media-spot {
   width: 100%;
+  max-inline-size: var(--measure);
   margin-inline: auto;
+  margin-block: var(--media-gap);
+}
+
+/* The video should fill its box and avoid letterboxing */
+.media-spot > video {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 4 / 3;     /* define the frame we want */
+  object-fit: cover;        /* fill the frame, crop any bars */
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-1);
-  background: #000;
-  
-  margin-block-end: 2em;
+  background: #000;         /* looks clean while the first frame loads */
 }
 
+/* On wide screens: 3/4 of the body-text column */
 @media (min-width: 64em) {
-  video:has(> source[src$="howto-720-cropped.webm"]) { width: 75%; }
+  .media-spot {
+    max-inline-size: calc(var(--measure) * 0.75);
+  }
 }
+
+
 
 
 .cookie-banner__actions { order: -1; }
