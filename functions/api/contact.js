@@ -1,178 +1,208 @@
-// Cloudflare Pages Function: /functions/api/contact.js
-// Handles POSTs from your contact form, verifies Cloudflare Turnstile, and sends via Resend.
-// Environment variables required (set in Cloudflare Pages project settings):
-// - RESEND_API_KEY
-// - CONTACT_TO              (e.g. "hello@humstudios.com")
-// - CONTACT_FROM            (e.g. "Hum Studios <no-reply@send.humstudios.com>" from a verified Resend domain/subdomain)
-// - TURNSTILE_SECRET_KEY
-// Optional: CONTACT_SUBJECT (defaults to "New contact form message")
-// Optional: CONTACT_CC, CONTACT_BCC (comma-separated lists)
-// Optional: CONTACT_ALLOWED_ORIGIN (for CORS in dev/preview; defaults to request origin)
+// Cloudflare Pages Function (JavaScript): POST /api/contact
+// - Accepts multipart/form-data and application/json
+// - Verifies Cloudflare Turnstile (env: TURNSTILE_SECRET)
+// - Sends mail via Resend (env: RESEND_API_KEY, RESEND_FROM, RESEND_TO, optional RESEND_SUBJECT_PREFIX)
+// - Emits diagnostic logs with CONTACT_STAGE markers (minimal PII)
+//
+// Environment variables (Cloudflare Pages → Settings → Environment variables → Production):
+//   TURNSTILE_SECRET
+//   RESEND_API_KEY
+//   RESEND_FROM           e.g., "Hum Studios <hello@humstudios.com>"
+//   RESEND_TO             e.g., "hello@humstudios.com, ops@humstudios.com"
+//   RESEND_SUBJECT_PREFIX (optional)
+//
+// Notes:
+// - We intentionally pick the **last non-empty** Turnstile token in case multiple widgets post values.
+// - Includes a simple "website" honeypot: if present and non-empty, we pretend success without sending.
+// - Keep responses JSON; your frontend displays server codes on error.
 
-const JSON_TYPE = "application/json; charset=utf-8";
+export async function onRequestPost(context) {
+  const { request, env } = context;
+  const stage = (s, extra) => console.log("CONTACT_STAGE", s, extra || {});
 
-function corsHeaders(origin) {
-  const allow = origin || "*";
-  return {
-    "Access-Control-Allow-Origin": allow,
-    "Vary": "Origin",
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type"
-  };
-}
-
-export async function onRequestOptions({ request, env }) {
-  const origin = request.headers.get("Origin") || undefined;
-  const allow = env.CONTACT_ALLOWED_ORIGIN || origin;
-  return new Response(null, { status: 204, headers: corsHeaders(allow) });
-}
-
-export async function onRequestPost({ request, env }) {
   try {
-    // --- Basic safety checks ---
-    const contentLength = Number(request.headers.get("content-length") || "0");
-    if (contentLength > 100 * 1024) {
-      return json({ ok: false, error: "Payload too large." }, 413, request, env);
-    }
+    stage("start", { contentType: request.headers.get("content-type") || "" });
 
     const contentType = (request.headers.get("content-type") || "").toLowerCase();
-    const accept = (request.headers.get("accept") || "").toLowerCase();
 
-    // Parse body (supports JSON and URL-encoded/multipart forms)
-    let data = {};
+    // Parse input
+    let name = "", email = "", message = "", turnstileToken = "", website = "";
     if (contentType.includes("application/json")) {
-      data = await request.json();
-    } else {
+      const body = await request.json().catch(() => ({}));
+      stage("parsed_json");
+      name = (body.name || "").toString().trim();
+      email = (body.email || "").toString().trim();
+      message = (body.message || "").toString();
+      website = (body.website || "").toString().trim();
+      const t = flatArray([body.turnstileToken, body["cf-turnstile-response"], body["g-recaptcha-response"]]);
+      turnstileToken = lastNonEmpty(t);
+    } else if (contentType.includes("application/x-www-form-urlencoded") || contentType.includes("multipart/form-data")) {
       const form = await request.formData();
-      for (const [k, v] of form.entries()) data[k] = typeof v === "string" ? v : String(v.name || "file");
+      stage("parsed_form", { keys: Array.from(form.keys()) });
+      name = String(form.get("name") || "").trim();
+      email = String(form.get("email") || "").trim();
+      message = String(form.get("message") || "");
+      website = String(form.get("website") || "").trim();
+      const tokens = formAll(form, "cf-turnstile-response")
+        .concat(formAll(form, "turnstileToken"))
+        .concat(formAll(form, "g-recaptcha-response"));
+      turnstileToken = lastNonEmpty(tokens);
+    } else {
+      stage("unsupported_content_type");
+      return jerr("UNSUPPORTED_CONTENT_TYPE", 415, "Unsupported content type");
     }
 
-    // Normalise fields
-    const name = (data.name || "").toString().trim().slice(0, 200);
-    const email = (data.email || data.replyTo || "").toString().trim().slice(0, 200);
-    const message = (data.message || data.body || "").toString().trim().slice(0, 5000);
-    const subject = (data.subject || env.CONTACT_SUBJECT || "New contact form message").toString().trim().slice(0, 200);
+    // Honeypot — silently accept and drop obvious bots
+    if (website) {
+      stage("honeypot_trip");
+      return json({ ok: true, id: null });
+    }
 
-    // Turnstile token can come from the default hidden field or custom field
-    const tsToken = (data["cf-turnstile-response"] || data["turnstile_token"] || "").toString();
-
-    // Validate required fields
+    // Basic validation
     if (!name || !email || !message) {
-      return json({ ok: false, error: "Please provide name, email, and message." }, 400, request, env);
+      stage("validation_fail", { name: !!name, email: !!email, message: !!message });
+      return jerr("MISSING_FIELDS", 400, "Missing name, email, or message");
+    }
+    if (!isValidEmail(email)) {
+      stage("validation_fail_email", { email });
+      return jerr("INVALID_EMAIL", 400, "Invalid email address");
+    }
+    if (!turnstileToken) {
+      stage("missing_turnstile");
+      return jerr("MISSING_TURNSTILE", 400, "Missing Turnstile token");
     }
 
-    if (!validateEmail(email)) {
-      return json({ ok: false, error: "Please provide a valid email address." }, 400, request, env);
-    }
-    if (!tsToken) {
-      return json({ ok: false, error: "Turnstile verification missing." }, 400, request, env);
-    }
-
-    // Verify Turnstile with siteverify API
-    const clientIp = request.headers.get("CF-Connecting-IP") || undefined;
-    const verifyBody = new URLSearchParams({
-      secret: env.TURNSTILE_SECRET_KEY || "",
-      response: tsToken,
-      ...(clientIp ? { remoteip: clientIp } : {}),
+    // Config presence log (booleans only)
+    stage("config_presence", {
+      hasTurnstileSecret: !!env.TURNSTILE_SECRET,
+      hasResendApiKey: !!env.RESEND_API_KEY,
+      hasResendFrom: !!env.RESEND_FROM,
+      hasResendTo: !!env.RESEND_TO,
     });
-    const tsResp = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-      method: "POST",
-      body: verifyBody,
-      headers: { "content-type": "application/x-www-form-urlencoded" },
-    });
-    const tsJson = await tsResp.json();
-    if (!tsJson.success) {
-      return json({ ok: false, error: "Turnstile verification failed.", details: tsJson["error-codes"] || null }, 403, request, env);
+
+    // Config check
+    if (!env.TURNSTILE_SECRET) return jerr("CONFIG_TURNSTILE_SECRET", 500, "TURNSTILE_SECRET missing");
+    if (!env.RESEND_API_KEY)   return jerr("CONFIG_RESEND_API_KEY", 500, "RESEND_API_KEY missing");
+    if (!env.RESEND_FROM)      return jerr("CONFIG_RESEND_FROM", 500, "RESEND_FROM missing");
+    if (!env.RESEND_TO)        return jerr("CONFIG_RESEND_TO", 500, "RESEND_TO missing");
+
+    // Verify Turnstile
+    stage("verify_turnstile_begin");
+    const verifyOk = await verifyTurnstile(turnstileToken, env.TURNSTILE_SECRET, request);
+    stage("verify_turnstile_end", verifyOk);
+    if (!verifyOk.ok) {
+      return jerr("TURNSTILE_FAIL", 400, "Turnstile verification failed", verifyOk.details || null);
     }
 
-    // Compose Resend payload
-    const to = splitEmails(env.CONTACT_TO);
-    const cc = splitEmails(env.CONTACT_CC);
-    const bcc = splitEmails(env.CONTACT_BCC);
-    const from = env.CONTACT_FROM;
-    const replyTo = email;
-
-    if (!env.RESEND_API_KEY || !from || !to.length) {
-      return json({ ok: false, error: "Server misconfiguration: missing email settings." }, 500, request, env);
-    }
-
-    // Simple HTML + text bodies
-    const escaped = (s) => s.replace(/[&<>"']/g, (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+    // Compose email
+    const prefix = (env.RESEND_SUBJECT_PREFIX || "").trim();
+    const subject = `${prefix ? `[${prefix}] ` : ""}New contact from ${name}`.slice(0, 200);
+    const text = `Name: ${name}\nEmail: ${email}\n\n${message}`;
     const html = `
-      <div style="font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; line-height:1.6">
-        <h2 style="margin:0 0 12px 0">New contact message</h2>
-        <p><strong>Name:</strong> ${escaped(name)}</p>
-        <p><strong>Email:</strong> ${escaped(email)}</p>
-        ${data.phone ? `<p><strong>Phone:</strong> ${escaped(String(data.phone))}</p>` : ""}
-        <hr style="border:none;border-top:1px solid #ddd; margin:16px 0" />
-        <pre style="white-space:pre-wrap;word-wrap:break-word;font:inherit">${escaped(message)}</pre>
+      <div style="font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; line-height:1.6">
+        <p><strong>Name:</strong> ${escapeHtml(name)}</p>
+        <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+        <hr style="border:none;border-top:1px solid #e5e7eb;margin:12px 0">
+        <pre style="white-space:pre-wrap;font:inherit">${escapeHtml(message)}</pre>
       </div>
     `;
-    const text = `New contact message
 
-Name: ${name}
-Email: ${email}
-${data.phone ? `Phone: ${String(data.phone)}\n` : ""}
----
-${message}
-`;
-
-    const payload = {
-      from,
-      to,
-      subject,
-      html,
-      text,
-      ...(replyTo ? { reply_to: replyTo } : {}),
-      ...(cc.length ? { cc } : {}),
-      ...(bcc.length ? { bcc } : {}),
-      // You can add "tags" or "headers" here if needed
-    };
-
-    const res = await fetch("https://api.resend.com/emails", {
+    // Send via Resend
+    stage("resend_begin");
+    const resendRes = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${env.RESEND_API_KEY}`,
-        "Content-Type": "application/json",
+        "authorization": `Bearer ${env.RESEND_API_KEY}`,
+        "content-type": "application/json",
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({
+        from: env.RESEND_FROM,
+        to: splitEmails(env.RESEND_TO),
+        subject,
+        text,
+        html,
+        reply_to: email,
+      }),
     });
+    const resendData = await safeJson(resendRes);
+    stage("resend_end", { status: resendRes.status, ok: resendRes.ok, id: resendData && resendData.id });
 
-    if (!res.ok) {
-      const errText = await res.text();
-      return json({ ok: false, error: "Email send failed.", provider_status: res.status, provider_body: errText }, 502, request, env);
+    if (!resendRes.ok) {
+      return jerr("RESEND_API_ERROR", 502, "Resend API error", resendData || null);
     }
 
-    // If the form included a redirect URL and Accept prefers HTML, do a post-redirect-get.
-    const wantsHTML = accept.includes("text/html") || contentType.includes("application/x-www-form-urlencoded") || contentType.includes("multipart/form-data");
-    const redirectURL = (data.redirect || "").toString();
-    if (wantsHTML && redirectURL) {
-      return Response.redirect(redirectURL, 303);
-    }
+    // Minimal, privacy-conscious log
+    const maskedEmail = maskEmail(email);
+    console.log("CONTACT_SENT", { name, email: maskedEmail, len: message.length });
 
-    return json({ ok: true, message: "Sent" }, 200, request, env);
+    return json({ ok: true, id: resendData && resendData.id || null });
   } catch (err) {
-    return json({ ok: false, error: "Server error.", detail: String(err && err.stack || err) }, 500, request, env);
+    console.error("CONTACT_ERROR", (err && err.stack) || String(err));
+    return jerr("SERVER_ERROR", 500, "Server error");
   }
 }
 
-// Helpers
-function splitEmails(value) {
-  if (!value) return [];
-  return String(value)
-    .split(",")
-    .map((s) => s.trim())
-    .filter(Boolean);
+// ---------- helpers ----------
+
+function flatArray(x) {
+  const arr = Array.isArray(x) ? x : [x];
+  return arr.filter(v => v !== undefined && v !== null).map(v => String(v));
 }
-function validateEmail(e) {
-  // Minimal validation
-  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e);
+
+function lastNonEmpty(arr) {
+  for (let i = arr.length - 1; i >= 0; i--) {
+    const v = (arr[i] || "").trim();
+    if (v) return v;
+  }
+  return "";
 }
-function json(obj, status, request, env) {
-  const origin = request.headers.get("Origin") || undefined;
-  const allow = env.CONTACT_ALLOWED_ORIGIN || origin;
-  return new Response(JSON.stringify(obj), {
+
+function formAll(form, key) {
+  const vals = form.getAll(key);
+  return vals.map(v => String(v || ""));
+}
+
+async function verifyTurnstile(token, secret, request) {
+  const formData = new FormData();
+  formData.append("secret", secret);
+  formData.append("response", token);
+  formData.append("remoteip", request.headers.get("CF-Connecting-IP") || "");
+
+  const res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", { method: "POST", body: formData });
+  const data = await res.json().catch(() => null);
+  return { ok: Boolean(data && data.success), details: data && data["error-codes"] };
+}
+
+function isValidEmail(v) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+}
+
+function splitEmails(v) {
+  return (v || "").split(",").map(s => s.trim()).filter(Boolean);
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function maskEmail(e) {
+  return String(e).replace(/(.{2}).+(@.+)/, "$1***$2");
+}
+
+async function safeJson(res) {
+  try { return await res.json(); } catch { return null; }
+}
+
+function json(data, status = 200) {
+  return new Response(JSON.stringify(data), {
     status,
-    headers: { "Content-Type": JSON_TYPE, ...corsHeaders(allow) },
+    headers: {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "no-store",
+    },
   });
+}
+
+function jerr(code, status, error, details) {
+  return json({ ok: false, code, error, details: details || null }, status);
 }
