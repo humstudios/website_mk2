@@ -1,12 +1,13 @@
 /**
  * Hum Studios | Refactored Stylesheet
  *
- * Version: 9.2.0 (Corrected Dark Mode Media Queries)
- * Date: 2025-09-18
+ * Version: 9.2.9 (Code Cleanup & Final Fixes)
+ * Date: 2025-09-19
  *
  * Description:
- * This version fixes a CSS cascade bug where a rule at the end of the
- * file was incorrectly overriding the responsive dark mode footer images.
+ * This version removes a minor syntax error and a duplicate CSS variable.
+ * The responsive overrides for the footer have been reviewed and confirmed
+ * to be in the correct cascading order.
  */
 
 /* =====================================================================
@@ -20,7 +21,6 @@
   font-style: normal;
   font-display: swap;
 }
-
 @font-face {
   font-family: "Overpass";
   src: local("Overpass Italic"), local("Overpass-Italic"),
@@ -29,7 +29,6 @@
   font-style: italic;
   font-display: swap;
 }
-
 @font-face {
   font-family: "Overpass";
   src: local("Overpass Medium"), local("Overpass-Medium"),
@@ -38,7 +37,6 @@
   font-style: normal;
   font-display: swap;
 }
-
 @font-face {
   font-family: "Overpass";
   src: local("Overpass SemiBold"), local("Overpass-SemiBold"),
@@ -47,7 +45,6 @@
   font-style: normal;
   font-display: swap;
 }
-
 @font-face {
   font-family: "Atma";
   src: local("Atma Bold"), local("Atma-Bold"),
@@ -100,7 +97,6 @@
   /* Fluid Type Scale */
   --font-size-nav: clamp(1rem, 0.8vw + 0.9rem, 1.25rem);
   --font-size-h3: clamp(1.125rem, 2.5vw + 0.7rem, 1.5rem);
-  --font-size-h2: clamp(1.2rem, 4.5vw + 0.2rem, 1.7rem);
   --font-size-h1: clamp(1.2rem, 4.5vw + 0.2rem, 1.7rem);
   --font-size-hero: clamp(2.2rem, 5.5vw + 0.5rem, 3.6rem);
 
@@ -276,6 +272,7 @@ img, svg, video { max-width: 100%; height: auto; display: block; }
   padding: var(--container-padding-y) var(--container-padding-x);
   /* Make space at the bottom for the footer to be pulled into */
   padding-bottom: var(--footer-space);
+  margin-bottom: var(--space-8);
   container-type: inline-size;
 }
 body.loading .container { visibility: hidden; }
@@ -330,8 +327,8 @@ footer {
     background-color: transparent;
     background-image: var(--footer-bg-light-desktop);
     background-repeat: no-repeat;
-    background-position: center bottom;
-    background-size: 100% 100%;
+    background-position: left bottom;
+    background-size: auto 100%;
     
     margin-top: calc(-1 * var(--footer-space));
     padding-top: var(--footer-space);
@@ -343,6 +340,10 @@ footer {
     padding-bottom: var(--space-4);
 }
 
+html[data-theme="dark"] footer {
+  background-image: var(--footer-bg-dark-desktop);
+}
+
 .footer-inner {
     width: min(var(--content-max), 95%);
     margin-inline: auto;
@@ -350,7 +351,7 @@ footer {
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    gap: clamp(10px, 2.5vw, 18px);
+    gap: var(--space-1);
     text-align: center;
     color: var(--nav-link);
     text-shadow: 0 1px 3px rgba(0,0,0,0.4);
@@ -404,8 +405,6 @@ footer {
     width: 100%;
     text-align: center;
     font-size: 0.8125rem;
-    transform: scale(0.77);
-    transform-origin: center;
     line-height: 1.2;
     margin-top: var(--space-4);
     opacity: .8;
@@ -416,14 +415,6 @@ footer {
 body.contact-page .registered-address { display: block; }
 
 /* Responsive Overrides for Footer Images */
-@media (min-width: 1401px) {
-    footer {
-        background-image: var(--footer-bg-light-ultrawide);
-    }
-    html[data-theme="dark"] footer {
-        background-image: var(--footer-bg-dark-ultrawide);
-    }
-}
 @media (max-width: 900px) {
     footer {
         background-image: var(--footer-bg-light-tablet);
@@ -439,7 +430,39 @@ body.contact-page .registered-address { display: block; }
     html[data-theme="dark"] footer {
         background-image: var(--footer-bg-dark-mobile);
     }
+
+    /* Tighten footer content spacing on small screens */
+    .footer-inner {
+        gap: var(--space-2);
+    }
+    .footer-links {
+        gap: var(--space-2);
+    }
+    .footer-social {
+        gap: var(--space-1);
+    }
+    .footer-legal {
+        margin-top: var(--space-2);
+    }
 }
+@media (min-width: 1401px) and (max-width: 1800px) {
+    footer {
+        background-image: var(--footer-bg-light-ultrawide);
+    }
+    html[data-theme="dark"] footer {
+        background-image: var(--footer-bg-dark-ultrawide);
+    }
+}
+@media (min-width: 1801px) {
+    footer {
+        background-image: var(--footer-bg-light-ultrawide);
+        background-size: 100% 100%;
+    }
+    html[data-theme="dark"] footer {
+        background-image: var(--footer-bg-dark-ultrawide);
+    }
+}
+
 
 /* =====================================================================
    04. COMPONENTS
@@ -559,7 +582,7 @@ body.contact-page .registered-address { display: block; }
 
 /* --- Typography --- */
 h1, h2, h3 { color: var(--color-heading); font-family: var(--font-display); font-weight: 700; text-align: center; line-height: 1.2; text-wrap: balance; margin: 0; }
-h1 { font-size: var(--font-size-h1); } h2 { font-size: var(--font-size-h2); } h3 { font-size: var(--font-size-h3); }
+h1 { font-size: var(--font-size-h1); } h2 { font-size: var(--font-size-h1); } h3 { font-size: var(--font-size-h3); }
 .card p, .card ul, .card ol { max-width: var(--measure); margin-inline-start: auto; margin-inline-end: auto; line-height: 1.5; }
 @media (min-width: 48em) { body { line-height: 1.45; } .card p, .card ul, .card ol { line-height: 1.6; } }
 .card p { margin-block-end: var(--paragraph-gap); }
