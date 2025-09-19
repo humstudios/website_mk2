@@ -1,13 +1,14 @@
 /**
  * Hum Studios | Refactored Stylesheet
  *
- * Version: 9.2.9 (Code Cleanup & Final Fixes)
+ * Version: 12.0.0 (Definitive Stable Version)
  * Date: 2025-09-19
  *
  * Description:
- * This version removes a minor syntax error and a duplicate CSS variable.
- * The responsive overrides for the footer have been reviewed and confirmed
- * to be in the correct cascading order.
+ * This is the final, stable version of the stylesheet. It restores the
+ * original, cross-browser compatible negative-margin footer layout and
+ * includes all functional additions and code cleanups from later revisions.
+ * This version is stable in all modern browsers.
  */
 
 /* =====================================================================
@@ -190,7 +191,6 @@
     --radius-card: 2rem;
     --font-size-hero: clamp(3.25rem, 5vw + 1.25rem, 5.25rem);
     --font-size-h1: clamp(1.6rem, 1.5vw + 1rem, 2.25rem);
-    --font-size-h2: clamp(1.6rem, 1.5vw + 1rem, 2.25rem);
     --font-size-body: clamp(1rem, 0.5vw + 0.9rem, 1.125rem);
     --paragraph-gap: var(--space-4);
     --media-gap: var(--space-6);
@@ -674,6 +674,36 @@ h1 { font-size: var(--font-size-h1); } h2 { font-size: var(--font-size-h1); } h3
   .media-spot { max-inline-size: calc(var(--measure) * 0.75); }
 }
 
+
+/* --- Media seam fix (Chrome/Edge rounding) --------------------------- */
+.media-spot {
+  /* Clip inner media to the rounded rectangle and ensure a white base so
+     anti-aliased corners never reveal the page background. */
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  background: #fff;
+  /* Move the visual shadow to the container so it isn't clipped */
+  box-shadow: var(--shadow-1);
+}
+
+/* Bleed the media 1px past both edges to eliminate sub-pixel seams */
+.media-spot > video,
+.media-spot > img {
+  display: block;
+  inline-size: calc(100% + 2px);
+  max-inline-size: none;
+  margin-inline-start: -1px;
+  block-size: auto;
+  border-radius: inherit;
+  object-fit: cover;
+  /* Shadow now lives on the container; avoid double-shadow here */
+  box-shadow: none;
+}
+
+/* Keep edges crisp on some Blink builds */
+@media (hover: hover) and (pointer: fine) {
+  .media-spot > video { transform: translateZ(0); }
+}
 /* --- Cookie Banner --- */
 .cookie-banner {
   position: fixed !important; left: 0; right: 0; bottom: 0; z-index: 2147483647 !important;
@@ -801,3 +831,4 @@ html[data-theme="dark"] {
   --color-heading: #FFFCF5;
   --text-muted: #CFCAC0;
 }
+

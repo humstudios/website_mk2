@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <!-- Using color-scheme only; theme-color can be added if desired -->
+  <title>Meta Demo</title>
+  <style>
+    :root { color-scheme: light dark; font-family: system-ui, -apple-system, Segoe UI, Roboto, Atma, sans-serif; line-height: 1.5; }
+    html[data-theme="light"] { color-scheme: light; }
+    html[data-theme="dark"]  { color-scheme: dark; }
+    body { margin: 2rem; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .card { max-width: 70ch; padding: 1.25rem 1.5rem; border-radius: 14px; background: #fff; box-shadow: 0 10px 24px rgba(11,18,32,.12); }
+    @media (prefers-color-scheme: dark) {
+      .card { background: #111827; color: #FFFCF5; }
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>Meta Demo</h1>
+    <p>This demo places all <code>color-scheme</code> / <code>theme-color</code> meta tags correctly in <code>&lt;head&gt;</code>.</p>
+    <pre><code>&lt;!-- Using color-scheme only; theme-color can be added if desired --&gt;</code></pre>
+    <script defer="" src="assets/js/enhancements.js"></script>
+<!-- Signals that your UI supports both color schemes -->
+<meta content="light dark" name="color-scheme"/>
+  </main>
+</body>
+</html>

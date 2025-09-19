@@ -72,7 +72,25 @@ export async function onRequestPost(context) {
       return jerr("MISSING_TURNSTILE", 400, "Missing Turnstile token");
     }
 
-    // Config presence log (booleans only)
+    
+    // Additional validation
+    if (name.length > 200) {
+      stage("validation_fail_name_len", { len: name.length });
+      return jerr("NAME_TOO_LONG", 400, "Name is too long");
+    }
+    if (email.length > 254) {
+      stage("validation_fail_email_len", { len: email.length });
+      return jerr("EMAIL_TOO_LONG", 400, "Email is too long");
+    }
+    if (/[\x00-\x1F\x7F]/.test(name)) {
+      stage("validation_fail_name_ctrl");
+      return jerr("NAME_INVALID_CHARS", 400, "Invalid characters in name");
+    }
+    if (message.length > 5000) {
+      stage("validation_fail_msg_len", { len: message.length });
+      return jerr("MESSAGE_TOO_LONG", 400, "Message is too long");
+    }
+// Config presence log (booleans only)
     stage("config_presence", {
       hasTurnstileSecret: !!env.TURNSTILE_SECRET,
       hasResendApiKey: !!env.RESEND_API_KEY,
@@ -109,7 +127,7 @@ export async function onRequestPost(context) {
 
     // Send via Resend
     stage("resend_begin");
-    const resendRes = await fetch("https://api.resend.com/emails", {
+    const resendRes = await fetchWithTimeout("https://api.resend.com/emails", {
       method: "POST",
       headers: {
         "authorization": `Bearer ${env.RESEND_API_KEY}`,
@@ -142,6 +160,18 @@ export async function onRequestPost(context) {
   }
 }
 
+
+// Timed fetch helper
+async function fetchWithTimeout(url, opts = {}, ms = 7000) {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), ms);
+  try {
+    const res = await fetch(url, { ...opts, signal: controller.signal });
+    return res;
+  } finally {
+    clearTimeout(id);
+  }
+}
 // ---------- helpers ----------
 
 function flatArray(x) {
@@ -162,16 +192,31 @@ function formAll(form, key) {
   return vals.map(v => String(v || ""));
 }
 
+
 async function verifyTurnstile(token, secret, request) {
   const formData = new FormData();
   formData.append("secret", secret);
   formData.append("response", token);
   formData.append("remoteip", request.headers.get("CF-Connecting-IP") || "");
 
-  const res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", { method: "POST", body: formData });
+  const res = await fetchWithTimeout("https://challenges.cloudflare.com/turnstile/v0/siteverify", { method: "POST", body: formData }, 7000);
   const data = await res.json().catch(() => null);
-  return { ok: Boolean(data && data.success), details: data && data["error-codes"] };
+  if (!data) return { ok: false, details: { error: "no-data" } };
+
+  // Hardened checks
+  const allowedHost = "www.humstudios.com";
+  const host = String(data.hostname || "");
+  const hostOk = host === allowedHost;
+  const actionOk = data.action === "contact";
+  const ts = Date.parse(data.challenge_ts || 0);
+  const fresh = Number.isFinite(ts) && (Date.now() - ts) < 3 * 60 * 1000; // 3 minutes
+
+  return {
+    ok: Boolean(data.success && hostOk && actionOk && fresh),
+    details: data
+  };
 }
+
 
 function isValidEmail(v) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
@@ -199,6 +244,7 @@ function json(data, status = 200) {
     headers: {
       "content-type": "application/json; charset=utf-8",
       "cache-control": "no-store",
+      "x-content-type-options": "nosniff"
     },
   });
 }

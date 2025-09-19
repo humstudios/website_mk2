@@ -11,7 +11,7 @@
 <meta content="#FFFCF5" media="(prefers-color-scheme: light)" name="theme-color"/>
 <meta content="#0b1220" media="(prefers-color-scheme: dark)" name="theme-color"/>
 <title>Hum Studios | Contact</title>
-<script async="" defer="" src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"></script>
+<script async="" defer="" src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileLoad"></script>
 <meta content="Contact Hum Studios for questions about our interactive stories and digital picture books." name="description"/>
 <!-- Color scheme & theme colors for browser UI -->
 <!-- Favicons (all relative for GH Pages, IONOS, and local) -->
@@ -27,7 +27,7 @@
 <link as="font" crossorigin="" href="assets/fonts/Overpass-Regular-400.woff2" rel="preload" type="font/woff2"/>
 <link as="font" crossorigin="" href="assets/fonts/Atma-Bold-700.woff2" rel="preload" type="font/woff2"/>
 <link href="assets/css/styles.css?v=20250907" rel="stylesheet"/>
-</meta><script defer="" src="assets/js/enhancements.js"></script><meta content="index,follow" name="robots"/><meta content="https://www.humstudios.com/assets/img/og-1200x630.jpg" property="og:image"/></head>
+<script defer="" src="assets/js/enhancements.js"></script><meta content="index,follow" name="robots"/><meta content="https://www.humstudios.com/assets/img/og-1200x630.jpg" property="og:image"/></head>
 <body class="contact-page">
 <a class="skip-link" href="#main">Skip to content</a>
 <!-- Permanent site backdrop (replaces body::before) -->
@@ -108,7 +108,34 @@
 </section>
 </main>
 </div>
-<footer data-include="partials/footer.html" role="contentinfo"></footer>
+<footer role="contentinfo">
+    <div class="footer-inner">
+    <div class="footer-content">
+    <nav aria-label="Footer" class="footer-nav">
+      <ul class="footer-links">
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="privacy.html">Privacy</a></li>
+        <li><a href="cookies.html">Cookies</a></li>
+      </ul>
+    </nav>
+
+    <div class="footer-social">
+      <a aria-label="Facebook" href="https://www.facebook.com/humstudiosltd" rel="noopener noreferrer" target="_blank">
+        <img height="120" width="120" fetchpriority="low" draggable="false" aria-hidden="true" alt="" decoding="async" loading="lazy" src="assets/img/logos/Facebook_Logo_Primary.png" />
+      </a>
+      <a aria-label="Instagram" href="https://www.instagram.com/hum_studios_uk/" rel="noopener noreferrer" target="_blank">
+        <img height="120" width="120" fetchpriority="low" draggable="false" aria-hidden="true" alt="" decoding="async" loading="lazy" src="assets/img/logos/Instagram_Glyph_Gradient.png" />
+      </a>
+    </div>
+
+    <div class="footer-legal">
+      <p>Hum Studios Ltd is registered in England and Wales under the company registration number 10595466.</p>
+      <p class="registered-address">Registered office address: 62 Rossmore Road, Poole, Dorset BH12 3NL.</p>
+      <p>© Copyright 2025 Hum Studios Ltd. All Rights Reserved.</p>
+    </div>
+  </div>
+</div>
+</footer>
 <!-- External scripts -->
 <!-- Site scripts (deferred) -->
 <script defer="" src="assets/js/theme-toggle.session.js"></script>

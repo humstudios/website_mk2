@@ -1,8 +1,9 @@
-/*! consent-bind.js — Hum Studios (2025-09-12)
+/*! consent-bind.js — Hum Studios (updated)
  *  Binds page controls to the Consent API provided by consent.js.
  *  - Wires "Change settings" buttons/links
  *  - Auto-opens the banner on cookies.html
  *  - Supports ?consent=open for quick testing
+ *  - Banner now offers optional theme cookie only (no analytics cookies)
  */
 (function(){
   'use strict';

@@ -67,7 +67,8 @@ try {
     }
     var url = new URL(src, ROOT_BASE);
     try {
-      var res = await fetch(url.toString(), { credentials: 'same-origin', cache: 'force-cache' });
+      // Use the default cache policy for reliability
+      var res = await fetch(url.toString(), { credentials: 'same-origin', cache: 'default' });
       if (!res.ok) throw new Error('HTTP ' + res.status + ' for ' + url);
       var html = await res.text();
       inject(el, html);
@@ -197,6 +198,8 @@ function __startAnimationsSoon(){
   function run(){
     ensureCloudsPlaceholder();
     var nodes = Array.from(document.querySelectorAll('[data-include]'));
+    
+    // If no includes are found, run final setup and exit.
     if (nodes.length === 0){
       rewriteAbsoluteAssetPathsForGithubPages();
       fixLogoHomeLinkForGithubPages();
@@ -204,15 +207,12 @@ function __startAnimationsSoon(){
       __startAnimationsSoon();
       return;
     }
-    var headerNodes = nodes.filter(function(n){ return /header\.html$/i.test(n.getAttribute('data-include')||''); });
-    var footerNodes = nodes.filter(function(n){ return /footer\.html$/i.test(n.getAttribute('data-include')||''); });
-    var others = nodes.filter(function(n){ return headerNodes.indexOf(n)===-1 && footerNodes.indexOf(n)===-1; });
-    var seq = headerNodes.concat(others, footerNodes);
-
-    seq.reduce(function(p, el){ return p.then(function(){ return loadInclude(el); }); }, Promise.resolve())
+    
+    // Process all found includes (e.g., clouds)
+    nodes.reduce(function(p, el){ return p.then(function(){ return loadInclude(el); }); }, Promise.resolve())
        .then(function(){
          document.dispatchEvent(new CustomEvent('partials:loaded'));
-         // header is now in DOM → we can safely set the active state
+         // Final setup after includes are loaded
          rewriteAbsoluteAssetPathsForGithubPages();
          fixLogoHomeLinkForGithubPages();
          setActiveNav();
