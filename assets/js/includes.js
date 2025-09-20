@@ -58,6 +58,13 @@ try {
   async function loadInclude(el){
     var src = el.getAttribute('data-include');
     if (!src) return;
+    // Normalize: if 'src' has no extension, assume .html (e.g., 'partials/clouds' -> 'partials/clouds.html')
+    try {
+      var _s = src.split('#')[0].split('?')[0];
+      var _last = _s.split('/').pop();
+      if (_last && !/\.[a-z0-9]+$/i.test(_last)) { src = src + '.html'; }
+    } catch (e) {}
+
     if (el.__included) return; // prevent dupes
     el.__included = true;
 
@@ -65,7 +72,11 @@ try {
       warn(el, 'Includes disabled in file:// preview. Run a local server (e.g., “npx http-server”).');
       return;
     }
-    var url = new URL(src, ROOT_BASE);
+    var url = new URL(src, document.baseURI || location.href);
+    if (url.origin !== location.origin || /^(127\.0\.0\.1|localhost)$/i.test(url.hostname)) {
+      var base = location.origin + location.pathname.replace(/[^/]*$/, '');
+      url = new URL(src, base);
+    }
     try {
       // Use the default cache policy for reliability
       var res = await fetch(url.toString(), { credentials: 'same-origin', cache: 'default' });
@@ -87,6 +98,7 @@ try {
     if (document.querySelector('.clouds, [data-include$="clouds.html"], [data-clouds-include]')) return;
 
     var src = (document.body && document.body.getAttribute('data-clouds-include')) || 'partials/clouds.html';
+    if (src && !/\.[a-z0-9]+($|\?|\#)/i.test(src)) { src += '.html'; }
     var ph = document.createElement('div');
     ph.setAttribute('data-include', src);
     var skip = document.querySelector('.skip-link');

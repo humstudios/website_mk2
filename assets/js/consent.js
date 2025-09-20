@@ -62,7 +62,7 @@
 
     var p = document.createElement('p');
     p.className = 'consent-banner__text';
-    p.innerHTML = '<strong>Optional:</strong> Let us remember your theme (Light/Dark) across visits.';
+    p.innerHTML = '<strong>Optional:</strong> Let us remember your theme (Light/Dark) across visits. <a href="cookies.html" class="consent-banner__link">Learn more</a>';
 
     var controls = document.createElement('div');
     controls.className = 'consent-banner__controls';
