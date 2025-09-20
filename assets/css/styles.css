@@ -651,7 +651,8 @@ html[data-theme="dark"]{
   color-scheme: dark;
 }html[data-theme="dark"] .card{ background: var(--card-bg); border-color: var(--card-border); color: var(--text-strong); }html[data-theme="dark"] .card:nth-of-type(even):not(.card--hero-placeholder){ background: var(--card-alt-bg); }html[data-theme="dark"] .card::after{ opacity: 0.25; mix-blend-mode: soft-light; }html[data-theme="dark"] .card--light{ background: var(--light-card-bg); border-color: var(--light-card-border); color: var(--light-card-fg); color-scheme: light; }html[data-theme="dark"] .mobile-nav:not(:is(.pushdown, [data-behavior="pushdown"])){ background: var(--card-bg); border-color: var(--card-border); }html[data-theme="dark"] .input, html[data-theme="dark"] .textarea{
   background: rgba(0,0,0,.3); border-color: rgba(255,255,255,.2);
-}html[data-theme="dark"] .btn{ background: #2B245A; color: #e6edf7; }html[data-theme="dark"]/* --- Authoritative Color Overrides (Dark Mode) --- */
+}html[data-theme="dark"] .btn{ background: #2B245A; color: #e6edf7; }
+/* --- Authoritative Color Overrides (Dark Mode) --- */
 /* These appear last and use !important to enforce brand values. */
 html[data-theme="dark"]{
   --text: #F3EFE6;
