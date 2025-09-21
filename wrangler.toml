@@ -1,0 +1,25 @@
+# wrangler.toml — Cloudflare Pages config
+# Docs: https://developers.cloudflare.com/pages/functions/wrangler-configuration/
+# This file is read by Pages during deploy. The key below is REQUIRED.
+pages_build_output_dir = "."
+
+# Set a recent compatibility date (adjust as needed).
+compatibility_date = "2025-09-01"
+
+# Uncomment if you need Node compat in Functions (not required for simple fetch/email)
+# compatibility_flags = ["nodejs_compat"]
+
+# Non-secret variables (for both preview & production). Secrets go in the dashboard.
+[vars]
+ALLOW_ORIGINS = "https://www.humstudios.com,https://humstudios.github.io"
+TURNSTILE_ENFORCE_HOSTNAME = "1"
+TURNSTILE_ALLOWED_HOSTNAMES = "www.humstudios.com,humstudios.github.io"
+
+# Example per-environment overrides (optional):
+# [env.preview.vars]
+# ALLOW_ORIGINS = "https://humstudios.github.io"
+#
+# [env.production.vars]
+# ALLOW_ORIGINS = "https://www.humstudios.com"
+
+# If you later add bindings (KV/DO/Service), follow the Pages docs for syntax.
