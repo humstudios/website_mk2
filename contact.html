@@ -11,7 +11,7 @@
 <meta content="#FFFCF5" media="(prefers-color-scheme: light)" name="theme-color"/>
 <meta content="#0b1220" media="(prefers-color-scheme: dark)" name="theme-color">
 <title>Hum Studios | Contact</title>
-<script async="" defer="" src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script>
+<script async="" defer="" src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&amp;onload=onTurnstileLoad"></script>
 <meta content="Contact Hum Studios for questions about our interactive stories and digital picture books." name="description"/>
 <!-- Color scheme & theme colors for browser UI -->
 <!-- Favicons (all relative for GH Pages, IONOS, and local) -->
@@ -85,7 +85,7 @@
           - Set to './contact' which your server maps to an email handler.
           - No mailto fallback by design (production will always have a backend).
         -->
-<form action="https://YOUR-SUBDOMAIN.workers.dev/contact" data-contact="" enctype="multipart/form-data" id="contactForm" method="POST" novalidate="">
+<form action="https://www.humstudios.com/api/contact" data-contact="" enctype="multipart/form-data" id="contactForm" method="POST" novalidate="">
 <label for="email">Email</label>
 <input aria-describedby="email-error" autocomplete="email" class="input" id="email" name="email" placeholder="you@example.com" required="" type="email"/>
 <div aria-live="polite" class="visually-hidden form-error" id="email-error" role="alert"></div>
@@ -104,7 +104,7 @@
 <div class="cf-turnstile" data-action="contact" data-callback="enableSubmit" data-sitekey="0x4AAAAAABzCutgVX0rn7kxw">
 </div>
 <button class="btn" disabled="" id="submit-button" type="submit">Send Message</button>
-<p aria-live="polite" class="form-status" id="contact-status" role="status" data-status></p>
+<p aria-live="polite" class="form-status" id="contact-status" role="status"></p>
 </form>
 </section>
 </main>
@@ -135,25 +135,21 @@
 </div>
 </div>
 </footer>
-<script>
-// Global callback for Cloudflare Turnstile (matches data-callback="enableSubmit")
-// Called when the challenge is successfully completed.
-function enableSubmit() {
-  var btn = document.getElementById('submit-button');
-  if (btn) { btn.removeAttribute('disabled'); }
-  var status = document.getElementById('contact-status');
-  if (status) { status.textContent = ''; }
-}
-</script>
-
 <!-- External scripts -->
 <!-- Site scripts (deferred) -->
 <script defer="" src="assets/js/theme-toggle.session.js"></script>
 <script defer="" src="assets/js/theme-color-sync.js"></script>
-<script defer="" src="assets/js/contact.simple.js?v=1"></script>
+<script defer="" src="assets/js/contact.js"></script>
 <script defer="" src="assets/js/hum-menu.clean.js"></script>
 <script data-glue="a|an|the|to|of|in|on|at|for|and|or|vs" data-selector=".card h1, .card h2, .card h3" data-wbr-after="/–—:" defer="" src="assets/js/headline-smart-wrap.js"></script>
 <script defer="" src="assets/js/includes.js"></script>
 <script defer="" src="assets/js/consent.js"></script>
+<script>
+  function enableSubmit(){
+    document.querySelector('[type="submit"], #send, #submit-button')?.removeAttribute('disabled');
+    var status = document.querySelector('[data-status]');
+    if (status) status.textContent = '';
+  }
+</script>
 </body>
 </html>
