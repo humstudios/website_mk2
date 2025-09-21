@@ -1,9 +1,9 @@
-// contact-worker.js
-// Cloudflare Worker for Hum Studios contact form
+// contact-worker.final.js
+// JSON-only Cloudflare Worker for Hum Studios contact form
 // - Accepts JSON or multipart/form-data
 // - Verifies Cloudflare Turnstile
 // - CORS for GitHub Pages + Production
-// - Optionally sends via MailChannels (set MAIL_TO + MAIL_FROM env vars)
+// - Sends JSON responses only (no HTML redirects)
 
 export default {
   async fetch(request, env, ctx) {
@@ -45,7 +45,6 @@ export default {
       if (!verify.success) {
         return json({ error: "Turnstile verification failed", detail: verify["error-codes"] || null }, 403, cors);
       }
-      // Optional: lock down accepted hostnames
       if (env.TURNSTILE_ENFORCE_HOSTNAME === "1") {
         const expected = new Set((env.TURNSTILE_ALLOWED_HOSTNAMES || "").split(",").map(s => s.trim()).filter(Boolean));
         if (expected.size && !expected.has(verify.hostname)) {
@@ -56,7 +55,7 @@ export default {
       return json({ error: "Turnstile verification error", detail: err.message }, 502, cors);
     }
 
-    // 4) Send the message (MailChannels optional)
+    // 4) Optionally send email via MailChannels
     let sent = false;
     let delivery = null;
     try {
@@ -65,16 +64,15 @@ export default {
         sent = delivery?.ok === true;
       }
     } catch (err) {
-      // fall through; we'll still return ok if verification passed, unless you want strict failure
       delivery = { ok: false, error: err.message };
     }
 
-    // 5) Build response
+    // 5) JSON response only
     return json({
       ok: true,
       sent,
       delivery,
-      echo: { name, email, messageLength: message.length },
+      echo: { name, email, messageLength: message.length }
     }, 200, cors);
   }
 };
@@ -110,7 +108,6 @@ async function parsePayload(request) {
     }
     return obj;
   }
-  // Default: try JSON then text fallback
   try { return await request.json(); } catch {}
   const text = await request.text();
   return { raw: text };
@@ -158,9 +155,7 @@ async function sendMailViaMailChannels({ name, email, message, origin }, env) {
   ].join("\n");
 
   const body = {
-    personalizations: [{
-      to: [{ email: env.MAIL_TO }],
-    }],
+    personalizations: [{ to: [{ email: env.MAIL_TO }] }],
     from: { email: env.MAIL_FROM, name: "Hum Studios Contact" },
     subject,
     content: [{ type: "text/plain", value: content }],

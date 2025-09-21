@@ -3,8 +3,7 @@
 // - Creates a status line if missing
 // - Works on GitHub Pages/localhost by auto-targeting production endpoint
 // - Respects global override: window.CONTACT_FALLBACK_URL
-// - Avoids cross-origin CORS issues by falling back to a plain form POST when needed
-// - Clear messages on success/failure; resets Turnstile on success
+//// - Clear messages on success/failure; resets Turnstile on success
 
 (() => {
   const form = document.querySelector('form[data-contact]') || document.querySelector('#contactForm');
@@ -12,6 +11,21 @@
     console.warn('[contact.js] No form found. Add data-contact to your form.');
     return;
   }
+
+  async function postJSON(url, data) {
+    const absolute = hasAbsolute(url);
+    const target = absolute ? new URL(url, location.href).toString() : url;
+    const cors = absolute && new URL(target).origin !== location.origin;
+    const res = await fetch(target, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+      mode: cors ? 'cors' : 'same-origin',
+      credentials: 'omit'
+    });
+    return res;
+  }
+
 
   // ---------- Environment-aware endpoint resolution ----------
   // 1) If the form has an absolute action, use it.
@@ -76,68 +90,41 @@
   };
 
   // ---------- Submit handling ----------
+  
   form.addEventListener('submit', async (e) => {
-    const postUrl = resolvePostUrl();
-    const willBeCrossOrigin = isCrossOrigin(postUrl);
-    const isProd = isProdHost && !willBeCrossOrigin; // same-origin in production
-
-    // Always require Turnstile token before submitting (both fetch and plain POST paths)
-    const formData = new FormData(form);
-    const ts = formData.get('cf-turnstile-response') || formData.get('turnstile_token');
-    if (!ts) {
-      e.preventDefault();
-      setStatus('Please complete the verification.', false);
-      console.warn('[contact.js] Missing Turnstile token. Is the widget visible and sitekey correct?');
-      return;
-    }
-
-    // If posting cross-origin (e.g., GH Pages → production), avoid CORS by letting the browser
-    // perform a normal form POST to the absolute URL. This sacrifices inline status updates, but
-    // guarantees submission without requiring server CORS headers.
-    if (willBeCrossOrigin && !isProdHost) {
-      console.info('[contact.js] Cross-origin environment detected; using plain form POST to', postUrl);
-      form.action = postUrl;
-      // Let the browser submit normally (do not preventDefault)
-      return;
-    }
-
-    // Same-origin path: enhance with fetch + inline status
     e.preventDefault();
     setBusy(true);
     setStatus('Sending…');
-
     try {
-      // Include any existing fields; supports multipart/form-data
-      const redirectTo = formData.get('redirect');
+      // Collect data
+      const data = collect();
+      if (!data.email || !data.message) {
+        setStatus('Please provide your email and a message.', false);
+        return;
+      }
+      // Turnstile token
+      const token = getToken();
+      if (!token) {
+        setStatus('Please complete the verification.', false);
+        return;
+      }
+      data.turnstileToken = token;
 
-      console.info('[contact.js] POST', postUrl);
-      const res = await fetch(postUrl, {
-        method: 'POST',
-        body: formData,
-        headers: { 'Accept': 'application/json' }
-      });
-
-      const contentType = (res.headers.get('content-type') || '').toLowerCase();
-      const isJson = contentType.includes('application/json');
+      // Choose endpoint and always AJAX
+      const endpoint = bestTarget();
+      const res = await postJSON(endpoint, data);
 
       if (!res.ok) {
-        let errText = 'Send failed';
-        try {
-          const payload = isJson ? await res.json() : await res.text();
-          errText = (payload && payload.error) || (typeof payload === 'string' ? payload : errText);
-          console.error('[contact.js] Server error:', payload);
-        } catch {}
-        throw new Error(errText);
+        const txt = await res.text().catch(() => '');
+        throw new Error('HTTP ' + res.status + (txt ? (' — ' + txt) : ''));
       }
-
-      if (redirectTo) {
-        location.href = redirectTo.toString();
-        return;
+      const payload = await res.json().catch(() => ({}));
+      if (!payload || payload.ok !== true) {
+        throw new Error('Server did not confirm ok');
       }
 
       setStatus('Thanks — your message was sent!');
       form.reset();
-
       if (window.turnstile && typeof window.turnstile.reset === 'function') {
         try { window.turnstile.reset(); } catch {}
       }
