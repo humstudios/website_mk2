@@ -1,37 +1,46 @@
-// contact.simple.js — classic submit (no AJAX). Inline UX, then let the browser POST the form.
+// /assets/js/contact.js
+// Classic form submit (no AJAX). Shows "Sending…", enables the button after Turnstile,
+// and renders an inline success message when redirected back with ?sent=1.
+
 (function () {
-  const form = document.querySelector('form[data-contact]') || document.querySelector('#contactForm');
-  if (!form) return;
+  function $(sel, root) { return (root || document).querySelector(sel); }
 
-  // Ensure method/action (adjust action to your Worker URL if /api/contact isn't routed yet)
-  if (!form.getAttribute('method')) form.setAttribute('method', 'POST');
-
-  // status line (optional)
-  let statusEl = form.querySelector('[data-status]');
-  if (!statusEl) {
-    statusEl = document.createElement('p');
-    statusEl.setAttribute('data-status', '');
-    statusEl.setAttribute('aria-live', 'polite');
-    form.appendChild(statusEl);
-  }
-  function setStatus(msg) { statusEl.textContent = msg || ''; }
-
-  // Global callback for Turnstile
-  window.enableSubmit = function () {
-    const btn = form.querySelector('[type="submit"], #send, #submit-button');
-    btn && btn.removeAttribute('disabled');
-    setStatus(''); // clear any previous error
+  // Called by Turnstile widget via data-callback="enableSubmit"
+  window.enableSubmit = function enableSubmit() {
+    var btn = $('[type="submit"], #send, #submit-button');
+    if (btn) btn.removeAttribute('disabled');
+    var s = $('[data-status]');
+    if (s) s.textContent = '';
   };
 
-  // DO NOT preventDefault — allow a normal form POST to your Worker
-  form.addEventListener('submit', () => {
-    const btn = form.querySelector('[type="submit"], #send, #submit-button');
-    btn && btn.setAttribute('disabled', 'true');
-    setStatus('Sending…');
+  // Optional: called by Turnstile via data-error-callback="tsError"
+  window.tsError = function tsError(code) {
+    var s = $('[data-status]');
+    if (s) {
+      s.textContent = 'We couldn’t verify you (' + code + '). '
+        + 'If you use privacy extensions, allow challenges.cloudflare.com and try again.';
+    }
+    try { window.turnstile && window.turnstile.reset && window.turnstile.reset(); } catch (_) {}
+  };
+
+  // Show inline success when the server redirected back with ?sent=1
+  document.addEventListener('DOMContentLoaded', function () {
+    try {
+      var sent = new URL(location.href).searchParams.get('sent') === '1';
+      if (sent) {
+        var s = $('[data-status]');
+        if (s) s.textContent = 'Thanks — your message was sent!';
+        // Optional: clean the URL (keep hash)
+        // history.replaceState({}, '', location.pathname + (location.hash || ''));
+      }
+    } catch (_) {}
   });
 
-  // If we landed here after a redirect (?sent=1), show success
-  try {
-    if (new URL(location.href).searchParams.get('sent') === '1') setStatus('Thanks — your message was sent!');
-  } catch {}
+  // While the browser navigates after submit, show a sending state (no preventDefault!)
+  document.addEventListener('submit', function () {
+    var s = $('[data-status]');
+    if (s) s.textContent = 'Sending…';
+    var btn = $('[type="submit"], #send, #submit-button');
+    if (btn) btn.setAttribute('aria-busy', 'true');
+  }, true);
 })();
