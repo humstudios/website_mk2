@@ -1,7 +1,13 @@
+/* PATCH NOTE (2025-09-21)
+   - Moved page gradient from `html{}` to a fixed `body::before` layer (z-index:-3)
+     to stop Android Chrome/Samsung Internet from scrolling it during fling/overscroll.
+   - Made html background transparent to ensure fixed negative layers are visible.
+   - Left grain/stars/clouds/dark-mode behavior unchanged.
+*/
 /**
  * Hum Studios | Refactored Stylesheet
  *
- * Version: 12.1.0 (Definitive Stable Version)
+ * Version: 12.1.0+android-fix (Fixed gradient via body::before)
  * Date: 2025-09-19
  *
  * Description:
@@ -196,30 +202,20 @@
 /* =====================================================================
    02. GLOBAL & BASE STYLES
    ===================================================================== */
+
 html{
-  background-color: var(--gradient-start);
-  background:
-  /* darker top shade */
-  radial-gradient(120% 70% at 50% -10%, rgba(0,0,0,.10), transparent 60%),
-  /* top-right corner glow */
-  radial-gradient(70% 55% at 100% 0%, rgba(255,255,255,.05), transparent 70%),
-  /* stronger bottom-left glow */
-  radial-gradient(70% 55% at 0% 100%, rgba(255,255,255,.10), transparent 70%),
-  /* subtle vignette */
-  radial-gradient(120% 100% at 50% 50%, rgba(0,0,0,.06), transparent 60%),
-  /* stronger top→bottom cue */
-  linear-gradient(180deg, rgba(0,0,0,.12) 0%, transparent 40%, transparent 72%, rgba(255,255,255,.12) 100%),
-  /* base brand gradient */
-  linear-gradient(130deg, var(--gradient-start), var(--gradient-mid) 55%, var(--gradient-end));
-  background-attachment: fixed;
+  background-color: transparent;
+  background: none;
   font-size: var(--font-size-base);
   scroll-behavior: smooth;
   scrollbar-gutter: stable; 
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   height: 100%;
-
-}body{
+  /* Reduce Android top-edge overscroll from demoting fixed layers */
+  overscroll-behavior: contain;
+}
+body{
   position: relative;
   display: flex;
   flex-direction: column;
@@ -235,6 +231,33 @@ html{
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Global fixed gradient layer — replaces html{background-attachment:fixed} for Android stability */
+body::before{
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -3;             /* behind grain (-2), stars (-1), clouds (0) */
+  pointer-events: none;
+  background:
+    /* darker top shade */
+    radial-gradient(120% 70% at 50% -10%, rgba(0,0,0,.10), transparent 60%),
+    /* top-right corner glow */
+    radial-gradient(70% 55% at 100% 0%, rgba(255,255,255,.05), transparent 70%),
+    /* stronger bottom-left glow */
+    radial-gradient(70% 55% at 0% 100%, rgba(255,255,255,.10), transparent 70%),
+    /* subtle vignette */
+    radial-gradient(120% 100% at 50% 50%, rgba(0,0,0,.06), transparent 60%),
+    /* stronger top→bottom cue */
+    linear-gradient(180deg, rgba(0,0,0,.12) 0%, transparent 40%, transparent 72%, rgba(255,255,255,.12) 100%),
+    /* base brand gradient */
+    linear-gradient(130deg, var(--gradient-start), var(--gradient-mid) 55%, var(--gradient-end));
+
+  /* Keep promoted to GPU to avoid fling/overscroll re-rasterization */
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
 body::after{
   content: "";
   position: fixed;
@@ -249,7 +272,9 @@ body::after{
   background-size: 120px 120px, 100% 100%;
 }
 @supports (-webkit-overflow-scrolling: touch){
+  /* iOS is already fine; the global body::before handles gradient everywhere. */
   html { background: none; }
+}
   body::before{
     content: "";
     position: fixed;
