@@ -4,6 +4,9 @@
 // - Submits via fetch and shows inline success/error
 // - Resets Turnstile after a successful send
 
+// Let the page know our AJAX handler is ready (prevents fallback from running)
+window.__contactAjaxReady = true;
+
 (function () {
   var SUCCESS_TEXT = 'Thanks — your message was sent!';
   var SENDING_TEXT = 'Sending…';
@@ -20,7 +23,6 @@
   window.enableSubmit = function enableSubmit() {
     var btn = $('[type="submit"], #send, #submit-button');
     if (btn) btn.removeAttribute('disabled');
-    // Don't clear status if we're showing success
     var s = $('[data-status]');
     if (s && !s.hasAttribute('data-success')) s.textContent = '';
   };
@@ -39,7 +41,6 @@
     var input = form.querySelector('input[name="cf-turnstile-response"]');
     if (input && input.value) return input.value.trim();
     try {
-      // Fallback: ask the API (if a widget id was created by Turnstile)
       if (window.turnstile && window.turnstile.getResponse) {
         return window.turnstile.getResponse();
       }
@@ -101,13 +102,12 @@
     }
   }, true);
 
-  // If your server ever redirects back with ?sent=1 (fallback path), still show success
+  // If server ever redirects back with ?sent=1 (fallback path), still show success
   document.addEventListener('DOMContentLoaded', function () {
     try {
       var sent = new URL(location.href).searchParams.get('sent') === '1';
       if (sent) {
         setStatus(SUCCESS_TEXT, true);
-        // Optional: clean URL so it doesn't persist
         history.replaceState({}, '', location.pathname + (location.hash || ''));
       }
     } catch (_) {}
