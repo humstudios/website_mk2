@@ -1,5 +1,5 @@
-// contact-worker.rollback.js
-// Accepts JSON or form-data. If request prefers HTML (classic form POST), 303 back to THANK_YOU_URL/contact.
+// contact-worker.redirect.js
+// JSON for AJAX; 303 redirect back to the contact page for classic form POSTs (Accept: text/html)
 export default {
   async fetch(request, env, ctx) {
     const origin = request.headers.get("Origin") || "";
@@ -16,7 +16,6 @@ export default {
     const email = (payload.email || "").toString().trim();
     const message = (payload.message || "").toString().trim();
     const token = getTurnstileToken(payload);
-
     if (!email || !message) return json({ error: "Missing required fields: email, message" }, 400, cors);
     if (!token) return json({ error: "Missing Turnstile token" }, 400, cors);
 
@@ -31,6 +30,7 @@ export default {
       return json({ error: "Turnstile verification error", detail: err.message }, 502, cors);
     }
 
+    // OPTIONAL: send via MailChannels if configured
     let sent = false;
     try {
       if (env.MAIL_TO && env.MAIL_FROM) {
@@ -39,11 +39,12 @@ export default {
       }
     } catch {}
 
-    // If this was a classic form POST (Accept prefers HTML), redirect back to the contact page.
+    // If the client expects HTML (classic form POST), redirect back with a success flag.
     const wantsHTML = /\btext\/html\b/.test(request.headers.get("Accept") || "");
     if (wantsHTML) {
-      const back = (env.THANK_YOU_URL || "").trim()
-        || (origin ? origin.replace(/\/$/, "") + "/contact.html?sent=1#contact" : "/contact.html?sent=1#contact");
+      const back =
+        (env.THANK_YOU_URL || "").trim() ||
+        (origin ? origin.replace(/\/$/, "") + "/contact.html?sent=1#contact" : "/contact.html?sent=1#contact");
       return Response.redirect(back, 303);
     }
 
@@ -61,9 +62,15 @@ function makeCorsHeaders(origin, env) {
 async function parsePayload(request) {
   const ctype = request.headers.get("Content-Type") || "";
   if (ctype.includes("application/json")) return await request.json();
-  if (ctype.includes("multipart/form-data") || ctype.includes("application/x-www-form-urlencoded")) {
+  if (ctype.includes("multipart/form-data") ) {
     const form = await request.formData();
-    const obj = {}; for (const [k, v] of form.entries()) obj[k] = typeof v === "string" ? v : (v?.name || ""); return obj;
+    const obj = {}; for (const [k, v] of form.entries()) obj[k] = typeof v === "string" ? v : (v?.name || "");
+    return obj;
+  }
+  if (ctype.includes("application/x-www-form-urlencoded")) {
+    const form = await request.formData();
+    const obj = {}; for (const [k, v] of form.entries()) obj[k] = typeof v === "string" ? v : (v?.name || "");
+    return obj;
   }
   try { return await request.json(); } catch {}
   const text = await request.text(); return { raw: text };
