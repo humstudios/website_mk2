@@ -197,6 +197,7 @@
    02. GLOBAL & BASE STYLES
    ===================================================================== */
 html{
+  background-color: var(--gradient-start);
   background:
   /* darker top shade */
   radial-gradient(120% 70% at 50% -10%, rgba(0,0,0,.10), transparent 60%),
@@ -282,9 +283,9 @@ body::after{
   }
 }
 @supports (-webkit-overflow-scrolling: touch){
-  /* On iOS, also avoid fixed for the background layer when on touch devices */
+  /* On iOS, keep the gradient layer fixed so it never scrolls */
   @media (hover: none) and (pointer: coarse){
-    body::before{ position: absolute; }
+    body::before{ position: fixed; }
   }
 }
 

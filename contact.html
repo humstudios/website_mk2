@@ -11,7 +11,7 @@
 <meta content="#FFFCF5" media="(prefers-color-scheme: light)" name="theme-color"/>
 <meta content="#0b1220" media="(prefers-color-scheme: dark)" name="theme-color">
 <title>Hum Studios | Contact</title>
-<script async="" defer="" src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&amp;onload=onTurnstileLoad"></script>
+<script async="" defer="" src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script>
 <meta content="Contact Hum Studios for questions about our interactive stories and digital picture books." name="description"/>
 <!-- Color scheme & theme colors for browser UI -->
 <!-- Favicons (all relative for GH Pages, IONOS, and local) -->
@@ -27,7 +27,7 @@
 <link as="font" crossorigin="" href="assets/fonts/Overpass-Regular-400.woff2" rel="preload" type="font/woff2"/>
 <link as="font" crossorigin="" href="assets/fonts/Atma-Bold-700.woff2" rel="preload" type="font/woff2"/>
 <link href="assets/css/styles.css?v=20250907" rel="stylesheet"/>
-<script defer="" src="assets/js/enhancements.js"></script><meta content="index,follow" name="robots"/><meta content="https://www.humstudios.com/assets/img/og-1200x630.jpg" property="og:image"/></meta><link as="image" href="assets/img/icons/sprite.svg" rel="preload" type="image/svg+xml"/></head>
+<script defer="" src="assets/js/enhancements.js"></script><meta content="index,follow" name="robots"/><meta content="https://www.humstudios.com/assets/img/og-1200x630.jpg" property="og:image"/><link as="image" href="assets/img/icons/sprite.svg" rel="preload" type="image/svg+xml"/></head>
 <body class="contact-page">
 <a class="skip-link" href="#main">Skip to content</a>
 <!-- Permanent site backdrop (replaces body::before) -->
@@ -104,7 +104,7 @@
 <div class="cf-turnstile" data-action="contact" data-callback="enableSubmit" data-sitekey="0x4AAAAAABzCutgVX0rn7kxw">
 </div>
 <button class="btn" disabled="" id="submit-button" type="submit">Send Message</button>
-<p aria-live="polite" class="form-status" id="contact-status" role="status"></p>
+<p aria-live="polite" class="form-status" id="contact-status" role="status" data-status></p>
 </form>
 </section>
 </main>
@@ -135,6 +135,17 @@
 </div>
 </div>
 </footer>
+<script>
+// Global callback for Cloudflare Turnstile (matches data-callback="enableSubmit")
+// Called when the challenge is successfully completed.
+function enableSubmit() {
+  var btn = document.getElementById('submit-button');
+  if (btn) { btn.removeAttribute('disabled'); }
+  var status = document.getElementById('contact-status');
+  if (status) { status.textContent = ''; }
+}
+</script>
+
 <!-- External scripts -->
 <!-- Site scripts (deferred) -->
 <script defer="" src="assets/js/theme-toggle.session.js"></script>
