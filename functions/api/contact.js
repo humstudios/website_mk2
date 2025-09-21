@@ -1,16 +1,8 @@
-// functions/api/contact.js
 // Cloudflare Pages Function — Contact endpoint
 // - Accepts JSON, multipart/form-data, or x-www-form-urlencoded
 // - Verifies Cloudflare Turnstile
 // - Sends email via Resend (if configured)
-// - On classic HTML form posts, 303-redirects back to the contact page so the UI shows inline success
-//
-// Required env vars (Pages → Settings → Environment variables):
-//   TURNSTILE_SECRET
-//   TURNSTILE_ALLOWED_HOSTNAMES="www.humstudios.com,humstudios.github.io"   (preview) / "www.humstudios.com" (prod)
-//   THANK_YOU_URL="https://www.humstudios.com/contact.html?sent=1#contact"  (or GH Pages URL while testing)
-// Email (optional via Resend):
-//   RESEND_API_KEY, RESEND_FROM, RESEND_TO, (optional) RESEND_SUBJECT_PREFIX
+// - Redirects after classic HTML form posts so the page shows inline success
 
 export async function onRequestPost(context) {
   const { request, env } = context;
@@ -27,7 +19,7 @@ export async function onRequestPost(context) {
   const email = s(body.email);
   const name = s(body.name);
   const message = s(body.message);
-  const honeypot = s(body.website || body.hp || ""); // if you use a honeypot field
+  const honeypot = s(body.website || body.hp || "");
   const turnstileToken =
     s(body["cf-turnstile-response"]) ||
     s(body.turnstileToken) ||
@@ -41,9 +33,7 @@ export async function onRequestPost(context) {
 
   // 3) Verify Turnstile (env + hostname allowlist)
   const verifyOk = await verifyTurnstile(turnstileToken, env.TURNSTILE_SECRET, request, env);
-  if (!verifyOk.ok) {
-    return jerr(403, "Turnstile verification failed", verifyOk.details || null);
-  }
+  if (!verifyOk.ok) return jerr(403, "Turnstile verification failed", verifyOk.details || null);
 
   // 4) Optional email via Resend
   let sent = false, mailId = null, mailErr = null;
@@ -65,31 +55,27 @@ export async function onRequestPost(context) {
     }
   }
 
-  // 5) Classic form POST? Robust redirect so the page shows the inline “Thanks”
-  const accept  = (request.headers.get("accept") || "").toLowerCase();
-  const secMode = (request.headers.get("sec-fetch-mode") || "").toLowerCase();   // "navigate" for full page loads
-  const secDest = (request.headers.get("sec-fetch-dest") || "").toLowerCase();   // "document" for full page loads
-  const xrw     = (request.headers.get("x-requested-with") || "").toLowerCase();
+  // 5) --- Robust redirect for classic form posts (avoids black JSON page) ---
+  const accept   = (request.headers.get("accept") || "").toLowerCase();
+  const ct       = (request.headers.get("content-type") || "").toLowerCase();
+  const secMode  = (request.headers.get("sec-fetch-mode") || "").toLowerCase();   // "navigate" for full page loads
+  const secDest  = (request.headers.get("sec-fetch-dest") || "").toLowerCase();   // "document" for full page loads
+  const xrw      = (request.headers.get("x-requested-with") || "").toLowerCase();
 
-  const isNavigation = secMode === "navigate" || secDest === "document";
-  const isAjaxLike   = xrw === "xmlhttprequest" ||
-                       accept.includes("application/json") ||
-                       accept.includes("text/json") ||
-                       accept.includes("application/javascript") ||
-                       accept.includes("text/javascript");
+  const isNavigation = (secMode === "navigate") || (secDest === "document");
+  const isForm       = ct.includes("application/x-www-form-urlencoded") || ct.includes("multipart/form-data");
+  const isJsonReq    = ct.includes("application/json") || accept.includes("application/json") || accept.includes("text/json");
+  const isAjaxLike   = (xrw === "xmlhttprequest") || isJsonReq;
 
-  // If it's a navigation (classic form submit), or it's NOT clearly AJAX → redirect back.
-  if (isNavigation || !isAjaxLike) {
+  // Redirect for anything that looks like a classic navigation or a form post.
+  // Only return JSON for clear AJAX/JSON calls.
+  if (isNavigation || isForm || !isAjaxLike) {
     const back = (env.THANK_YOU_URL || "https://www.humstudios.com/contact.html?sent=1#contact").trim();
     return Response.redirect(back, 303);
   }
 
   // 6) Otherwise: JSON (useful for AJAX/tools)
-  return jok({
-    ok: true,
-    id: mailId,
-    sent,
-  });
+  return jok({ ok: true, id: mailId, sent });
 }
 
 /* ----------------- helpers ----------------- */
@@ -107,7 +93,6 @@ async function parsePayload(request) {
     for (const [k, v] of form.entries()) obj[k] = typeof v === "string" ? v : (v?.name || "");
     return obj;
   }
-  // Try JSON, then text fallback
   try { return await request.json(); } catch {}
   const text = await request.text();
   return { raw: text };
@@ -115,21 +100,14 @@ async function parsePayload(request) {
 
 async function verifyTurnstile(token, secret, request, env) {
   if (!secret) return { ok: false, details: { error: "Missing TURNSTILE_SECRET" } };
-
-  // Build form for siteverify
   const ip = request.headers.get("CF-Connecting-IP") || "";
   const fd = new FormData();
   fd.append("secret", secret);
   fd.append("response", token);
   if (ip) fd.append("remoteip", ip);
 
-  const resp = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-    method: "POST",
-    body: fd
-  });
-  if (!resp.ok) {
-    return { ok: false, details: { error: "siteverify HTTP " + resp.status } };
-  }
+  const resp = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", { method: "POST", body: fd });
+  if (!resp.ok) return { ok: false, details: { error: "siteverify HTTP " + resp.status } };
   const data = await resp.json();
 
   // Hardened checks (HOSTNAME + ACTION + FRESHNESS)
@@ -141,12 +119,9 @@ async function verifyTurnstile(token, secret, request, env) {
 
   const actionOk = String(data.action || "") === "contact";
   const ts = Date.parse(data.challenge_ts || 0);
-  const fresh = Number.isFinite(ts) && (Date.now() - ts) < 3 * 60 * 1000; // 3 minutes
+  const fresh = Number.isFinite(ts) && (Date.now() - ts) < 3 * 60 * 1000;
 
-  return {
-    ok: Boolean(data.success && hostOk && actionOk && fresh),
-    details: data
-  };
+  return { ok: Boolean(data.success && hostOk && actionOk && fresh), details: data };
 }
 
 async function sendViaResend({ apiKey, from, to, subjectPrefix, name, email, message, origin }) {
@@ -157,24 +132,17 @@ async function sendViaResend({ apiKey, from, to, subjectPrefix, name, email, mes
     <pre style="white-space:pre-wrap">${escapeHtml(message)}</pre>
   `.trim();
   const payload = {
-    from,
-    to,
-    subject,
-    html,
+    from, to, subject, html,
     text: `From: ${name || "(no name)"} <${email}>\nOrigin: ${origin || "unknown"}\n\n${message}`
   };
 
   const r = await fetch("https://api.resend.com/emails", {
     method: "POST",
-    headers: {
-      "Authorization": `Bearer ${apiKey}`,
-      "Content-Type": "application/json"
-    },
+    headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
     body: JSON.stringify(payload)
   });
 
-  let data = null;
-  try { data = await r.json(); } catch {}
+  let data = null; try { data = await r.json(); } catch {}
   return { ok: r.ok, status: r.status, id: data?.id, error: data?.message || null };
 }
 
