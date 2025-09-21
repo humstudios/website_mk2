@@ -85,7 +85,7 @@
           - Set to './contact' which your server maps to an email handler.
           - No mailto fallback by design (production will always have a backend).
         -->
-<form action="https://www.humstudios.com/api/contact" data-contact="" enctype="multipart/form-data" id="contactForm" method="POST" novalidate="">
+<form action="/api/contact" data-contact="" enctype="multipart/form-data" id="contactForm" method="POST" novalidate="">
 <label for="email">Email</label>
 <input aria-describedby="email-error" autocomplete="email" class="input" id="email" name="email" placeholder="you@example.com" required="" type="email"/>
 <div aria-live="polite" class="visually-hidden form-error" id="email-error" role="alert"></div>
@@ -101,8 +101,13 @@
 <input autocomplete="off" id="website" name="website" tabindex="-1" type="text"/>
 </div>
 <!-- Cloudflare Turnstile -->
-<div class="cf-turnstile" data-action="contact" data-callback="enableSubmit" data-sitekey="0x4AAAAAABzCutgVX0rn7kxw" data-error-callback="tsError" data-retry="auto">
-</div>
+\1
+<noscript>
+  <p class="no-js-alert" style="margin-top:0.75rem;padding:0.75rem;border:1px solid #eab308;background:#fffbe6;border-radius:0.5rem;">
+    JavaScript is required to send this form. Please enable it, or email us at
+    <a href="mailto:hello@humstudios.com">hello@humstudios.com</a>.
+  </p>
+</noscript>
 <button class="btn" disabled="" id="submit-button" type="submit">Send Message</button>
 <p aria-live="polite" class="form-status" id="contact-status" role="status" data-status></p>
 </form>
@@ -143,22 +148,6 @@
 <script defer="" src="assets/js/hum-menu.clean.js"></script>
 <script data-glue="a|an|the|to|of|in|on|at|for|and|or|vs" data-selector=".card h1, .card h2, .card h3" data-wbr-after="/–—:" defer="" src="assets/js/headline-smart-wrap.js"></script>
 <script defer="" src="assets/js/includes.js"></script>
-<script defer="" src="assets/js/consent.js"></script>
-<script>
-  function enableSubmit(){
-    document.querySelector('[type="submit"], #send, #submit-button')?.removeAttribute('disabled');
-    var status = document.querySelector('[data-status]');
-    if (status) status.textContent = '';
-  }
-</script>
-<script>
-  function tsError(code){
-    var s = document.querySelector('[data-status]');
-    if (s) {
-      s.textContent = 'We couldn\'t verify you (' + code + '). If you use privacy extensions, allow challenges.cloudflare.com and try again.';
-    }
-    try { window.turnstile && window.turnstile.reset && window.turnstile.reset(); } catch {}
-  }
-</script>
+
 </body>
 </html>
