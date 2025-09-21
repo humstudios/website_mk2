@@ -39,7 +39,7 @@ export async function onRequestPost(context) {
   if (!email || !message) return jerr(400, "Missing required fields: email, message");
   if (!turnstileToken) return jerr(400, "Missing Turnstile token");
 
-  // 3) Verify Turnstile (now with env + hostname allowlist)
+  // 3) Verify Turnstile (env + hostname allowlist)
   const verifyOk = await verifyTurnstile(turnstileToken, env.TURNSTILE_SECRET, request, env);
   if (!verifyOk.ok) {
     return jerr(403, "Turnstile verification failed", verifyOk.details || null);
@@ -65,10 +65,21 @@ export async function onRequestPost(context) {
     }
   }
 
-  // 5) Classic form POST? Redirect back so the page shows the inline “Thanks”
-  const accept = (request.headers.get("accept") || request.headers.get("Accept") || "").toLowerCase();
-  const wantsHTML = /\btext\/html\b/.test(accept);
-  if (wantsHTML) {
+  // 5) Classic form POST? Robust redirect so the page shows the inline “Thanks”
+  const accept  = (request.headers.get("accept") || "").toLowerCase();
+  const secMode = (request.headers.get("sec-fetch-mode") || "").toLowerCase();   // "navigate" for full page loads
+  const secDest = (request.headers.get("sec-fetch-dest") || "").toLowerCase();   // "document" for full page loads
+  const xrw     = (request.headers.get("x-requested-with") || "").toLowerCase();
+
+  const isNavigation = secMode === "navigate" || secDest === "document";
+  const isAjaxLike   = xrw === "xmlhttprequest" ||
+                       accept.includes("application/json") ||
+                       accept.includes("text/json") ||
+                       accept.includes("application/javascript") ||
+                       accept.includes("text/javascript");
+
+  // If it's a navigation (classic form submit), or it's NOT clearly AJAX → redirect back.
+  if (isNavigation || !isAjaxLike) {
     const back = (env.THANK_YOU_URL || "https://www.humstudios.com/contact.html?sent=1#contact").trim();
     return Response.redirect(back, 303);
   }
