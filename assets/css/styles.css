@@ -275,28 +275,8 @@ body::after{
   /* iOS is already fine; the global body::before handles gradient everywhere. */
   html { background: none; }
 }
-  body::before{
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    background:
-  /* darker top shade */
-  radial-gradient(120% 70% at 50% -10%, rgba(0,0,0,.10), transparent 60%),
-  /* top-right corner glow */
-  radial-gradient(70% 55% at 100% 0%, rgba(255,255,255,.05), transparent 70%),
-  /* stronger bottom-left glow */
-  radial-gradient(70% 55% at 0% 100%, rgba(255,255,255,.10), transparent 70%),
-  /* subtle vignette */
-  radial-gradient(120% 100% at 50% 50%, rgba(0,0,0,.06), transparent 60%),
-  /* stronger top→bottom cue */
-  linear-gradient(180deg, rgba(0,0,0,.12) 0%, transparent 40%, transparent 72%, rgba(255,255,255,.12) 100%),
-  /* base brand gradient */
-  linear-gradient(130deg, var(--gradient-start), var(--gradient-mid) 55%, var(--gradient-end));
   
-  }
-}
+
 /* --- Mobile-friendly performance guards (belt & braces) -------------- */
 @media (hover: none) and (pointer: coarse){
   /* Reduce extra compositing and fixed attachment costs on touch devices */
@@ -489,7 +469,7 @@ footer{
    ========================= */
 :root{
   --z-stars: -1;             /* below clouds */
-  --stars-opacity: 0.45;     /* overall brightness */}/* Hidden by default */
+  --stars-opacity: 0.65;     /* overall brightness */}/* Hidden by default */
 .stars{  background-position: 0 0;
 position: fixed;
   inset: 0;
@@ -511,14 +491,14 @@ content: "";
   }/* Base layer (small, dense) */
 .stars{
   background-image:
-    radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,.9) 50%, transparent 51%),
-    radial-gradient(1px 1px at 28% 63%, rgba(255,246,220,.9) 50%, transparent 51%),
-    radial-gradient(1px 1px at 47% 29%, rgba(220,234,255,.9) 50%, transparent 51%),
-    radial-gradient(1px 1px at 72% 41%, rgba(255,255,255,.9) 50%, transparent 51%),
-    radial-gradient(1px 1px at 83% 77%, rgba(255,246,220,.9) 50%, transparent 51%),
-    radial-gradient(1px 1px at 6%  82%, rgba(220,234,255,.9) 50%, transparent 51%),
-    radial-gradient(1px 1px at 59% 81%, rgba(255,255,255,.9) 50%, transparent 51%),
-    radial-gradient(1px 1px at 91% 12%, rgba(255,246,220,.9) 50%, transparent 51%);
+    radial-gradient(2px 2px at 12% 18%, rgba(255,255,255,.9) 60%, transparent 61%),
+    radial-gradient(2px 2px at 28% 63%, rgba(255,246,220,.9) 60%, transparent 61%),
+    radial-gradient(2px 2px at 47% 29%, rgba(220,234,255,.9) 60%, transparent 61%),
+    radial-gradient(2px 2px at 72% 41%, rgba(255,255,255,.9) 60%, transparent 61%),
+    radial-gradient(2px 2px at 83% 77%, rgba(255,246,220,.9) 60%, transparent 61%),
+    radial-gradient(2px 2px at 6%  82%, rgba(220,234,255,.9) 60%, transparent 61%),
+    radial-gradient(2px 2px at 59% 81%, rgba(255,255,255,.9) 60%, transparent 61%),
+    radial-gradient(2px 2px at 91% 12%, rgba(255,246,220,.9) 60%, transparent 61%);
 
 }/* Mid layer (slightly bigger, offset) */
 .stars::before{  background-image:
@@ -882,4 +862,26 @@ html[data-theme="light"]{
 
 @media (prefers-reduced-motion: reduce){
   body.first-load .container{ animation: none !important; }
+}
+
+/* =====================================================================
+   A11Y: Reduced Motion (clouds + transitions + scroll)
+   ===================================================================== */
+@media (prefers-reduced-motion: reduce){
+  /* Disable animated cloud drift */
+  .cloud { animation: none !important; }
+  /* Stars are static already; ensure no future animation hooks run */
+  .stars, .stars::before, .stars::after { animation: none !important; }
+
+  /* Remove smooth scrolling to avoid motion sickness */
+  html { scroll-behavior: auto; }
+
+  /* Collapse transition durations via tokens */
+  :root {
+    --transition-fast: 0s;
+    --transition-normal: 0s;
+    --transition-slow: 0s;
+  }
+  /* Safety: disable the first-load fade animation */
+  body.first-load .container { animation: none !important; }
 }

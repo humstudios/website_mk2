@@ -1,9 +1,14 @@
+<!-- Decorative clouds (body-only include)
+     A11y: aria-hidden on wrapper; each <img> has empty alt and fixed dimensions.
+     Performance: lazy + decoding=async + fetchpriority=low. Keep sources relative.
+     Reduced motion: ensure CSS disables animation under prefers-reduced-motion.
+-->
 <div class="clouds" aria-hidden="true">
-  <img height="107" width="200" draggable="false" fetchpriority="low" class="cloud cloud1" decoding="async" loading="lazy" src="assets/img/animation/Cloud.png" alt="">
-  <img height="106" width="150" draggable="false" fetchpriority="low" class="cloud cloud2" decoding="async" loading="lazy" src="assets/img/animation/Cloud2.png" alt="">
-  <img height="85" width="120" draggable="false" fetchpriority="low" class="cloud cloud3" decoding="async" loading="lazy" src="assets/img/animation/Cloud3.png" alt="">
-  <img height="107" width="200" draggable="false" fetchpriority="low" class="cloud cloud4" decoding="async" loading="lazy" src="assets/img/animation/Cloud.png" alt="">
-  <img height="85" width="120" draggable="false" fetchpriority="low" class="cloud cloud5" decoding="async" loading="lazy" src="assets/img/animation/Cloud3.png" alt="">
-  <img height="106" width="150" draggable="false" fetchpriority="low" class="cloud cloud6" decoding="async" loading="lazy" src="assets/img/animation/Cloud2.png" alt="">
-  <img height="85" width="120" draggable="false" fetchpriority="low" class="cloud cloud7" decoding="async" loading="lazy" src="assets/img/animation/Cloud3.png" alt="">
+  <img class="cloud cloud1" src="assets/img/animation/Cloud.png"  alt="" width="200" height="107" loading="lazy" decoding="async" fetchpriority="low" draggable="false">
+  <img class="cloud cloud2" src="assets/img/animation/Cloud2.png" alt="" width="150" height="106" loading="lazy" decoding="async" fetchpriority="low" draggable="false">
+  <img class="cloud cloud3" src="assets/img/animation/Cloud3.png" alt="" width="120" height="85"  loading="lazy" decoding="async" fetchpriority="low" draggable="false">
+  <img class="cloud cloud4" src="assets/img/animation/Cloud.png"  alt="" width="200" height="107" loading="lazy" decoding="async" fetchpriority="low" draggable="false">
+  <img class="cloud cloud5" src="assets/img/animation/Cloud3.png" alt="" width="120" height="85"  loading="lazy" decoding="async" fetchpriority="low" draggable="false">
+  <img class="cloud cloud6" src="assets/img/animation/Cloud2.png" alt="" width="150" height="106" loading="lazy" decoding="async" fetchpriority="low" draggable="false">
+  <img class="cloud cloud7" src="assets/img/animation/Cloud3.png" alt="" width="120" height="85"  loading="lazy" decoding="async" fetchpriority="low" draggable="false">
 </div>
