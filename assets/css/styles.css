@@ -860,10 +860,6 @@ html[data-theme="light"]{
 }
 
 
-@media (prefers-reduced-motion: reduce){
-  body.first-load .container{ animation: none !important; }
-}
-
 /* =====================================================================
    A11Y: Reduced Motion (clouds + transitions + scroll)
    ===================================================================== */

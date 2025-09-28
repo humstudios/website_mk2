@@ -62,7 +62,11 @@
 
     var p = document.createElement('p');
     p.className = 'consent-banner__text';
-    p.innerHTML = '<strong>Optional:</strong> Let us remember your theme (Light/Dark) across visits. <a href="cookies.html" class="consent-banner__link">Learn more</a>';
+    p.textContent = '';
+var s = document.createElement('strong'); s.textContent = 'Optional:'; p.appendChild(s);
+p.append(' Let us remember your theme between visits. ');
+var a = document.createElement('a'); a.href = 'cookies.html'; a.className = 'consent-banner__link'; a.textContent = 'Learn more'; p.appendChild(a);
+
 
     var controls = document.createElement('div');
     controls.className = 'consent-banner__controls';

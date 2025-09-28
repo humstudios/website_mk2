@@ -1,246 +1,119 @@
-(function(){
-  'use strict';
+/* assets/js/includes.js (unified, prod-safe)
+   One file for dev *and* production:
+   - Pure RELATIVE URLs only (origin-safe, CSP-safe).
+   - Tries with and without ".html" in PARALLEL; first 200 OK wins.
+   - Short per-attempt timeout (1500ms) using AbortController.
+   - Caches the winning URL in sessionStorage for instant reuse on subsequent loads.
+   - Preserves data-include; sets data-include-loaded="true" on success.
+*/
+(function () {
+  if (window.__hum_includes_init__) return; window.__hum_includes_init__ = true;
+  "use strict";
 
-// --- animation hold to prevent first-paint flash ---
-try {
-  var __root = document.documentElement;
-  if (!__root.hasAttribute('data-anim')) {
-    __root.setAttribute('data-anim', 'hold');
+  var ATTR = "data-include";
+  var ATTR_BASE = "data-include-base";
+  var DEFAULT_BASE = "partials/";
+  var TIMEOUT_MS = 1500;
+  var SS_PREFIX = "inc:url:";
+
+  function getBasePath() {
+    var docBase = document.documentElement.getAttribute(ATTR_BASE)
+              || (document.body && document.body.getAttribute(ATTR_BASE));
+    var base = (docBase || DEFAULT_BASE).trim();
+    if (base && !/\/$/.test(base)) base += "/";
+    return base;
   }
-} catch (e) {}
 
-
-  // -------- path helpers --------
-  function normalizePath(href){
+  function pathOnly(path) {
     try {
-      var u = new URL(href, location.href);
-      var p = u.pathname;
-      // Treat / and /index.html equivalently; trim trailing slash (except root)
-      p = p.replace(/index\.html$/i, '');
-      if (p.length > 1 && p.endsWith('/')) p = p.slice(0, -1);
-      return p.toLowerCase();
+      var u = new URL(path, location.href);
+      return u.pathname + u.search + u.hash;
     } catch (e) {
-      return '';
+      return path;
     }
   }
 
-  // -------- simple DOM helpers --------
-  function warn(el, msg){
-    var box = document.createElement('div');
-    box.style.cssText = 'padding:8px 12px;margin:8px 0;border:1px dashed #f59e0b;color:#92400e;background:#FFFBEB;font:14px/1.4 system-ui;';
-    box.textContent = msg;
-    el.replaceWith(box);
-  }
-  function inject(el, html){
-    var frag = document.createRange().createContextualFragment(html);
-    el.replaceWith(frag);
+  function candidates(val, base) {
+    var v = (val || "").trim();
+    if (!v) return [];
+    var name = v.indexOf("/") === -1 ? (base + v) : v;
+    name = pathOnly(name);
+    var withHtml = name.endsWith(".html") ? name : (name + ".html");
+    var withoutHtml = name.endsWith(".html") ? name.slice(0, -5) : name;
+    return [withHtml, withoutHtml].filter(function (x, i, a) { return a.indexOf(x) === i; });
   }
 
-  // Resolve includes relative to site root (assets/js/ → root)
-  function getScriptBase(){
-    var s = document.currentScript;
-    if (!s) {
-      var scripts = document.querySelectorAll('script[src]');
-      for (var i = scripts.length - 1; i >= 0; i--) {
-        var src = scripts[i].getAttribute('src') || '';
-        if (/assets\/js\/includes\.js(\?|#|$)/.test(src)) { s = scripts[i]; break; }
-      }
-    }
-    var url = new URL(s ? s.src : 'assets/js/includes.js', location.href);
-    url.pathname = url.pathname.replace(/[^\/]*$/, ''); // dir of includes.js
-    return url;
-  }
-  var SCRIPT_BASE = getScriptBase();
-  var ROOT_BASE = new URL(SCRIPT_BASE);
-  ROOT_BASE.pathname = ROOT_BASE.pathname.replace(/assets\/js\/?$/, '');
-
-  // -------- includes loader --------
-  async function loadInclude(el){
-    var src = el.getAttribute('data-include');
-    if (!src) return;
-    // Normalize: if 'src' has no extension, assume .html (e.g., 'partials/clouds' -> 'partials/clouds.html')
-    try {
-      var _s = src.split('#')[0].split('?')[0];
-      var _last = _s.split('/').pop();
-      if (_last && !/\.[a-z0-9]+$/i.test(_last)) { src = src + '.html'; }
-    } catch (e) {}
-
-    if (el.__included) return; // prevent dupes
-    el.__included = true;
-
-    if (location.protocol === 'file:') {
-      warn(el, 'Includes disabled in file:// preview. Run a local server (e.g., “npx http-server”).');
-      return;
-    }
-    var url = new URL(src, document.baseURI || location.href);
-    if (url.origin !== location.origin || /^(127\.0\.0\.1|localhost)$/i.test(url.hostname)) {
-      var base = location.origin + location.pathname.replace(/[^/]*$/, '');
-      url = new URL(src, base);
-    }
-    try {
-      // Use the default cache policy for reliability
-      var res = await fetch(url.toString(), { credentials: 'same-origin', cache: 'default' });
-      if (!res.ok) throw new Error('HTTP ' + res.status + ' for ' + url);
-      var html = await res.text();
-      inject(el, html);
-    } catch (err) {
-      console.warn('[includes] Failed to include', url.toString(), err);
-      el.remove();
-    }
+  function withTimeout(promise, ms, controller) {
+    var t = setTimeout(function () {
+  if (window.__hum_includes_init__) return; window.__hum_includes_init__ = true; try { controller.abort(); } catch (e) {} }, ms);
+    return promise.finally(function () {
+  if (window.__hum_includes_init__) return; window.__hum_includes_init__ = true; clearTimeout(t); });
   }
 
-  function ensureCloudsPlaceholder(){
-    // opt-out: <body data-no-clouds> or data-clouds="off"
-    if (document.body && (document.body.hasAttribute('data-no-clouds') || document.body.getAttribute('data-clouds') === 'off')) {
-      return;
-    }
-    // prevent duplicates
-    if (document.querySelector('.clouds, [data-include$="clouds.html"], [data-clouds-include]')) return;
-
-    var src = (document.body && document.body.getAttribute('data-clouds-include')) || 'partials/clouds.html';
-    if (src && !/\.[a-z0-9]+($|\?|\#)/i.test(src)) { src += '.html'; }
-    var ph = document.createElement('div');
-    ph.setAttribute('data-include', src);
-    var skip = document.querySelector('.skip-link');
-    if (skip && skip.parentNode) {
-      if (skip.nextSibling) skip.parentNode.insertBefore(ph, skip.nextSibling);
-      else skip.parentNode.appendChild(ph);
-    } else if (document.body) {
-      document.body.insertBefore(ph, document.body.firstChild || null);
-    }
+  function fetchCandidate(url) {
+    var ctrl = new AbortController();
+    var p = fetch(url, { credentials: "same-origin", cache: "no-store", signal: ctrl.signal })
+      .then(function (r) {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.text().then(function (text) { return { ok: true, url: r.url || url, text: text }; });
+      })
+      .catch(function () {
+  if (window.__hum_includes_init__) return; window.__hum_includes_init__ = true; return { ok: false, url: url }; });
+    return { promise: withTimeout(p, TIMEOUT_MS, ctrl), abort: function () { try { ctrl.abort(); } catch (e) {} } };
   }
 
-  function initIncludes(root){
-    (root || document).querySelectorAll('[data-include]').forEach(loadInclude);
-  }
-
-  // -------- active nav state --------
-  function setActiveNav(){
-    var pagePath = normalizePath(location.href);
-    var nav = document.querySelector('header nav');
-    if (!nav) return;
-    var links = nav.querySelectorAll('a[href]');
-
-    links.forEach(function(a){
-      a.removeAttribute('aria-current');
-      a.classList && a.classList.remove('is-active');
-    });
-
-    var best = null;
-    links.forEach(function(a){
-      var linkPath = normalizePath(a.getAttribute('href'));
-      if (!linkPath) return;
-      // exact match or homepage equivalence
-      if (linkPath === pagePath) best = a;
-      // Also consider root match for "/" vs ""
-      if (!best && pagePath === '' && linkPath === '/') best = a;
-    });
-
-    // Fallback: highlight the shortest link that is a prefix of the page path (useful for subpages)
-    if (!best){
-      var candidates = [];
-      links.forEach(function(a){
-        var linkPath = normalizePath(a.getAttribute('href'));
-        if (linkPath && pagePath.indexOf(linkPath) === 0) candidates.push([linkPath.length, a]);
-      });
-      if (candidates.length){
-        candidates.sort(function(a,b){ return b[0]-a[0]; });
-        best = candidates[0][1];
-      }
-    }
-
-    if (best){
-      best.setAttribute('aria-current', 'page');
-      if (best.classList) best.classList.add('is-active');
-    }
-  }
-  // -------- GitHub Pages project-site home link fix --------
-  function fixLogoHomeLinkForGithubPages(){
-    try {
-      if (!/github\.io$/i.test(location.hostname)) return;
-      var segs = location.pathname.split('/').filter(Boolean);
-      if (!segs.length) return;
-      var repo = segs[0];
-      document.querySelectorAll('a.logo[href="/"]').forEach(function(a){
-        a.setAttribute('href', '/' + repo + '/');
-      });
-    } catch (e) {}
-  }
-  // -------- GitHub Pages project-site absolute /assets/ rewriter --------
-  function rewriteAbsoluteAssetPathsForGithubPages(){
-    try {
-      if (!/github\.io$/i.test(location.hostname)) return;
-      var segs = location.pathname.split('/').filter(Boolean);
-      if (!segs.length) return; // user/org root site
-      var repo = segs[0];
-      var prefix = '/' + repo + '/assets/';
-      var list = document.querySelectorAll('[src^="/assets/"], [href^="/assets/"], [poster^="/assets/"], link[rel="preload"][href^="/assets/"]');
-      list.forEach(function(el){
-        ['src','href','poster'].forEach(function(attr){
-          if (el.hasAttribute && el.hasAttribute(attr)) {
-            var v = el.getAttribute(attr);
-            if (v && v.indexOf('/assets/') === 0) {
-              el.setAttribute(attr, v.replace('/assets/', prefix));
-            }
+  function raceFirstOk(urls) {
+    return new Promise(function (resolve, reject) {
+      var pending = [], settled = false, finished = 0;
+      urls.forEach(function (u, idx) {
+        var c = fetchCandidate(u);
+        pending[idx] = c;
+        c.promise.then(function (res) {
+          finished++;
+          if (!settled && res && res.ok) {
+            settled = true;
+            pending.forEach(function (p, j) { if (j !== idx && p && p.abort) p.abort(); });
+            resolve(res);
+          } else if (!settled && finished === urls.length) {
+            reject(new Error("All candidates failed"));
           }
+        }, function () {
+          finished++;
+          if (!settled && finished === urls.length) reject(new Error("All candidates failed"));
         });
-        // Handle srcset (images)
-        if (el.hasAttribute && el.hasAttribute('srcset')){
-          var ss = el.getAttribute('srcset').split(',').map(function(part){
-            var t = part.trim();
-            var url = t.split(/\s+/)[0];
-            var rest = t.slice(url.length);
-            if (url.indexOf('/assets/') === 0) url = url.replace('/assets/', prefix);
-            return url + rest;
-          }).join(', ');
-          el.setAttribute('srcset', ss);
-        }
       });
-    } catch (e) {}
-  }
-
-function __startAnimationsSoon(){
-  try {
-    requestAnimationFrame(function(){
-      document.documentElement.setAttribute('data-anim', 'run');
     });
-  } catch (e) {}
-}
-
-  function run(){
-    ensureCloudsPlaceholder();
-    var nodes = Array.from(document.querySelectorAll('[data-include]'));
-    
-    // If no includes are found, run final setup and exit.
-    if (nodes.length === 0){
-      rewriteAbsoluteAssetPathsForGithubPages();
-      fixLogoHomeLinkForGithubPages();
-      setActiveNav();
-      __startAnimationsSoon();
-      return;
-    }
-    
-    // Process all found includes (e.g., clouds)
-    nodes.reduce(function(p, el){ return p.then(function(){ return loadInclude(el); }); }, Promise.resolve())
-       .then(function(){
-         document.dispatchEvent(new CustomEvent('partials:loaded'));
-         // Final setup after includes are loaded
-         rewriteAbsoluteAssetPathsForGithubPages();
-         fixLogoHomeLinkForGithubPages();
-         setActiveNav();
-         __startAnimationsSoon();
-       });
   }
 
-  if (document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', run);
+  function cacheKey(val) { return SS_PREFIX + val; }
+  function getCached(val) { try { return sessionStorage.getItem(cacheKey(val)); } catch (e) { return null; } }
+  function setCached(val, url) { try { sessionStorage.setItem(cacheKey(val), url); } catch (e) {} }
+
+  function loadInto(el, val, base) {
+    var cached = getCached(val);
+    var urls = cached ? [pathOnly(cached)].concat(candidates(val, base)) : candidates(val, base);
+    raceFirstOk(urls).then(function (res) {
+      setCached(val, res.url);
+      el.innerHTML = res.text;
+      el.setAttribute("data-include-loaded", "true");
+      el.dispatchEvent(new CustomEvent("include:loaded", { detail: { url: res.url }, bubbles: true }));
+    }).catch(function () {
+  if (window.__hum_includes_init__) return; window.__hum_includes_init__ = true;
+      el.setAttribute("data-include-error", "failed");
+    });
+  }
+
+  function run() {
+    var base = getBasePath();
+    document.querySelectorAll("[" + ATTR + "]").forEach(function (el) {
+      var val = el.getAttribute(ATTR);
+      if (val) loadInto(el, val, base);
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", run, { once: true });
   } else {
     run();
   }
-
-  // If your app dynamically adds [data-include] nodes later:
-  window.includesInit = function(root){
-    initIncludes(root);
-    setActiveNav();
-  };
 })();

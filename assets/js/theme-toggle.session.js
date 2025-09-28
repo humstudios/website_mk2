@@ -1,74 +1,119 @@
-// theme-toggle.session.js — robust 2-state toggle (light/dark)
-// - Syncs with current effective theme (attr -> stored -> system)
-// - Guarantees first click toggles immediately (no "two click" issue)
-// - Persists to sessionStorage('theme.session')
-// - Updates aria-pressed/title on #theme-toggle
+/* assets/js/theme-toggle.session.js — robust (direct + delegated, no double toggles) */
 (function () {
-  if (window.__themeToggleInit) return;
-  window.__themeToggleInit = true;
+  "use strict";
 
-  var KEY = "theme.session";
-  var root = document.documentElement;
+  var THEME_KEY = "theme.session";
+  var BTN_SEL = "#theme-toggle";
 
-  function systemTheme() {
+  function getTheme() {
+    // Prefer sessionStorage (user's current per-tab choice), then <html data-theme>, else light
     try {
-      return (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
-    } catch (e) {
-      return "light";
-    }
+      var s = sessionStorage.getItem(THEME_KEY);
+      if (s === "dark" || s === "light") return s;
+    } catch (e) {}
+    var t = document.documentElement.getAttribute("data-theme");
+    if (t === "dark" || t === "light") return t;
+    return "light";
   }
-  function getStored() {
+
+  function setTheme(t) {
+    var v = (t === "dark") ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", v);
+    try { sessionStorage.setItem(THEME_KEY, v); } catch (e) {}
+    syncButton(v);
     try {
-      var v = sessionStorage.getItem(KEY);
-      return (v === "light" || v === "dark") ? v : null;
-    } catch (e) {
-      return null;
-    }
-  }
-  function setStored(v) {
-    try { sessionStorage.setItem(KEY, v); } catch (e) {}
-  }
-  function current() {
-    // Prefer the live attribute so we reflect the actual page state
-    return root.getAttribute("data-theme") || getStored() || systemTheme();
-  }
-  function updateButton(theme) {
-    var btn = document.getElementById("theme-toggle");
-    if (!btn) return;
-    btn.setAttribute("aria-pressed", theme === "dark" ? "true" : "false");
-    try { btn.title = theme === "dark" ? "Switch to light mode" : "Switch to dark mode"; } catch(e) {}
-  }
-  function apply(theme) {
-    var t = (theme === "light" || theme === "dark") ? theme : systemTheme();
-    if (root.getAttribute("data-theme") !== t) {
-      root.setAttribute("data-theme", t);
-    }
-    setStored(t);
-    updateButton(t);
-    // Optional custom event if other scripts care
-    try { 
-      var ev = new CustomEvent("hum:themechange", { detail: { theme: t } });
-      window.dispatchEvent(ev);
+      document.dispatchEvent(new CustomEvent("hum:themechange", { detail: { theme: v }, bubbles: true }));
     } catch (e) {}
   }
-  function init() {
-    // Ensure attribute reflects effective theme and is persisted once
-    apply(current());
+
+  function toggleTheme() {
+    setTheme(getTheme() === "dark" ? "light" : "dark");
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init, { once: true });
-  } else {
-    init();
-  }
-
-  // Delegate clicks so it works when the icon/text inside is clicked
-  document.addEventListener("click", function (e) {
-    var btn = e.target && (e.target.id === "theme-toggle" ? e.target :
-                (e.target.closest && e.target.closest("#theme-toggle")));
+  function syncButton(theme) {
+    var btn = document.querySelector(BTN_SEL);
     if (!btn) return;
-    e.preventDefault();
-    var next = current() === "light" ? "dark" : "light";
-    apply(next);
-  }, true);
+    var isDark = (theme === "dark");
+    var nextLabel = isDark ? "Switch to light mode" : "Switch to dark mode";
+    btn.type = "button";
+    btn.setAttribute("aria-pressed", isDark ? "true" : "false");
+    btn.setAttribute("aria-label", nextLabel);
+    btn.title = nextLabel;
+    var vh = btn.querySelector(".visually-hidden, .vh");
+    if (vh) {
+      vh.textContent = nextLabel;
+    } else {
+      // Auto-inject hidden label if missing (A11Y)
+      try {
+        var span = document.createElement('span');
+        span.className = 'visually-hidden';
+        span.textContent = nextLabel;
+        btn.appendChild(span);
+      } catch(e) {}
+    }
+    if (!btn.querySelector("svg")) btn.textContent = isDark ? "Dark" : "Light";
+  }
+
+  // Mark an event as handled so delegated and direct handlers don't both toggle
+  function markHandled(ev) { try { ev.__humThemeHandled = true; } catch(e) {} }
+  function alreadyHandled(ev) { return !!(ev && ev.__humThemeHandled); }
+
+  function bindDirect() {
+    var btn = document.querySelector(BTN_SEL);
+    if (!btn || btn.__humBound) return;
+    btn.__humBound = true;
+    btn.addEventListener("click", function (e) {
+      if (alreadyHandled(e)) return;
+      markHandled(e);
+      toggleTheme();
+    });
+    btn.addEventListener("keydown", function (e) {
+      if (alreadyHandled(e)) return;
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        markHandled(e);
+        toggleTheme();
+      }
+    });
+  }
+
+  function bindDelegated() {
+    if (document.__humDelegatedBound) return;
+    document.__humDelegatedBound = true;
+
+    document.addEventListener("click", function (ev) {
+      if (alreadyHandled(ev)) return;
+      // Find a current or future #theme-toggle
+      var t = ev.target;
+      var btn = t && (t.matches && t.matches(BTN_SEL) ? t : (t && t.closest && t.closest(BTN_SEL)));
+      if (!btn) return;
+      if (ev.button !== 0) return; // left click only
+      markHandled(ev);
+      toggleTheme();
+    }, true);
+
+    document.addEventListener("keydown", function (e) {
+      if (alreadyHandled(e)) return;
+      var t = e.target;
+      var btn = t && (t.matches && t.matches(BTN_SEL) ? t : (t && t.closest && t.closest(BTN_SEL)));
+      if (!btn) return;
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        markHandled(e);
+        toggleTheme();
+      }
+    }, true);
+  }
+
+  function init() {
+    syncButton(getTheme());
+    bindDirect();
+    bindDelegated();
+  }
+
+  if (document.readyState === "loading") { document.addEventListener("DOMContentLoaded", init, { once: true }); }
+  else { init(); }
+
+  // Optional test hook for console
+  try { window.humToggleTheme = toggleTheme; } catch (e) {}
 })();
