@@ -1,22 +1,9 @@
-/* PATCH NOTE (2025-09-21)
-   - Moved page gradient from `html{}` to a fixed `body::before` layer (z-index:-3)
-     to stop Android Chrome/Samsung Internet from scrolling it during fling/overscroll.
-   - Made html background transparent to ensure fixed negative layers are visible.
-   - Left grain/stars/clouds/dark-mode behavior unchanged.
+/* Hum Studios — Stylesheet (cleaned)
+   - Preserved visuals & behavior
+   - Removed obsolete/duplicate comments
+   - Merged duplicate `.media-spot` rules
+   - Left all tokens/sections intact for stability
 */
-/**
- * Hum Studios | Refactored Stylesheet
- *
- * Version: 12.1.0+android-fix (Fixed gradient via body::before)
- * Date: 2025-09-19
- *
- * Description:
- * This is the final, stable version of the stylesheet. It restores the
- * original, cross-browser compatible negative-margin footer layout and
- * includes all functional additions and code cleanups from later revisions.
- * This version is stable in all modern browsers.
- */
-
 /* =====================================================================
    00. WEBFONTS (Overpass + Atma)
    ===================================================================== */
@@ -320,7 +307,6 @@ body.first-load .container{ animation: fadeInLayout var(--transition-normal) eas
   to{   opacity:1; transform: translateY(0); }
 }
 
-
 main{
     flex: 1 0 auto;
 }main > :last-child{
@@ -346,6 +332,55 @@ main{
     transform: scale(1.2);
     filter: drop-shadow(0 4px 18px rgba(255, 255, 245, 0.4)) drop-shadow(0 0 10px rgba(255, 255, 245, 0.45));
   }}
+
+/* Cookies page: stack-table renders as single-column “cards” at all widths */
+.stack-table thead {
+  position: absolute !important;
+  width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0);
+  white-space: nowrap; margin: -1px; padding: 0; border: 0;
+}
+.stack-table,
+.stack-table tbody,
+.stack-table tr,
+.stack-table td {
+  display: block;
+  width: 100%;
+}
+.stack-table tr {
+  background: var(--light-card-bg);
+  border: 1px solid var(--light-card-border);
+  border-radius: 14px;
+  padding: var(--space-4);
+  margin-bottom: var(--space-4);
+  box-shadow: var(--shadow-0);
+  max-width: 70ch;
+  margin-inline: auto;
+}
+html[data-theme="dark"] .stack-table tr {
+  background: var(--dark-card-bg);
+  border-color: var(--dark-card-border);
+}
+.stack-table td {
+  padding: .5rem 0;
+}
+.stack-table td::before {
+  content: attr(data-label);
+  display: block;
+  font-weight: 600;
+  margin-bottom: .15rem;
+  color: var(--muted, #6b7280);
+}
+.stack-table td:last-child { margin-bottom: 0; }
+
+/* Pleasant body text width on Cookies */
+.cookies-page .card p { max-width: 70ch; }
+
+/* Center the “Change cookie settings” button */
+#change-settings {
+  display: block;
+  inline-size: max-content;
+  margin: var(--space-4, 1rem) auto 0 auto;
+}
 
 /* --- Footer --- */
 footer{
@@ -522,8 +557,7 @@ content: "";
   transform: translate3d(0,0,0);
 
   opacity: .7;
-}/* Respect reduced motion */
-
+}
 /* --- Clouds --- */
 .clouds{
   position: fixed;
@@ -644,16 +678,10 @@ h1, h2, h3{ color: var(--color-heading); font-family: var(--font-display); font-
   object-fit: contain;
 }/* --- How-To Animation --- */
 .media-spot{
-  width: 100%; max-inline-size: var(--measure);
-  margin-inline: auto; margin-block: var(--media-gap);
-}.media-spot > video{
-  display: block; inline-size: 100%; block-size: auto; object-fit: cover;
-  border-radius: var(--radius-card); box-shadow: var(--shadow-1); background: #000;
-}@media (min-width: 64em){
-  .media-spot { max-inline-size: calc(var(--measure) * 0.75); }}
-
-/* --- Media seam fix (Chrome/Edge rounding) --------------------------- */
-.media-spot{
+  width: 100%;
+  max-inline-size: var(--measure);
+  margin-inline: auto;
+  margin-block: var(--media-gap);
   /* Clip inner media to the rounded rectangle and ensure a white base so
      anti-aliased corners never reveal the page background. */
   overflow: hidden;
@@ -818,39 +846,37 @@ html[data-theme="light"]{
   padding: .7rem 1.05rem;
   min-height: 44px; /* touch target */
   border-radius: 9999px; /* pill */
-  border: 1px solid #cbd5e1; /* slate-300 */
+  border: 1px solid #cbd5e1;
   color: #0b1220;
   background: #ffffff;
   box-shadow: 0 1px 1px rgba(0,0,0,.06);
   cursor: pointer;
   transition: background-color .2s ease, border-color .2s ease, box-shadow .2s ease, transform .02s;
-}.consent-btn:hover{ background: #f3f4f6; }/* gray-100 */
+}.consent-btn:hover{ background: #f3f4f6; }
 .consent-btn:active{ transform: translateY(1px); }.consent-btn:focus-visible{
   outline: none;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, .45);           /* blue focus ring */
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, .45);
 }@media (prefers-color-scheme: dark){
   .consent-btn {
-    background: #0f172a;           /* slate-900 */
-    color: #e5e7eb;                /* gray-200 */
-    border-color: #475569;         /* slate-600 */
+    background: #0f172a;
+    color: #e5e7eb;
+    border-color: #475569;
     box-shadow: 0 1px 1px rgba(0,0,0,.35);
-  }.consent-btn:hover{ background: #111827; }/* gray-900 */
+  }.consent-btn:hover{ background: #111827; }
 }
-
-/* Primary "Allow" button */
 .consent-btn--primary{
-  border-color: #1e40af;                                   /* blue-800 */
+  border-color: #1e40af;
   color: #ffffff;
-  background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%); /* blue-500 -> blue-600 */
+  background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
   box-shadow:
     0 8px 18px rgba(37, 99, 235, .35),
     0 1px 2px rgba(0,0,0,.12);
 }.consent-btn--primary:hover{
-  background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%); /* blue-600 -> blue-700 */
+  background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
 }.consent-btn--primary:active{ transform: translateY(1px); }@media (prefers-color-scheme: dark){
   .consent-btn--primary {
-    border-color: #1d4ed8;                                  /* blue-700 */
-    background: linear-gradient(180deg, #60a5fa 0%, #3b82f6 100%); /* blue-400 -> blue-500 */
+    border-color: #1d4ed8;
+    background: linear-gradient(180deg, #60a5fa 0%, #3b82f6 100%);
     box-shadow:
       0 10px 22px rgba(59, 130, 246, .35),
       0 1px 2px rgba(0,0,0,.35);
@@ -858,7 +884,6 @@ html[data-theme="light"]{
     background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
   }
 }
-
 
 /* =====================================================================
    A11Y: Reduced Motion (clouds + transitions + scroll)

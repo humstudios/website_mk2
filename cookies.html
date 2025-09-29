@@ -1,107 +1,76 @@
 <!DOCTYPE html>
 
 <html class="cards-light" lang="en">
-<head><meta charset="utf-8"/>
-<meta content="summary_large_image" name="twitter:card"/>
-<meta content="Cookie Policy | Hum Studios" name="twitter:title"/>
-<meta content="Cookie Policy for Hum Studios interactive stories and digital picture books." name="twitter:description"/>
-<link href="https://www.humstudios.com/cookies/" rel="canonical"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
-<!-- Canonical -->
-<link href="https://www.humstudios.com/cookies/" rel="canonical"/>
-<!-- Primary SEO -->
-<title>Cookie Policy | Hum Studios</title>
-<meta content="Cookie Policy for Hum Studios interactive stories and digital picture books." name="description"/>
-<!-- Open Graph (Facebook, etc.) -->
-<meta content="Hum Studios" property="og:site_name"/>
-<meta content="website" property="og:type"/>
-<meta content="Cookie Policy | Hum Studios" property="og:title"/>
-<meta content="Cookie Policy for Hum Studios interactive stories and digital picture books." property="og:description"/>
-<meta content="https://www.humstudios.com/cookies/" property="og:url"/>
-<meta content="https://www.humstudios.com/assets/og/hum-studios-interactive-stories-for-kids-og-1200x630.jpg" property="og:image"/>
-<meta content="1200" property="og:image:width"/>
-<meta content="630" property="og:image:height"/>
-<meta content="Hum Studios cookie policy — ad-free interactive storybooks for kids." property="og:image:alt"/>
-<!-- Twitter (works without a handle) -->
-<meta content="summary_large_image" name="twitter:card"/>
-<meta content="Cookie Policy | Hum Studios" name="twitter:title"/>
-<meta content="Cookie Policy for Hum Studios interactive stories and digital picture books." name="twitter:description"/>
-<meta content="https://www.humstudios.com/assets/og/hum-studios-interactive-stories-for-kids-og-1200x630.jpg" name="twitter:image"/>
-<meta content="Hum Studios cookie policy — ad-free interactive storybooks for kids." name="twitter:image:alt"/>
-<meta content="light dark" name="color-scheme">
-<meta content="#FFFCF5" media="(prefers-color-scheme: light)" name="theme-color">
-<meta content="#0b1220" media="(prefers-color-scheme: dark)" name="theme-color">
-<meta content="Cookie Policy for Hum Studios interactive stories and digital picture books." name="description">
-<!-- Color scheme & theme colors for browser UI -->
-<!-- Favicons (relative so they work on GitHub Pages, IONOS, and local) -->
-<!-- Fonts (keep consistent with site) -->
-<!-- Canonical + Open Graph/Twitter
-       - Dynamically set to the current origin + path so it works
-         across GitHub Pages subpaths, IONOS, and local dev without edits.
-  -->
-<meta content="Cookie Policy | Hum Studios" property="og:title"/>
-<meta content="Cookie Policy for Hum Studios interactive stories and digital picture books." property="og:description">
-<meta content="website" property="og:type">
-<meta content="https://www.humstudios.com/cookies/" property="og:url">
-<!-- Site styles -->
-<!-- Turbo (ESM) -->
-<!-- Includes loader: injects header/footer marked with [data-include] -->
-<link as="font" crossorigin="" href="assets/fonts/Overpass-Regular-400.woff2" rel="preload" type="font/woff2">
-<link as="font" crossorigin="" href="assets/fonts/Atma-Bold-700.woff2" rel="preload" type="font/woff2"/>
-<link as="image" href="assets/img/icons/icons-sprite.svg" rel="prefetch" type="image/svg+xml"/>
-<script src="assets/js/early-theme.session.js"></script>
-<link href="assets/css/styles.css" rel="stylesheet">
-<meta content="index,follow" name="robots"><meta content="https://www.humstudios.com/assets/og/hum-studios-interactive-stories-for-kids-og-1200x630.jpg" property="og:image">
-<style>
-/* Stack-table: single-column cards at all widths */
-    .stack-table thead {
-      position: absolute !important;
-      width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0);
-      white-space: nowrap; margin: -1px; padding: 0; border: 0;
-    }
-    .stack-table,
-    .stack-table tbody,
-    .stack-table tr,
-    .stack-table td {
-      display: block;
-      width: 100%;
-    }
-    .stack-table tr {
-      background: var(--light-card-bg);
-      border: 1px solid var(--light-card-border);
-      border-radius: 14px;
-      padding: var(--space-4);
-      margin-bottom: var(--space-4);
-      box-shadow: var(--shadow-0);
-      max-width: 70ch;
-      margin-inline: auto;
-    }
-    html[data-theme="dark"] .stack-table tr {
-      background: var(--dark-card-bg);
-      border-color: var(--dark-card-border);
-    }
-    .stack-table td {
-      padding: .5rem 0;
-    }
-    .stack-table td::before {
-      content: attr(data-label);
-      display: block;
-      font-weight: 600;
-      margin-bottom: .15rem;
-      color: var(--muted, #6b7280);
-    }
-    .stack-table td:last-child { margin-bottom: 0; }
 
-    /* Pleasant body text width */
-    .cookies-page .card p { max-width: 70ch; }
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Preloads / Hints -->
+  <link rel="preload" href="assets/fonts/Overpass-Regular-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/Atma-Bold-700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/img/icons/icons-sprite.svg" as="image" type="image/svg+xml">
+
+  <!-- Early theme script -->
+  <script src="assets/js/early-theme.session.js"></script>
+
+  <!-- Site styles (keep exactly) -->
+  <link rel="stylesheet" href="assets/css/styles.css">
+
+  <!-- Primary SEO -->
+  <title>Cookie Policy | Hum Studios</title>
+  <meta name="description" content="Cookie Policy for Hum Studios interactive stories and digital picture books.">
+  <link rel="canonical" href="https://www.humstudios.com/cookies/">
+
+  <!-- Open Graph -->
+  <meta property="og:site_name" content="Hum Studios">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Cookie Policy | Hum Studios">
+  <meta property="og:description" content="Cookie Policy for Hum Studios interactive stories and digital picture books.">
+  <meta property="og:url" content="https://www.humstudios.com/cookies/">
+  <meta property="og:image" content="https://www.humstudios.com/assets/og/hum-studios-interactive-stories-for-kids-og-1200x630.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Hum Studios cookie policy — ad-free interactive storybooks for kids.">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Cookie Policy | Hum Studios">
+  <meta name="twitter:description" content="Cookie Policy for Hum Studios interactive stories and digital picture books.">
+  <meta name="twitter:image" content="https://www.humstudios.com/assets/og/hum-studios-interactive-stories-for-kids-og-1200x630.jpg">
+  <meta name="twitter:image:alt" content="Hum Studios cookie policy — ad-free interactive storybooks for kids.">
+
+  <!-- Robots -->
+  <meta name="robots" content="index,follow">
+
+  <!-- Color scheme & theme colors for browser UI -->
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#FFFCF5" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0b1220" media="(prefers-color-scheme: dark)">
   
-  /* Center the Change cookie settings button */
-  #change-settings {
-    display: block;
-    inline-size: max-content; /* shrink to fit content */
-    margin: var(--space-4, 1rem) auto 0 auto; /* top spacing + center horizontally */
-  }
-</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://www.humstudios.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Cookies",
+      "item": "https://www.humstudios.com/cookies/"
+    }
+  ]
+}
+</script>
+  
 </head>
+  
 <body class="cookies-page theme-plain">
 <a class="skip-link" href="#main">Skip to content</a>
 <!-- Permanent site backdrop (replaces body::before) -->
