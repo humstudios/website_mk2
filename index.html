@@ -27,8 +27,7 @@
 <script defer="" src="assets/js/enhancements.js"></script><meta content="index,follow" name="robots"/><meta content="Hum Studios" property="og:site_name"/><meta content="1200" property="og:image:width"/><meta content="630" property="og:image:height"/><meta content="Hum Studios characters in a colorful, welcoming title card." name="twitter:image:alt"/>
     
 <!-- 1) Organization -->
-<script type="application/ld+json">
-{
+<script type="application/ld+json">{
   "@context": "https://schema.org",
   "@type": "Organization",
   "@id": "https://www.humstudios.com/#org",
@@ -44,8 +43,7 @@
     "https://www.instagram.com/hum_studios_uk",
     "https://www.facebook.com/humstudiosltd"
   ]
-}
-</script>
+}</script>
 
 <!-- 2) WebSite (homepage only) -->
 <script type="application/ld+json">
@@ -60,6 +58,15 @@
 }
 </script>
 
+<style>
+  .media-spot{ margin: 1.25rem 0; }
+  .media-spot > figcaption{ font-size: 0.95rem; line-height: 1.4; margin-top: 0.5rem; color: var(--muted-foreground, #555); }
+</style>
+<style>
+  .video-frame{ aspect-ratio: 4 / 3; width: 100%; }
+  .video-frame > video{ width:100%; height:auto; display:block; }
+  .video-frame picture, .video-frame img{ width:100%; height:auto; display:block; }
+</style>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -106,12 +113,19 @@
 <div class="card card--hero-placeholder">
 <div class="hero-image">
 <video aria-hidden="true" autoplay="" class="hero-video" data-poster-webp="assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-poster-960w.webp" height="720" id="heroVideo" loop="" muted="" playsinline="" poster="assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-poster-960w.jpg" preload="metadata" width="960">
-<source src="assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-720p.webm" type="video/webm"/>
-<source src="assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-720p.mp4" type="video/mp4"/>
+  <!-- small phones -->
+  <source media="(max-width: 424px)" src="assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-360p.webm" type="video/webm">
+  <source media="(max-width: 424px)" src="assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-360p.mp4"  type="video/mp4">
+  <!-- larger phones and up -->
+  <source media="(min-width: 425px)" src="assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-720p.webm" type="video/webm">
+  <source media="(min-width: 425px)" src="assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-720p.mp4"  type="video/mp4">
+
+
 </video>
-<noscript>
-<img alt="Cartoon elephant, crocodile, and girl looking out apartment windows" class="hero-video" height="720" src="assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-poster-960w.jpg" width="960"/>
-</noscript>
+<noscript><picture>
+  <source type="image/webp" srcset="assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-poster-960w.webp">
+  <img src="assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-poster-960w.jpg" alt="Playful picture-book cast—girl, elephant, crocodile and penguin wave hello." width="960" height="720" loading="lazy" decoding="async">
+</picture></noscript>
 </div>
 </div>
 <section class="card">
@@ -131,13 +145,20 @@
 <section class="card">
 <h2 class="smart-wrap no-balance">Our first adventure:<wbr/> <span class="nb">No Pets Allowed!</span></h2>
 <p id="adventure-desc">Jessie is a young girl who loves animals but lives in a building where no pets are allowed. When the local zoo closes down and an elephant and its friends turn up at Jessie’s apartment looking for a new place to live, Jessie is over the moon—but she needs to keep the animals hidden from the neighbors.</p>
-<video aria-describedby="adventure-desc" autoplay="" class="demo-video" data-poster-webp="assets/img/animation/no-pets-allowed-interactive-animal-story-poster-800w.webp" id="adventureVideo" loop="" muted="" playsinline="" poster="assets/img/animation/no-pets-allowed-interactive-animal-story-poster-800w.jpg" preload="none">
-<source data-src="assets/img/animation/no-pets-allowed-interactive-animal-story-600p.webm" type="video/webm"/>
-<source data-src="assets/img/animation/no-pets-allowed-interactive-animal-story-600p.mp4" type="video/mp4"/>
+<video autoplay="" class="demo-video" data-poster-webp="assets/img/animation/no-pets-allowed-interactive-animal-story-poster-800w.webp" id="adventureVideo" loop="" muted="" playsinline="" poster="assets/img/animation/no-pets-allowed-interactive-animal-story-poster-800w.jpg" preload="metadata">
+  <!-- small phones -->
+  <source media="(max-width: 424px)" src="assets/img/animation/no-pets-allowed-interactive-animal-story-300p.webm" type="video/webm">
+  <source media="(max-width: 424px)" src="assets/img/animation/no-pets-allowed-interactive-animal-story-300p.mp4"  type="video/mp4">
+  <!-- larger phones and up -->
+  <source media="(min-width: 425px)" src="assets/img/animation/no-pets-allowed-interactive-animal-story-600p.webm" type="video/webm">
+  <source media="(min-width: 425px)" src="assets/img/animation/no-pets-allowed-interactive-animal-story-600p.mp4"  type="video/mp4">
+
+
 </video>
-<noscript>
-<img alt="Animated still from the 'No Pets Allowed!' demo" class="demo-video" decoding="async" loading="lazy" src="assets/img/animation/no-pets-allowed-interactive-animal-story-poster-1200w.jpg"/>
-</noscript>
+<noscript><picture>
+  <source type="image/webp" srcset="assets/img/animation/no-pets-allowed-interactive-animal-story-poster-800w.webp">
+  <img src="assets/img/animation/no-pets-allowed-interactive-animal-story-poster-800w.jpg" alt="No Pets Allowed! interactive picture-book frame with characters mid-action." width="800" height="600" loading="lazy" decoding="async">
+</picture></noscript>
 <p>It's an endearing and comical adventure that’s perfect if your child likes elephant stories, crocodile stories, or even penguin stories. Download the first 10 pages for free and meet Jessie and her animal friends.</p>
 <div class="download-row">
 <a href="#">
@@ -150,10 +171,20 @@
 <h2>How our digital books work</h2>
 <p>“No Pets Allowed!” is the first in Hum Studios’ interactive book series. Our books work just like traditional ones, with the pages turning when you swipe the screen on your tablet or phone. Unlike a regular book, though, if you tap the screen, the characters come alive and play out the scene! You can have the app narrate the story or read the book aloud with your child, with a playful music soundtrack if you want it.</p>
 <div class="media-spot animate ipad-ish">
-<video autoplay="" data-poster-webp="assets/img/animation/how-interactive-picture-books-work-poster-800w.webp" loop="" muted="" playsinline="" poster="assets/img/animation/how-interactive-picture-books-work-poster-800w.jpg" preload="metadata">
-<source src="assets/img/animation/how-interactive-picture-books-work-600p.webm" type="video/webm"/>
-<source src="assets/img/animation/how-interactive-picture-books-work-600p.mp4" type="video/mp4"/>
+<video id="howVideo" loop="" muted="" playsinline="" poster="assets/img/animation/how-interactive-picture-books-work-poster-800w.jpg" preload="metadata" autoplay data-poster-webp="assets/img/animation/how-interactive-picture-books-work-poster-800w.webp">
+  <!-- small phones -->
+  <source media="(max-width: 424px)" src="assets/img/animation/how-interactive-picture-books-work-300p.webm" type="video/webm">
+  <source media="(max-width: 424px)" src="assets/img/animation/how-interactive-picture-books-work-300p.mp4"  type="video/mp4">
+  <!-- larger phones and up -->
+  <source media="(min-width: 425px)" src="assets/img/animation/how-interactive-picture-books-work-600p.webm" type="video/webm">
+  <source media="(min-width: 425px)" src="assets/img/animation/how-interactive-picture-books-work-600p.mp4"  type="video/mp4">
+
+
 </video>
+<noscript><picture>
+  <source type="image/webp" srcset="assets/img/animation/how-interactive-picture-books-work-poster-800w.webp">
+  <img src="assets/img/animation/how-interactive-picture-books-work-poster-800w.jpg" alt="Demo of interactive picture-book page where a tap animates the scene." width="800" height="600" loading="lazy" decoding="async">
+</picture></noscript>
 </div>
 <h2>It's a game as well as a book</h2>
 <p>Find the butterflies! Hidden within the story are five butterflies. As your child reads the adventure, they’re invited to find all of them! The great thing about the book being digital is every time your child reads it, the butterflies are hidden in different places.</p>
@@ -203,5 +234,85 @@
 <script defer="" src="assets/js/consent.js"></script>
 <script defer="" src="assets/js/ios-resume-fix.js"></script>
 <div aria-hidden="true" class="stars"></div>
+<script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    "name": "Elephant, Crocodile, Girl & Penguin \u2014 Hero Animation",
+    "description": "Playful picture-book cast\u2014girl, elephant, crocodile and penguin wave hello.",
+    "thumbnailUrl": [
+      "assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-poster-960w.jpg",
+      "assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-poster-960w.webp"
+    ],
+    "contentUrl": "assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-720p.webm"
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    "name": "No Pets Allowed! \u2014 Interactive Demo",
+    "@id": "#no-pets-allowed-video",
+    "description": "No Pets Allowed! interactive picture-book frame with characters mid-action.",
+    "thumbnailUrl": [
+      "assets/img/animation/no-pets-allowed-interactive-animal-story-poster-800w.jpg",
+      "assets/img/animation/no-pets-allowed-interactive-animal-story-poster-800w.webp"
+    ],
+    "contentUrl": "assets/img/animation/no-pets-allowed-interactive-animal-story-600p.webm"
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    "name": "How Our Digital Picture Books Work",
+    "description": "Demo of interactive picture-book page where a tap animates the scene.",
+    "thumbnailUrl": [
+      "assets/img/animation/how-interactive-picture-books-work-poster-800w.jpg",
+      "assets/img/animation/how-interactive-picture-books-work-poster-800w.webp"
+    ],
+    "contentUrl": "assets/img/animation/how-interactive-picture-books-work-600p.webm"
+  }
+]
+</script>
+
+<script defer>
+(function(){
+  function detectWebP(cb){
+    try{
+      var img = new Image();
+      img.onload = function(){ cb(img.width > 0 && img.height > 0); };
+      img.onerror = function(){ cb(false); };
+      img.src = "data:image/webp;base64,UklGRiIAAABXRUJQVlA4ICAAAADwAQCdASoIAAgAAkA0JaQAA3AA/vuUAAA=";
+    }catch(e){ cb(false); }
+  }
+  function init(webpOK){
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var videos = document.querySelectorAll('video[data-poster-webp]');
+    videos.forEach(function(v){
+      var webpPoster = v.getAttribute('data-poster-webp');
+      if (webpOK && webpPoster) v.setAttribute('poster', webpPoster);
+      if (reduce){
+        v.pause();
+        v.removeAttribute('autoplay');
+        v.style.visibility = 'hidden';
+        v.addEventListener('loadedmetadata', function(){ v.style.visibility = 'visible'; }, { once:true });
+        return;
+      }
+      v.style.visibility = 'hidden';
+      var show = function(){ v.style.visibility = 'visible'; };
+      v.addEventListener('canplay', function(){
+        show();
+        var p = v.play && v.play();
+        if (p && typeof p.catch === 'function'){ p.catch(function(){}); }
+      }, { once:true });
+      if (v.readyState >= 3){ show(); }
+    });
+  }
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', function(){ detectWebP(init); });
+  } else {
+    detectWebP(init);
+  }
+})();
+</script>
+
 </body>
 </html>
