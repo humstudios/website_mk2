@@ -3,6 +3,7 @@
 // Precedence (sync): sessionStorage -> cookie(hum_theme) -> 'light'
 // Also writes the chosen theme back to sessionStorage to survive page navigations.
 (function () {
+  'use strict';
   try {
     var KEY = "theme.session";
     var COOKIE = "hum_theme";

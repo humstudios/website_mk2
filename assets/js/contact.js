@@ -8,6 +8,7 @@
 window.__contactAjaxReady = true;
 
 (function () {
+  'use strict';
   var SUCCESS_TEXT = 'Thanks — your message was sent!';
   var SENDING_TEXT = 'Sending…';
 

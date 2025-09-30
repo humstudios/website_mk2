@@ -6,7 +6,8 @@
 */
 
 (function () {
-  "use strict";
+ 'use strict';
+   "use strict";
 
   // Select headings by a data attribute or class (adjust selector if needed)
   var SELECTOR = '[data-smart-wrap], .smart-wrap';
@@ -60,7 +61,8 @@
   function processHeadings() {
     try {
       var nodes = document.querySelectorAll(SELECTOR);
-      nodes.forEach(function (el) { walkAndWrap(el); });
+      nodes.forEach(function (el) { 'use strict';
+  walkAndWrap(el); });
     } catch (e) {
       // Fail silently to avoid hard errors
       // console.warn('[smart-wrap]', e);

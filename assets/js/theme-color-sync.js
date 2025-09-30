@@ -10,6 +10,7 @@
  *   - Listens for changes to data-theme and to prefers-color-scheme.
  */
 (function () {
+  'use strict';
   var root = document.documentElement;
 
   function byMediaContainsDark(m) {
@@ -25,7 +26,8 @@
     var metas = Array.prototype.slice.call(document.querySelectorAll('meta[name="theme-color"]'));
     var dark = metas.find(byMediaContainsDark) || null;
     var light = metas.find(byMediaContainsLight) || null;
-    var override = metas.find(function (m) { return !m.hasAttribute('media'); }) || null;
+    var override = metas.find(function (m) { 'use strict';
+  return !m.hasAttribute('media'); }) || null;
     return { light: light, dark: dark, override: override, all: metas };
   }
 
@@ -85,7 +87,8 @@
 
   // React to user toggling the theme (data-theme changes)
   var mo = new MutationObserver(function (mutations) {
-    for (var i = 0; i < mutations.length; i++) {
+    'use strict';
+  for (var i = 0; i < mutations.length; i++) {
       if (mutations[i].attributeName === 'data-theme') { apply(); break; }
     }
   });

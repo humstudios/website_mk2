@@ -4,6 +4,7 @@
 // - Calls window.enableSubmit() after successful solve if defined.
 
 (function () {
+  'use strict';
   function isRendered(el) {
     // Already rendered if there's an iframe (Turnstile injects one)
     if (el.querySelector('iframe[src*="/turnstile/"]')) return true;
@@ -16,7 +17,8 @@
   function renderAll() {
     if (!window.turnstile || typeof window.turnstile.render !== 'function') return;
     document.querySelectorAll('.cf-turnstile').forEach(function (el) {
-      if (isRendered(el)) return;
+      'use strict';
+  if (isRendered(el)) return;
       var headKey = (document.querySelector('meta[name="turnstile-sitekey"]') || {}).content || null;
       var key = el.getAttribute('data-sitekey') || headKey;
       if (!key) return;
@@ -48,12 +50,14 @@
   var obs;
   try {
     obs = new MutationObserver(function (mutations) {
-      for (var i = 0; i < mutations.length; i++) {
+      'use strict';
+  for (var i = 0; i < mutations.length; i++) {
         var m = mutations[i];
         if (m.addedNodes && m.addedNodes.length) {
           // If any .cf-turnstile gets added, try to render it
           document.querySelectorAll('.cf-turnstile').forEach(function (el) {
-            if (!isRendered(el)) renderAll();
+            'use strict';
+  if (!isRendered(el)) renderAll();
           });
         }
       }

@@ -1,6 +1,7 @@
 /* assets/js/theme-toggle.session.js — robust (direct + delegated, no double toggles) */
 (function () {
-  "use strict";
+ 'use strict';
+   "use strict";
 
   var THEME_KEY = "theme.session";
   var BTN_SEL = "#theme-toggle";

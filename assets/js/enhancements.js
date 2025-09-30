@@ -1,4 +1,5 @@
 (function(){
+  'use strict';
   try {
     const m = window.matchMedia && window.matchMedia('(prefers-reduced-data: reduce)');
     const saveData = (navigator.connection && navigator.connection.saveData) || (m && m.matches);

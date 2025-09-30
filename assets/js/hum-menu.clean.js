@@ -1,5 +1,6 @@
 /* Hum Studios — Unified Mobile Menu (overlay or pushdown) */
 (function(){
+  'use strict';
   if (window.__humMenuInit) return; window.__humMenuInit = true;
 
   var btn, menu, bound = false, lastFocus = null, skipClickAway = false;
@@ -85,7 +86,8 @@
     btn.addEventListener('click', function(e){
       e.preventDefault(); e.stopPropagation();
       skipClickAway = true; setState(!isOpen());
-      setTimeout(function(){ skipClickAway = false; }, 0);
+      setTimeout(function(){ 'use strict';
+  skipClickAway = false; }, 0);
     }, false);
 
     // Close when switching to desktop breakpoint
@@ -100,7 +102,8 @@
     try {
       var attempts = 0;
       var mo = new MutationObserver(function(_,obs){
-        attempts++; if (bind() || attempts > 5000) obs.disconnect();
+        'use strict';
+  attempts++; if (bind() || attempts > 5000) obs.disconnect();
       });
       mo.observe(document.documentElement, { childList:true, subtree:true });
     } catch(e){}

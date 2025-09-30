@@ -7,6 +7,7 @@
 'use strict';
 
 (function () {
+  'use strict';
   const reloadImg = (img) => {
     if (!img) return;
     const src = img.currentSrc || img.src;

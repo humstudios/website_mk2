@@ -7,7 +7,8 @@
  *    - Tiny public API: window.ConsentBind.open()
  */
 (function () {
-  'use strict';
+ 'use strict';
+   'use strict';
 
   function openConsent() {
     if (window.Consent && typeof window.Consent.show === 'function') {
@@ -35,7 +36,8 @@
     ].join(',');
 
     root.querySelectorAll(selector).forEach(function (el) {
-      // Avoid double-binding
+      'use strict';
+  // Avoid double-binding
       if (el.__consentBindAttached) return;
       el.__consentBindAttached = true;
 
@@ -50,7 +52,8 @@
   function observeNewTriggers() {
     // Capture dynamically added buttons/links
     var mo = new MutationObserver(function (mutations) {
-      for (var i=0; i<mutations.length; i++) {
+      'use strict';
+  for (var i=0; i<mutations.length; i++) {
         var m = mutations[i];
         if (!m.addedNodes || !m.addedNodes.length) continue;
         for (var j=0; j<m.addedNodes.length; j++) {

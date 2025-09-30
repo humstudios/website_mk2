@@ -1,5 +1,6 @@
 (function () {
-  'use strict';
+ 'use strict';
+   'use strict';
   if (window.__humConsentInit) return;
   window.__humConsentInit = true;
 
