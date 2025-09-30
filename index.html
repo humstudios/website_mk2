@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 
 <html class="cards-light" lang="en">
-<head><meta charset="utf-8"/>
+<head>
+  <link as="video" href="assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-720p.webm" media="(min-width: 425px)" rel="preload" type="video/webm"/>
+  <link as="video" href="assets/img/animation/no-pets-allowed-interactive-animal-story-600p.webm" media="(min-width: 425px)" rel="preload" type="video/webm"/>
+  <link as="video" href="assets/img/animation/how-interactive-picture-books-work-600p.webm" media="(min-width: 425px)" rel="preload" type="video/webm"/>
+<meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <link href="https://www.humstudios.com/" rel="canonical"/>
 <meta content="light dark" name="color-scheme"/>
@@ -14,30 +18,17 @@
 <meta content="website" property="og:type"/>
 <meta content="https://www.humstudios.com/" property="og:url"/>
 <meta content="https://www.humstudios.com/assets/og/hum-studios-interactive-stories-for-kids-og-1200x630.jpg" property="og:image"/>
-<meta content="Hum Studios — interactive picture books for kids" property="og:image:alt"/>
+<meta content="Hum Studios characters in a colorful, welcoming title card." property="og:image:alt"/>
 <meta content="summary_large_image" name="twitter:card"/>
 <meta content="Interactive Stories | Hum Studios" name="twitter:title"/>
 <meta content="Interactive stories for kids - Hum Studios creates ad-free, fun digital picture books for preschoolers that blend reading and entertainment." name="twitter:description"/>
-<meta content="https://www.humstudios.com/assets/og/hum-studios-interactive-stories-for-kids-og-1200x630.jpg" name="twitter:image"/><meta content="Hum Studios — interactive picture books for kids" name="twitter:image:alt"/>
-  
-<link as="image" fetchpriority="high" href="assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-poster-960w.jpg" rel="preload"/>
+<meta content="https://www.humstudios.com/assets/og/hum-studios-interactive-stories-for-kids-og-1200x630.jpg" name="twitter:image"/>
+<link as="image" href="assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-poster-960w.jpg" rel="preload"/>
 <link as="font" crossorigin="" href="assets/fonts/Overpass-Regular-400.woff2" rel="preload" type="font/woff2"/>
-<link as="font" crossorigin="" href="assets/fonts/Atma-Bold-700.woff2" rel="preload" type="font/woff2"/>
-<link as="image" href="assets/img/icons/icons-sprite.svg" rel="preload" type="image/svg+xml"/>
-<link as="video" href="assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-720p.webm" media="(min-width: 425px)" rel="preload" type="video/webm"/>
-<link as="video" href="assets/img/animation/no-pets-allowed-interactive-animal-story-600p.webm" media="(min-width: 425px)" rel="preload" type="video/webm"/>
-<link as="video" href="assets/img/animation/how-interactive-picture-books-work-600p.webm" media="(min-width: 425px)" rel="preload" type="video/webm"/>
-<link as="image" fetchpriority="high" href="assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-poster-960w.jpg" media="(min-width: 425px)" rel="preload"/>
-<link as="image" href="assets/img/animation/no-pets-allowed-interactive-animal-story-poster-800w.jpg" media="(min-width: 425px)" rel="preload"/>
-<link as="image" href="assets/img/animation/how-interactive-picture-books-work-poster-800w.jpg" media="(min-width: 425px)" rel="preload"/>
+<link as="font" crossorigin="" href="assets/fonts/Atma-Bold-700.woff2" rel="preload" type="font/woff2"/><link as="image" href="assets/img/icons/icons-sprite.svg" rel="preload" type="image/svg+xml"/>
 <script src="assets/js/early-theme.session.js"></script>
 <link href="assets/css/styles.css" rel="stylesheet"/>
-<script defer="" src="assets/js/enhancements.js"></script>
-<meta content="index,follow" name="robots"/>
-<meta content="Hum Studios" property="og:site_name"/>
-<meta content="1200" property="og:image:width"/>
-<meta content="630" property="og:image:height"/>
-
+<script defer="" src="assets/js/enhancements.js"></script><meta content="index,follow" name="robots"/><meta content="Hum Studios" property="og:site_name"/><meta content="1200" property="og:image:width"/><meta content="630" property="og:image:height"/><meta content="Hum Studios characters in a colorful, welcoming title card." name="twitter:image:alt"/>
 <!-- 1) Organization -->
 <script type="application/ld+json">{
   "@context": "https://schema.org",
@@ -68,18 +59,9 @@
   "inLanguage": "en-GB"
 }
 </script>
-<style>.media-spot{ margin: 1.25rem 0; }
-  .media-spot > figcaption{ font-size: 0.95rem; line-height: 1.4; margin-top: 0.5rem; color: var(--muted-foreground, #555); }
-
-.video-frame{ aspect-ratio: 4 / 3; width: 100%; }
-  .video-frame > video{ width:100%; height:auto; display:block; }
-  .video-frame picture, .video-frame img{ width:100%; height:auto; display:block; }</style>
 </head>
 <body>
-<a class="skip-link" href="#main">Skip to content</a>
-<div aria-hidden="true" id="site-backdrop"></div>
-<div data-include="partials/stars.html"></div>
-<div aria-hidden="true" data-include="partials/clouds.html" id="clouds"></div>
+<div id="clouds" class="clouds" data-include="partials/clouds.html" aria-hidden="true"></div>
 <div class="container">
 <header id="site-header" role="banner">
 <div class="top-header">
@@ -87,9 +69,9 @@
 <img alt="Hum Studios Logo" decoding="async" height="344" loading="eager" src="assets/img/logos/hum-studios-logo-614x344.png" width="614"/>
 </a>
 <nav aria-label="Main" class="top-nav desktop">
-<a href="index.html"><svg aria-hidden="true" class="icon" focusable="false"><use href="assets/img/icons/icons-sprite.svg#house" xlink:href="assets/img/icons/icons-sprite.svg#house"></use></svg> Home</a>
-<a href="about.html"><svg aria-hidden="true" class="icon" focusable="false"><use href="assets/img/icons/icons-sprite.svg#person" xlink:href="assets/img/icons/icons-sprite.svg#person"></use></svg> About</a>
-<a href="contact.html"><svg aria-hidden="true" class="icon" focusable="false"><use href="assets/img/icons/icons-sprite.svg#bubble" xlink:href="assets/img/icons/icons-sprite.svg#bubble"></use></svg> Contact</a>
+<a href="index.html"><svg aria-hidden="true" class="icon" focusable="false"><use href="assets/img/icons/icons-sprite.svg#house"></use></svg> Home</a>
+<a href="about.html"><svg aria-hidden="true" class="icon" focusable="false"><use href="assets/img/icons/icons-sprite.svg#person"></use></svg> About</a>
+<a href="contact.html"><svg aria-hidden="true" class="icon" focusable="false"><use href="assets/img/icons/icons-sprite.svg#bubble"></use></svg> Contact</a>
 </nav>
 <button aria-controls="mobileMenu" aria-expanded="false" aria-label="Toggle menu" class="hamburger" id="hamburgerBtn" type="button">
 <span aria-hidden="true" class="bar"></span>
@@ -97,11 +79,11 @@
 <span aria-hidden="true" class="bar"></span>
 </button>
 <nav aria-hidden="true" aria-label="Mobile" class="mobile-nav pushdown" hidden="" id="mobileMenu">
-<a href="index.html"><svg aria-hidden="true" class="icon" focusable="false"><use href="assets/img/icons/icons-sprite.svg#house" xlink:href="assets/img/icons/icons-sprite.svg#house"></use></svg> Home</a>
-<a href="about.html"><svg aria-hidden="true" class="icon" focusable="false"><use href="assets/img/icons/icons-sprite.svg#person" xlink:href="assets/img/icons/icons-sprite.svg#person"></use></svg> About</a>
-<a href="contact.html"><svg aria-hidden="true" class="icon" focusable="false"><use href="assets/img/icons/icons-sprite.svg#bubble" xlink:href="assets/img/icons/icons-sprite.svg#bubble"></use></svg> Contact</a>
-<a href="privacy.html"><svg aria-hidden="true" class="icon" focusable="false"><use href="assets/img/icons/icons-sprite.svg#shield" xlink:href="assets/img/icons/icons-sprite.svg#shield"></use></svg> Privacy</a>
-<a href="cookies.html"><svg aria-hidden="true" class="icon" focusable="false"><use href="assets/img/icons/icons-sprite.svg#cookie" xlink:href="assets/img/icons/icons-sprite.svg#cookie"></use></svg>Cookies</a>
+<a href="index.html"><svg aria-hidden="true" class="icon" focusable="false"><use href="assets/img/icons/icons-sprite.svg#house"></use></svg> Home</a>
+<a href="about.html"><svg aria-hidden="true" class="icon" focusable="false"><use href="assets/img/icons/icons-sprite.svg#person"></use></svg> About</a>
+<a href="contact.html"><svg aria-hidden="true" class="icon" focusable="false"><use href="assets/img/icons/icons-sprite.svg#bubble"></use></svg> Contact</a>
+<a href="privacy.html"><svg aria-hidden="true" class="icon" focusable="false"><use href="assets/img/icons/icons-sprite.svg#shield"></use></svg> Privacy</a>
+<a href="cookies.html"><svg aria-hidden="true" class="icon" focusable="false"><use href="assets/img/icons/icons-sprite.svg#cookie"></use></svg>Cookies</a>
 </nav>
 <button aria-label="Toggle theme" aria-pressed="false" class="theme-toggle" id="theme-toggle" title="Toggle theme" type="button">
 <span class="theme-toggle__slider">
@@ -137,7 +119,7 @@
 <h1>Interactive stories for kids</h1>
 <div class="download-row">
 <a href="#">
-<img alt="Download on the App Store" decoding="async" height="40" src="assets/img/logos/appstorebadge.svg" width="120"/>
+<img alt="Download on the App Store" height="40" src="assets/img/logos/appstorebadge.svg" width="120"/>
 <span class="app-caption">Download our free demo!</span>
 </a>
 </div>
@@ -165,7 +147,7 @@
 <p>It's an endearing and comical adventure that’s perfect if your child likes elephant stories, crocodile stories, or even penguin stories. Download the first 10 pages for free and meet Jessie and her animal friends.</p>
 <div class="download-row">
 <a href="#">
-<img alt="Download on the App Store" decoding="async" height="40" src="assets/img/logos/appstorebadge.svg" width="120"/>
+<img alt="Download on the App Store" height="40" src="assets/img/logos/appstorebadge.svg" width="120"/>
 <span class="app-caption">Download No Pets Allowed!</span>
 </a>
 </div>
@@ -214,10 +196,10 @@
 </nav>
 <div class="footer-social">
 <a aria-label="Facebook" href="https://www.facebook.com/humstudiosltd" rel="noopener noreferrer" target="_blank">
-<img alt="Hum Studios" aria-hidden="true" decoding="async" draggable="false" fetchpriority="low" height="120" loading="lazy" src="assets/img/logos/facebook-logo-120x120.png" width="120"/>
+<img alt="" aria-hidden="true" decoding="async" draggable="false" fetchpriority="low" height="120" loading="lazy" src="assets/img/logos/facebook-logo-120x120.png" width="120"/>
 </a>
 <a aria-label="Instagram" href="https://www.instagram.com/hum_studios_uk/" rel="noopener noreferrer" target="_blank">
-<img alt="Hum Studios" aria-hidden="true" decoding="async" draggable="false" fetchpriority="low" height="120" loading="lazy" src="assets/img/logos/instagram-logo-120x120.png" width="120"/>
+<img alt="" aria-hidden="true" decoding="async" draggable="false" fetchpriority="low" height="120" loading="lazy" src="assets/img/logos/instagram-logo-120x120.png" width="120"/>
 </a>
 </div>
 <div class="footer-legal">
@@ -311,6 +293,52 @@
   } else {
     detectWebP(init);
   }
+})();
+</script>
+
+<script>
+(function(){
+  var v = document.getElementById('heroVideo');
+  if (!v) return;
+  // Autoplay preconditions (defensive)
+  v.muted = true; try{ v.setAttribute('muted',''); }catch(e){}
+  v.autoplay = true; try{ v.setAttribute('autoplay',''); }catch(e){}
+  try{ v.setAttribute('playsinline',''); }catch(e){}
+  // Try to play now and when it's ready
+  function kick(){ try{ var p=v.play&&v.play(); if(p&&p.catch){p.catch(function(){});} }catch(e){} }
+  if (v.readyState >= 2) kick();
+  v.addEventListener('loadeddata', kick, { once:true });
+  v.addEventListener('canplay', kick, { once:true });
+  // Last-chance nudge
+  setTimeout(kick, 1500);
+})();
+</script><script>
+(function(){
+  var btn = document.getElementById('hamburgerBtn');
+  var menu = document.getElementById('mobileMenu');
+  if (!btn || !menu) return;
+  function setState(open){
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open){
+      menu.removeAttribute('hidden');
+      menu.setAttribute('aria-hidden','false');
+      try{ menu.removeAttribute('inert'); }catch(e){}
+      document.documentElement.classList.add('menu-open');
+    } else {
+      menu.setAttribute('hidden','');
+      menu.setAttribute('aria-hidden','true');
+      try{ menu.setAttribute('inert',''); }catch(e){}
+      document.documentElement.classList.remove('menu-open');
+    }
+  }
+  var open = false; setState(false);
+  btn.addEventListener('click', function(){
+    open = !open; setState(open);
+  });
+  // Close on Escape for accessibility
+  document.addEventListener('keydown', function(ev){
+    if (ev.key === 'Escape' && open){ open = false; setState(false); btn.focus(); }
+  });
 })();
 </script>
 </body>
