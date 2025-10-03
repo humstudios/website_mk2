@@ -143,7 +143,7 @@
   --shadow-2: 0 0.75em 1.8em rgba(11, 18, 32, 0.14), 0 1.4em 3em rgba(11, 18, 32, 0.10);
   --underline-offset: 0.18em;
   --underline-thickness: 0.08em;
-  --clouds-opacity: 0.4;
+  --clouds-opacity: 0.5;
   --transition-fast: 0.15s;
   --transition-normal: 0.25s;
   --transition-slow: 0.35s;
