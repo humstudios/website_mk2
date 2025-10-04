@@ -38,3 +38,10 @@
 
 # === Preserved custom headers for review ===
 #   Access-Control-Allow-Origin: *
+
+
+/docs/*
+  X-Robots-Tag: noindex, nofollow
+
+/partials/*
+  X-Robots-Tag: noindex, nofollow
