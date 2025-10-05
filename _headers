@@ -1,5 +1,5 @@
-# === Global security headers ===
 /*
+
   Strict-Transport-Security: max-age=31536000; includeSubDomains
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
@@ -11,29 +11,34 @@
   # Content Security Policy — permissive enough for Turnstile + CF Analytics + Google Fonts
   # If you’re nervous, start with Report-Only (uncomment the Report-Only line and comment the enforcing line).
   #Content-Security-Policy-Report-Only: default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests; script-src 'self' https://challenges.cloudflare.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob:; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://challenges.cloudflare.com; frame-src 'self' https://challenges.cloudflare.com
-  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests; script-src 'self' https://challenges.cloudflare.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob:; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://challenges.cloudflare.com; frame-src 'self' https://challenges.cloudflare.com
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests; script-src 'self' https://challenges.cloudflare.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://challenges.cloudflare.com; frame-src 'self' https://challenges.cloudflare.com
 
 # === Long-cache static assets ===
 /assets/js/*
+
   Cache-Control: public, max-age=31536000, immutable
 
 /assets/css/*
+
   Cache-Control: public, max-age=31536000, immutable
 
 /assets/img/*
+
   Cache-Control: public, max-age=31536000, immutable
 
 /assets/fonts/*
+
   Cache-Control: public, max-age=31536000, immutable
 
 # === Noindex for docs/lab and demo meta pages ===
 /docs/*
-  X-Robots-Tag: noindex, follow
 
-/head-color-scheme-meta.html
   X-Robots-Tag: noindex, follow
+/docs/head-color-scheme-meta.html
 
-/head-theme-color-meta.html
+  X-Robots-Tag: noindex, follow
+/docs/head-theme-color-meta.html
+
   X-Robots-Tag: noindex, follow
 
 # === Preserved custom headers for review ===
@@ -41,7 +46,9 @@
 
 
 /docs/*
+
   X-Robots-Tag: noindex, nofollow
 
 /partials/*
+
   X-Robots-Tag: noindex, nofollow
