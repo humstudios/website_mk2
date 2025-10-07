@@ -1,0 +1,39 @@
+name: CI (HTML validate, links, Lighthouse)
+
+on:
+  workflow_dispatch: {}
+  # When ready, enable pull_request to gate changes:
+  # pull_request:
+  #   branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: HTML validation
+        run: npx --yes html-validate "**/*.html"
+
+      - name: Link check (lychee)
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --verbose --no-progress --accept 200,204,301,302,403,429 --base . ./
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Lighthouse CI (static)
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          configPath: ./docs/.lighthouserc.json
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+          runs: 1
+          staticDistDir: .
+        continue-on-error: true
