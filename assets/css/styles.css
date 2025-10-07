@@ -927,36 +927,3 @@ html[data-theme="light"]{
 .video-frame{ aspect-ratio: 4 / 3; width: 100%; }
   .video-frame > video{ width:100%; height:auto; display:block; }
   .video-frame picture, .video-frame img{ width:100%; height:auto; display:block; }
-
-video.hero-video{ background-color: transparent; }
-
-/* === Hero responsive poster (CSS-first) ================================
-   Paints an instant poster on the hero container (mobile vs desktop)
-   with WebP preferred and JPG fallback. This avoids JS timing races.
-   Paths are relative to assets/css/styles.css -> use ../img/...
-*/
-.hero {
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  /* Fallback (JPEG) for older browsers */
-  background-image: url("../img/animation/interactive-storybook-elephant-crocodile-girl-hero-poster-480w.jpg");
-  /* Prefer WebP where supported */
-  background-image: image-set(
-    url("../img/animation/interactive-storybook-elephant-crocodile-girl-hero-poster-480w.jpg") type("image/jpeg") 1x,
-    url("../img/animation/interactive-storybook-elephant-crocodile-girl-hero-poster-480w.webp") type("image/webp") 1x
-  );
-}
-
-@media (min-width: 768px) {
-  .hero {
-    background-image: image-set(
-      url("../img/animation/interactive-storybook-elephant-crocodile-girl-hero-poster-960w.jpg") type("image/jpeg") 1x,
-      url("../img/animation/interactive-storybook-elephant-crocodile-girl-hero-poster-960w.webp") type("image/webp") 1x
-    );
-  }
-}
-
-/* Ensure video doesn't overlay with a black box before first frame */
-.hero-video { background-color: transparent; }
-
