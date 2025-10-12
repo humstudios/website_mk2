@@ -1,5 +1,14 @@
-/index.html    /           301
-/about.html     /about/      301
-/contact.html   /contact/    301
-/privacy.html   /privacy/    301
-/cookies.html   /cookies/    301
+# Hum Studios — canonical trailing slash + strip .html
+/index.html   /           301
+
+/about        /about/     301
+/about.html   /about/     301
+
+/contact      /contact/   301
+/contact.html /contact/   301
+
+/privacy      /privacy/   301
+/privacy.html /privacy/   301
+
+/cookies      /cookies/   301
+/cookies.html /cookies/   301
