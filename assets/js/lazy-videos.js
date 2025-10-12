@@ -2,7 +2,7 @@
   'use strict';
   var mq = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
   var reduceMotion = mq ? mq.matches : false;
-  if (reduceMotion) return; // show poster only
+  if (reduceMotion && !document.querySelector('video[data-allow-motion]')) return; // allow whitelisted motion
 
   function lazyLoadVideo(id) {
     var v = document.getElementById(id);

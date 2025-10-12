@@ -7,25 +7,25 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://www.humstudios.com/about</loc>
+    <loc>https://www.humstudios.com/about/</loc>
     <lastmod>2025-10-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.humstudios.com/contact</loc>
+    <loc>https://www.humstudios.com/contact/</loc>
     <lastmod>2025-10-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.humstudios.com/privacy</loc>
+    <loc>https://www.humstudios.com/privacy/</loc>
     <lastmod>2025-10-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.humstudios.com/cookies</loc>
+    <loc>https://www.humstudios.com/cookies/</loc>
     <lastmod>2025-10-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
