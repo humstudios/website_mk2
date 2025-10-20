@@ -1,13 +1,21 @@
+// Hum Studios — Cloudflare Pages Advanced Mode Worker
+// Canonical host/protocol, .html normalization, legacy queries, and explicit 410s.
+
+function redirect301(url) {
+  return Response.redirect(url.toString(), 301);
+}
+
 export default {
   async fetch(request, env, ctx) {
-    const url = new URL(request.url);
+    const incoming = new URL(request.url);
+    const url = new URL(incoming.toString()); // clone to mutate safely
 
     // --- 0) Canonical host + HTTPS ---
     const CANONICAL_HOST = "www.humstudios.com";
-    if (url.hostname !== CANONICAL_HOST) {
+    if (url.hostname !== CANONICAL_HOST || url.protocol !== "https:") {
       url.hostname = CANONICAL_HOST;
       url.protocol = "https:";
-      return Response.redirect(url.toString(), 301);
+      return redirect301(url);
     }
 
     // Normalize accidental double slashes in path (except the leading one)
@@ -27,25 +35,26 @@ export default {
     if (url.searchParams.has("cat")) {
       url.pathname = "/";
       url.search = "";
-      return Response.redirect(url.toString(), 301);
+      return redirect301(url);
     }
 
     // Legacy /work paths → home (adjust target later if desired)
-    if (url.pathname === "/work" or url.pathname.startsWith("/work/")) {
+    if (url.pathname === "/work" || url.pathname.startsWith("/work/")) {
       url.pathname = "/";
       url.search = "";
-      return Response.redirect(url.toString(), 301);
+      return redirect301(url);
     }
 
     // --- 3) .html normalization + index.html → clean trailing-slash ---
-    if (url.pathname === "/index" or url.pathname === "/index.html") {
+    if (url.pathname === "/index" || url.pathname === "/index.html") {
       url.pathname = "/";
       url.search = "";
-      return Response.redirect(url.toString(), 301);
+      return redirect301(url);
     }
+
     if (url.pathname.endsWith(".html")) {
       url.pathname = url.pathname.replace(/\.html$/i, "/");
-      return Response.redirect(url.toString(), 301);
+      return redirect301(url);
     }
 
     // Hand off to Pages asset serving
