@@ -1,10 +1,16 @@
-// Hum Studios — Cloudflare Pages Advanced Mode Worker (single-hop + direct .html serve)
+// Hum Studios — Cloudflare Pages Worker (canonical: no trailing slash for leaf pages)
 //
-// Strategy:
-//  - Canonicalize in one 301 (host, https, .html→slash, index→/, legacy paths/queries).
-//  - For requests that already end with a slash (e.g., /about/, /privacy/), try serving the
-//    backing .html *before* calling ASSETS, to avoid CF's internal 308.
-//  - Serve 410 for phantom URLs immediately.
+// Rationale: Cloudflare Pages issues 308s from `/about/` → `/about` when backed by `about.html`.
+// Fighting that adds complexity; instead, adopt the platform's preferred convention.
+// Canonicalization:
+//  - Force HTTPS + www
+//  - Drop `.html` → bare path (e.g., /about)
+//  - /index.html → /
+//  - Remove trailing slash on non-root, non-file paths
+//  - Legacy cleanup: ?cat=*, /work/* → /
+//  - 410 for phantom URLs
+//
+// Note: Keep `_redirects` out of repo; this Worker owns routing.
 
 function redirect301(url) {
   return Response.redirect(url.toString(), 301);
@@ -43,42 +49,26 @@ export default {
     // D) Index normalization
     if (url.pathname === "/index" || url.pathname === "/index.html") { url.pathname = "/"; url.search = ""; changed = true; }
 
-    // E) .html → directory style
-    if (url.pathname.endsWith(".html")) { url.pathname = url.pathname.replace(/\.html$/i, "/"); url.search = ""; changed = true; }
-
-    // F) Ensure trailing slash for route-like paths (not files), except root
-    if (url.pathname !== "/" && !url.pathname.endsWith("/") && !hasFileExtension(url.pathname)) {
-      url.pathname = url.pathname + "/"; changed = true;
+    // E) .html → remove extension
+    if (url.pathname.endsWith(".html")) {
+      url.pathname = url.pathname.replace(/\.html$/i, "");
+      if (url.pathname === "") url.pathname = "/"; // safety
+      url.search = "";
+      changed = true;
     }
 
-    // If anything changed, emit one redirect to the final canonical URL
+    // F) Remove trailing slash for non-root, non-file paths
+    if (url.pathname !== "/" && url.pathname.endsWith("/") && !hasFileExtension(url.pathname)) {
+      url.pathname = url.pathname.slice(0, -1);
+      changed = true;
+    }
+
+    // If anything changed, emit one redirect
     if (changed && url.toString() !== incoming.toString()) {
       return redirect301(url);
     }
 
-    // G) Serve trailing-slash routes by backing .html directly to avoid CF 308
-    if (url.pathname.endsWith("/") && url.pathname !== "/") {
-      const tryHtml = new URL(url.toString());
-      tryHtml.pathname = url.pathname.slice(0, -1) + ".html";
-      const htmlRes = await env.ASSETS.fetch(new Request(tryHtml.toString(), request));
-      if (htmlRes.ok) {
-        // Add canonical link header if desired (optional)
-        return htmlRes;
-      }
-      // If .html doesn't exist, fall through to ASSETS for normal handling
-    }
-
-    // H) Default: hand off to ASSETS
-    let response = await env.ASSETS.fetch(new Request(url.toString(), request));
-
-    // I) Fallback: if 404 on /path/, try /path.html (safety net)
-    if (response.status === 404 && url.pathname.endsWith("/")) {
-      const tryHtml = new URL(url.toString());
-      tryHtml.pathname = url.pathname.slice(0, -1) + ".html";
-      const htmlRes = await env.ASSETS.fetch(new Request(tryHtml.toString(), request));
-      if (htmlRes.ok) return htmlRes;
-    }
-
-    return response;
+    // Serve asset normally
+    return env.ASSETS.fetch(new Request(url.toString(), request));
   }
 };
