@@ -1,12 +1,12 @@
-// Hum Studios — Cloudflare Pages Worker (canonical: no trailing slash for leaf pages)
+// Hum Studios — Cloudflare Pages Worker (canonical: trailing slashes preserved for leaf pages)
 //
-// Rationale: Cloudflare Pages issues 308s from `/about/` → `/about` when backed by `about.html`.
-// Fighting that adds complexity; instead, adopt the platform's preferred convention.
+// Rationale: Hum Studios site and sitemap use trailing slashes (e.g. /about/). This Worker enforces
+// consistency: all leaf routes end with a trailing slash, no .html, HTTPS + www enforced.
 // Canonicalization:
 //  - Force HTTPS + www
-//  - Drop `.html` → bare path (e.g., /about)
+//  - Drop `.html` → bare path with trailing slash (e.g., /about.html → /about/)
 //  - /index.html → /
-//  - Remove trailing slash on non-root, non-file paths
+//  - Add trailing slash on non-root, non-file paths
 //  - Legacy cleanup: ?cat=*, /work/* → /
 //  - 410 for phantom URLs
 //
@@ -49,17 +49,17 @@ export default {
     // D) Index normalization
     if (url.pathname === "/index" || url.pathname === "/index.html") { url.pathname = "/"; url.search = ""; changed = true; }
 
-    // E) .html → remove extension
+    // E) .html → remove extension and enforce trailing slash
     if (url.pathname.endsWith(".html")) {
-      url.pathname = url.pathname.replace(/\.html$/i, "");
+      url.pathname = url.pathname.replace(/\.html$/i, "/");
       if (url.pathname === "") url.pathname = "/"; // safety
       url.search = "";
       changed = true;
     }
 
-    // F) Remove trailing slash for non-root, non-file paths
-    if (url.pathname !== "/" && url.pathname.endsWith("/") && !hasFileExtension(url.pathname)) {
-      url.pathname = url.pathname.slice(0, -1);
+    // F) Add trailing slash for non-root, non-file paths
+    if (url.pathname !== "/" && !url.pathname.endsWith("/") && !hasFileExtension(url.pathname)) {
+      url.pathname = url.pathname + "/";
       changed = true;
     }
 
