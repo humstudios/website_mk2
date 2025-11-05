@@ -1,16 +1,20 @@
-// Hum Studios — Cloudflare Pages Worker (canonical: trailing slashes preserved for leaf pages)
+// Hum Studios — Cloudflare Pages Worker (enforce trailing slashes + internal rewrite to .html)
 //
-// Rationale: Hum Studios site and sitemap use trailing slashes (e.g. /about/). This Worker enforces
-// consistency: all leaf routes end with a trailing slash, no .html, HTTPS + www enforced.
+// Goal: Keep public URLs with trailing slashes (e.g. /about/), but serve flat files like /about.html
+// without creating redirect loops. We *redirect* to add the slash, then *internally rewrite* the
+// asset fetch so Cloudflare serves the correct file while the browser URL remains pretty.
+//
 // Canonicalization:
 //  - Force HTTPS + www
-//  - Drop `.html` → bare path with trailing slash (e.g., /about.html → /about/)
 //  - /index.html → /
+//  - Drop `.html` → trailing‑slash path (e.g., /about.html → /about/)
 //  - Add trailing slash on non-root, non-file paths
-//  - Legacy cleanup: ?cat=*, /work/* → /
-//  - 410 for phantom URLs
+//  - Legacy cleanup: ?cat=* and /work/* → /
+//  - 410 for specific phantom URLs
 //
-// Note: Keep `_redirects` out of repo; this Worker owns routing.
+// Serving behavior:
+//  - If requesting a trailing‑slash path (e.g., /about/), *internally map* to /about.html for ASSETS.fetch
+//    so Pages finds the file, but do NOT redirect. This prevents /about ↔ /about/ loops seen by crawlers.
 
 function redirect301(url) {
   return Response.redirect(url.toString(), 301);
@@ -63,12 +67,19 @@ export default {
       changed = true;
     }
 
-    // If anything changed, emit one redirect
+    // Emit a single redirect if the canonical URL differs
     if (changed && url.toString() !== incoming.toString()) {
       return redirect301(url);
     }
 
-    // Serve asset normally
-    return env.ASSETS.fetch(new Request(url.toString(), request));
+    // G) INTERNAL REWRITE for trailing‑slash paths to corresponding .html flat files
+    // Example: /about/ → (internally) /about.html  (no redirect)
+    let assetURL = new URL(url.toString());
+    if (assetURL.pathname !== "/" && assetURL.pathname.endsWith("/") && !hasFileExtension(assetURL.pathname)) {
+      assetURL.pathname = assetURL.pathname.slice(0, -1) + ".html";
+    }
+
+    // Serve asset (using the internally mapped URL if applied)
+    return env.ASSETS.fetch(new Request(assetURL.toString(), request));
   }
 };
