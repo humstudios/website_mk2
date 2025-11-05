@@ -1,27 +1,26 @@
-// Hum Studios — Cloudflare Pages Worker (enforce trailing slashes + internal rewrite to .html)
+// Hum Studios — Cloudflare Pages Worker (v3): no-loop trailing slashes
+// Public policy: **trailing slashes** (/about/). Files on disk: flat **.html** (about.html).
+// Fix for HEAD-based checks (curl -I, Googlebot HEAD): internally rewrite *both* GET and HEAD
+// trailing-slash navigations to the corresponding .html so the asset layer never 308s back.
 //
-// Goal: Keep public URLs with trailing slashes (e.g. /about/), but serve flat files like /about.html
-// without creating redirect loops. We *redirect* to add the slash, then *internally rewrite* the
-// asset fetch so Cloudflare serves the correct file while the browser URL remains pretty.
-//
-// Canonicalization:
+// External redirects (canonicalization):
 //  - Force HTTPS + www
-//  - /index.html → /
-//  - Drop `.html` → trailing‑slash path (e.g., /about.html → /about/)
-//  - Add trailing slash on non-root, non-file paths
-//  - Legacy cleanup: ?cat=* and /work/* → /
-//  - 410 for specific phantom URLs
+//  - /index.html  →  /
+//  - *.html       →  strip extension and add trailing slash (e.g. /about.html → /about/)
+//  - Add trailing slash on non-root, non-file paths (e.g. /about → /about/)
 //
-// Serving behavior:
-//  - If requesting a trailing‑slash path (e.g., /about/), *internally map* to /about.html for ASSETS.fetch
-//    so Pages finds the file, but do NOT redirect. This prevents /about ↔ /about/ loops seen by crawlers.
+// Internal rewrite (no external redirect):
+//  - /            →  /index.html
+//  - /leaf/       →  /leaf.html
+//
+// Legacy: ?cat=* → /, /work/* → /, specific phantom 410s.
 
 function redirect301(url) {
   return Response.redirect(url.toString(), 301);
 }
 
 function hasFileExtension(pathname) {
-  const last = pathname.split("/").pop() || "";
+  const last = (pathname.split("/").pop() || "");
   return last.includes(".");
 }
 
@@ -50,36 +49,42 @@ export default {
     if (url.searchParams.has("cat")) { url.pathname = "/"; url.search = ""; changed = true; }
     if (url.pathname === "/work" || url.pathname.startsWith("/work/")) { url.pathname = "/"; url.search = ""; changed = true; }
 
-    // D) Index normalization
-    if (url.pathname === "/index" || url.pathname === "/index.html") { url.pathname = "/"; url.search = ""; changed = true; }
-
-    // E) .html → remove extension and enforce trailing slash
-    if (url.pathname.endsWith(".html")) {
-      url.pathname = url.pathname.replace(/\.html$/i, "/");
-      if (url.pathname === "") url.pathname = "/"; // safety
+    // D) Index normalization (external redirect only for explicit index paths)
+    if (url.pathname === "/index" || url.pathname === "/index.html") {
+      url.pathname = "/";
       url.search = "";
       changed = true;
     }
 
-    // F) Add trailing slash for non-root, non-file paths
+    // E) .html → strip and enforce trailing slash (external redirect)
+    if (url.pathname.endsWith(".html")) {
+      url.pathname = url.pathname.replace(/\.html$/i, "/");
+      if (url.pathname === "") url.pathname = "/";
+      url.search = "";
+      changed = true;
+    }
+
+    // F) Add trailing slash for non-root, non-file paths (external redirect)
     if (url.pathname !== "/" && !url.pathname.endsWith("/") && !hasFileExtension(url.pathname)) {
       url.pathname = url.pathname + "/";
       changed = true;
     }
 
-    // Emit a single redirect if the canonical URL differs
+    // If canonical URL differs, perform ONE external redirect
     if (changed && url.toString() !== incoming.toString()) {
       return redirect301(url);
     }
 
-    // G) INTERNAL REWRITE for trailing‑slash paths to corresponding .html flat files
-    // Example: /about/ → (internally) /about.html  (no redirect)
-    let assetURL = new URL(url.toString());
-    if (assetURL.pathname !== "/" && assetURL.pathname.endsWith("/") && !hasFileExtension(assetURL.pathname)) {
+    // G) INTERNAL REWRITE to flat files for asset fetch (NO external redirect).
+    // Apply for **GET and HEAD** HTML-like navigations so curl -I / Googlebot HEAD don't loop.
+    const assetURL = new URL(url.toString());
+    if (assetURL.pathname === "/") {
+      assetURL.pathname = "/index.html";
+    } else if (assetURL.pathname.endsWith("/") && !hasFileExtension(assetURL.pathname)) {
       assetURL.pathname = assetURL.pathname.slice(0, -1) + ".html";
     }
 
-    // Serve asset (using the internally mapped URL if applied)
+    // Fetch using internal mapping so Pages serves the correct file without bouncing
     return env.ASSETS.fetch(new Request(assetURL.toString(), request));
   }
 };
