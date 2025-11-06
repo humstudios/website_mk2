@@ -1,14 +1,12 @@
-// /functions/[[path]].js — Trailing slashes + HTTPS/www; bypass Clean URLs by fetching the slashless asset
-// This variant avoids Cloudflare Pages' Clean URLs 308 by requesting the *slashless* version
-// from ASSETS, while keeping the public URL with a trailing slash.
+// /functions/[[path]].js — Canonical host + HTTPS + trailing slashes
+// + Asset alias so pages using "assets/..." from subdirectories still work.
 //
-// Public behavior:
-//   - http/non‑www → https://www.humstudios.com (301)
-//   - /leaf       → /leaf/ (301)
-//   - /leaf/      → 200 OK (served from /leaf.html via internal fetch of "/leaf")
-//   - /index.html → / (301), / → 200 OK
+// Why the alias?
+// If a page at /about/ uses <link href="assets/css/styles.css"> the browser
+// requests /about/assets/css/styles.css. This file doesn't exist. We map any
+// "/<anything>/assets/*" request back to "/assets/*" so CSS/JS/fonts/images load.
 //
-// IMPORTANT: Do not ship a root-level `_worker.js` alongside this.
+// NOTE: Keep only ONE routing layer: use Pages Functions OR a root _worker.js (not both).
 
 export async function onRequest(context) {
   const { request, env, next } = context;
@@ -17,15 +15,26 @@ export async function onRequest(context) {
 
   if (method !== "GET" && method !== "HEAD") return next();
 
-  // Bypass static assets
-  if (url.pathname.startsWith("/assets/") ||
-      /\.(css|js|mjs|map|json|svg|png|jpe?g|gif|webp|ico|woff2?|ttf|mp4|webm|txt|xml|pdf)$/i.test(url.pathname)) {
+  // --- Asset alias: /foo/bar/assets/... -> /assets/...
+  // Run this BEFORE the generic asset bypass so we can remap.
+  const i = url.pathname.indexOf("/assets/");
+  if (i > 0) {
+    const newPath = url.pathname.slice(i); // keep "/assets/..."
+    const assetURL = new URL(newPath + url.search, url.origin);
+    return env.ASSETS.fetch(new Request(assetURL.toString(), request));
+  }
+
+  // --- Bypass obvious assets (already at root /assets/* or with file extensions)
+  if (
+    url.pathname.startsWith("/assets/") ||
+    /\.(css|js|mjs|map|json|svg|png|jpe?g|gif|webp|ico|woff2?|ttf|mp4|webm|txt|xml|pdf)$/i.test(url.pathname)
+  ) {
     return next();
   }
 
   const hasExt = (p) => (p.split("/").pop() || "").includes(".");
 
-  // Canonical host + HTTPS
+  // --- Canonical host + HTTPS
   const CANON = "www.humstudios.com";
   if (url.hostname !== CANON || url.protocol !== "https:") {
     url.hostname = CANON;
@@ -33,7 +42,7 @@ export async function onRequest(context) {
     return Response.redirect(url.toString(), 301);
   }
 
-  // Path canonicalization
+  // --- Path canonicalization
   let changed = false;
   const normalized = url.pathname.replace(/\/{2,}/g, "/");
   if (normalized !== url.pathname) { url.pathname = normalized; changed = true; }
@@ -52,15 +61,14 @@ export async function onRequest(context) {
 
   if (changed) return Response.redirect(url.toString(), 301);
 
-  // Internal asset mapping:
-  // - "/"           → fetch "/"
-  // - "/leaf/"      → fetch "/leaf"   (slashless) to bypass Clean URLs redirect to /leaf
-  // - anything with extension → fetch as-is
+  // --- Internal asset mapping to avoid Clean URLs 308:
+  // "/" → fetch "/"
+  // "/leaf/" → fetch "/leaf" (slashless) so Pages serves leaf.html without bouncing
   let assetPath = url.pathname;
   if (assetPath === "/") {
     assetPath = "/";
   } else if (assetPath.endsWith("/") && !hasExt(assetPath)) {
-    assetPath = assetPath.slice(0, -1); // "/leaf/"" -> "/leaf"
+    assetPath = assetPath.slice(0, -1);
   }
 
   const assetURL = new URL(assetPath + url.search, url.origin);
