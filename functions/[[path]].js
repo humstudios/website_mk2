@@ -1,86 +1,68 @@
-// /functions/[[path]].js — Trailing slashes + HTTPS/www host enforcement (no head injection)
-// Hum Studios — Pages Functions catch‑all
+// /functions/[[path]].js — Trailing slashes + HTTPS/www; bypass Clean URLs by fetching the slashless asset
+// This variant avoids Cloudflare Pages' Clean URLs 308 by requesting the *slashless* version
+// from ASSETS, while keeping the public URL with a trailing slash.
 //
-// Public policy: **trailing slashes** everywhere. Files on disk are flat *.html.
-// This function:
-//   • Enforces canonical host & HTTPS → https://www.humstudios.com
-//   • Redirects once to canonical path: /index.html → /, *.html → /leaf/, /leaf → /leaf/
-//   • Internally serves / and /leaf/ from /index.html and /leaf.html (no extra redirect).
-//   • Handles GET and HEAD. Skips assets and non‑HTML requests.
-//   • No head injection.
+// Public behavior:
+//   - http/non‑www → https://www.humstudios.com (301)
+//   - /leaf       → /leaf/ (301)
+//   - /leaf/      → 200 OK (served from /leaf.html via internal fetch of "/leaf")
+//   - /index.html → / (301), / → 200 OK
 //
-// IMPORTANT: Do not ship a root‑level `_worker.js` alongside this; keep one routing layer only.
+// IMPORTANT: Do not ship a root-level `_worker.js` alongside this.
 
 export async function onRequest(context) {
   const { request, env, next } = context;
-  const incoming = new URL(request.url);
-  const url = new URL(incoming.toString());
-
-  // Only handle GET/HEAD navigations
+  const url = new URL(request.url);
   const method = request.method.toUpperCase();
+
   if (method !== "GET" && method !== "HEAD") return next();
 
-  // Bypass obvious static assets and API endpoints
-  if (
-    url.pathname.startsWith("/assets/") ||
-    /\.(css|js|mjs|map|json|svg|png|jpg|jpeg|gif|webp|ico|woff2?|ttf|mp4|webm|txt|xml|pdf)$/i.test(url.pathname)
-  ) {
+  // Bypass static assets
+  if (url.pathname.startsWith("/assets/") ||
+      /\.(css|js|mjs|map|json|svg|png|jpe?g|gif|webp|ico|woff2?|ttf|mp4|webm|txt|xml|pdf)$/i.test(url.pathname)) {
     return next();
   }
 
-  // Helpers
-  const hasExt = (p) => {
-    const last = (p.split("/").pop() || "");
-    return last.includes(".");
-  };
+  const hasExt = (p) => (p.split("/").pop() || "").includes(".");
 
-  // A) Canonical host + HTTPS (external 301)
-  const CANON_HOST = "www.humstudios.com";
-  let hostChanged = false;
-  if (url.hostname !== CANON_HOST) { url.hostname = CANON_HOST; hostChanged = true; }
-  if (url.protocol !== "https:")   { url.protocol = "https:";   hostChanged = true; }
-  if (hostChanged) return Response.redirect(url.toString(), 301);
+  // Canonical host + HTTPS
+  const CANON = "www.humstudios.com";
+  if (url.hostname !== CANON || url.protocol !== "https:") {
+    url.hostname = CANON;
+    url.protocol = "https:";
+    return Response.redirect(url.toString(), 301);
+  }
 
-  // B) Path canonicalization (single 301 hop max)
+  // Path canonicalization
   let changed = false;
-
-  // Collapse duplicate slashes
   const normalized = url.pathname.replace(/\/{2,}/g, "/");
   if (normalized !== url.pathname) { url.pathname = normalized; changed = true; }
 
-  // Optional legacy cleanups
-  if (url.searchParams.has("cat")) { url.pathname = "/"; url.search = ""; changed = true; }
-  if (url.pathname === "/work" || url.pathname.startsWith("/work/")) { url.pathname = "/"; url.search = ""; changed = true; }
-
-  // /index or /index.html → /
   if (url.pathname === "/index" || url.pathname === "/index.html") {
     url.pathname = "/"; url.search = ""; changed = true;
   }
 
-  // *.html → strip + add trailing slash
   if (url.pathname.endsWith(".html")) {
-    url.pathname = url.pathname.replace(/\.html$/i, "/");
-    if (url.pathname === "") url.pathname = "/";
-    url.search = "";
-    changed = true;
+    url.pathname = url.pathname.replace(/\.html$/i, "/"); url.search = ""; changed = true;
   }
 
-  // Add trailing slash to non-root, non-file paths
   if (url.pathname !== "/" && !url.pathname.endsWith("/") && !hasExt(url.pathname)) {
-    url.pathname = url.pathname + "/";
-    changed = true;
+    url.pathname += "/"; changed = true;
   }
 
   if (changed) return Response.redirect(url.toString(), 301);
 
-  // C) Internal mapping to physical .html (NO redirect)
-  const assetURL = new URL(url.toString());
-  if (assetURL.pathname === "/") {
-    assetURL.pathname = "/index.html";
-  } else if (assetURL.pathname.endsWith("/") && !hasExt(assetURL.pathname)) {
-    assetURL.pathname = assetURL.pathname.slice(0, -1) + ".html";
+  // Internal asset mapping:
+  // - "/"           → fetch "/"
+  // - "/leaf/"      → fetch "/leaf"   (slashless) to bypass Clean URLs redirect to /leaf
+  // - anything with extension → fetch as-is
+  let assetPath = url.pathname;
+  if (assetPath === "/") {
+    assetPath = "/";
+  } else if (assetPath.endsWith("/") && !hasExt(assetPath)) {
+    assetPath = assetPath.slice(0, -1); // "/leaf/"" -> "/leaf"
   }
 
-  // Fetch the mapped asset directly from static files
+  const assetURL = new URL(assetPath + url.search, url.origin);
   return env.ASSETS.fetch(new Request(assetURL.toString(), request));
 }
