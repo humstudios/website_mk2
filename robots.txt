@@ -1,4 +1,64 @@
+# =============================================================================
+# Hum Studios — robots.txt
+# =============================================================================
+# Standard crawlers: allow everything.
+# =============================================================================
+
 User-agent: *
 Allow: /
-
 Sitemap: https://www.humstudios.com/sitemap.xml
+
+
+# =============================================================================
+# AI training crawlers — disallowed.
+# These bots collect site content for use in AI training datasets.
+# Note: compliance is voluntary; not all bots honour robots.txt.
+# =============================================================================
+
+# OpenAI (ChatGPT, GPT models)
+User-agent: GPTBot
+Disallow: /
+
+# OpenAI web browsing / research preview
+User-agent: ChatGPT-User
+Disallow: /
+
+# Anthropic (Claude)
+User-agent: ClaudeBot
+Disallow: /
+
+# Common Crawl (widely used for AI training datasets)
+User-agent: CCBot
+Disallow: /
+
+# Google Gemini / Bard training
+User-agent: Google-Extended
+Disallow: /
+
+# Apple Applebot-Extended (AI features in Apple products)
+User-agent: Applebot-Extended
+Disallow: /
+
+# Meta AI training
+User-agent: FacebookBot
+Disallow: /
+
+# Amazon Alexa / AI training
+User-agent: Amazonbot
+Disallow: /
+
+# Cohere AI training
+User-agent: cohere-ai
+Disallow: /
+
+# Perplexity AI
+User-agent: PerplexityBot
+Disallow: /
+
+# Bytedance / TikTok AI
+User-agent: Bytespider
+Disallow: /
+
+# ImagesiftBot (image scraping for AI datasets)
+User-agent: ImagesiftBot
+Disallow: /
