@@ -1,0 +1,34 @@
+# --- Cloudflare Wrangler (local dev) ---
+.wrangler/
+
+# --- Node / package managers ---
+node_modules/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --- Optional build output (if you ever add one) ---
+dist/
+build/
+out/
+
+# --- Jekyll (only if you test locally) ---
+_site/
+.jekyll-cache/
+.jekyll-metadata
+.sass-cache/
+
+# --- Logs / temp / caches ---
+*.log
+*.tmp
+.cache/
+
+# --- Editors / OS cruft ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# --- Env files (if you add later) ---
+.env
+.env.*
