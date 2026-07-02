@@ -19,10 +19,6 @@ Sitemap: https://www.humstudios.com/sitemap.xml
 User-agent: GPTBot
 Disallow: /
 
-# OpenAI web browsing / research preview
-User-agent: ChatGPT-User
-Disallow: /
-
 # Anthropic (Claude)
 User-agent: ClaudeBot
 Disallow: /
@@ -49,10 +45,6 @@ Disallow: /
 
 # Cohere AI training
 User-agent: cohere-ai
-Disallow: /
-
-# Perplexity AI
-User-agent: PerplexityBot
 Disallow: /
 
 # Bytedance / TikTok AI

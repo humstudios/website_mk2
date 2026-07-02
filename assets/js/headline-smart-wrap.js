@@ -20,8 +20,12 @@
   var CAMEL_BREAK = /([a-z])([A-Z])/g;
 
   function processNodeText(text) {
-    // 1) Insert <wbr> after symbolic break chars
-    var withChars = text.replace(CHAR_BREAK, function (m, ch) { return ch + "<wbr>"; });
+    // 1) Insert <wbr> after symbolic break chars (but never between digits, e.g. $2.99)
+    var withChars = text.replace(CHAR_BREAK, function (m, ch, offset) {
+      var prev = text.charAt(offset - 1), next = text.charAt(offset + 1);
+      if (/\d/.test(prev) && /\d/.test(next)) return ch;
+      return ch + "<wbr>";
+    });
     // 2) Insert <wbr> at camelCase boundaries
     var withCamel = withChars.replace(CAMEL_BREAK, function (m, a, b) { return a + "<wbr>" + b; });
     return withCamel;

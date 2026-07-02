@@ -25,17 +25,18 @@
 
   # Content Security Policy — tailored to what the site actually loads:
   #   script-src:   self + inline scripts (critical theme/video JS) + Cloudflare Turnstile (contact form)
+  #                 + Cloudflare Web Analytics beacon (auto-injected by Cloudflare)
   #   style-src:    self + inline styles (critical hero CSS)
   #   img-src:      self + data: URIs (used for WebP feature detection)
   #   media-src:    self (all videos are self-hosted)
   #   font-src:     self (self-hosted Overpass + Atma)
-  #   connect-src:  self (contact form POSTs to /api/contact Pages Function)
+  #   connect-src:  self (contact form POSTs to /api/contact Pages Function) + cloudflareinsights.com (analytics beacon)
   #   frame-src:    Cloudflare Turnstile widget renders in an iframe
   #   frame-ancestors: blocks all iframe embedding of your pages
   #   form-action:  only allow form submissions to self (/api/contact)
   #   base-uri:     prevents <base> tag injection attacks
   #   object-src:   blocks Flash/plugins entirely
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; font-src 'self'; connect-src 'self'; frame-src https://challenges.cloudflare.com; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; font-src 'self'; connect-src 'self' https://cloudflareinsights.com; frame-src https://challenges.cloudflare.com; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'
 
   # --- Caching: HTML pages ---
   # Always revalidate HTML so updates are seen immediately.

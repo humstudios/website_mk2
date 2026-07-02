@@ -12,8 +12,6 @@ support.html
 privacy.html
 cookies.html
 404.html
-stars.html              # Partial: star background
-clouds.html             # Partial: cloud layer
 
 assets/
   css/
@@ -21,14 +19,12 @@ assets/
   js/
     early-theme.session.js   # Inline theme init (prevents FOUC)
     enhancements.js          # General progressive enhancement
-    hum-menu_clean.js        # Hamburger / mobile nav
+    hum-menu.clean.js        # Hamburger / mobile nav
     consent.js               # Cookie consent UI
-    consent-bind.js          # Wires consent decisions to analytics
-    theme-toggle_session.js  # Light/Dark/Auto toggle
+    consent-bind.js          # Binds "change cookie settings" controls to the consent UI
+    theme-toggle.session.js  # Light/Dark/Auto toggle
     theme-color-sync.js      # Syncs <meta name="theme-color">
-    turnstile-init.js        # Cloudflare Turnstile widget init
-    contact.js               # Contact form AJAX submit + status
-    contact-worker.js        # Cloudflare Worker (deploy separately — not a static asset)
+    contact.js               # Contact form AJAX submit + status + Turnstile callbacks
     headline-smart-wrap.js   # Prevents widows in headings
     ios-resume-fix.js        # Resumes paused video on iOS focus
   img/
@@ -45,6 +41,10 @@ google1cb35fe2fea0fd7d.html  # Google Search Console verification
 
 # Cloudflare Pages
 _headers                # Security & cache headers (Cloudflare Pages only — ignored on GitHub Pages)
+functions/
+  [[path]].js           # Canonical host/HTTPS/trailing-slash redirects + asset alias
+  api/
+    contact.js          # Pages Function: contact form handler (Turnstile verify + Resend email)
 ```
 
 ## Animations & fallbacks (index.html)
@@ -134,10 +134,10 @@ Then visit `http://localhost:5173/`. Note: security headers from `_headers` are 
 
 1. Push to GitHub.
 2. Connect repo to Cloudflare Pages — build command: (none), output directory: `/` (root).
-3. Deploy the contact form handler separately:
-   - Open `contact-worker.js` in the Cloudflare Workers dashboard (or use Wrangler).
-   - Set the required environment variables (`TURNSTILE_SECRET`, `EMAIL_*`, etc.).
-   - Bind the Worker route to match the `action` URL used in `contact.html`.
+3. The contact form handler deploys automatically as a Pages Function (`functions/api/contact.js`):
+   - Set the required environment variables in the Pages project settings:
+     `TURNSTILE_SECRET`, `RESEND_API_KEY`, `RESEND_FROM`, `RESEND_TO`
+     (optional: `RESEND_SUBJECT_PREFIX`, `THANK_YOU_URL`, `ALLOW_ORIGINS`, `TURNSTILE_ALLOWED_HOSTNAMES`).
 4. Confirm your Turnstile **site key** in `contact.html` matches the live key in your Cloudflare dashboard.
 
 ### Post-deploy checklist
