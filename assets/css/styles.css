@@ -664,7 +664,7 @@ h1, h2, h3{ color: var(--color-heading); font-family: var(--font-display); font-
 .download-row{ display: flex; justify-content: center; align-items: center; gap: var(--space-3); flex-wrap: wrap; margin-top: var(--space-6); }@media (min-width: 40em){ .download-row { gap: var(--space-4); }}
 .download-row a{
   display: inline-flex; flex-direction: column; align-items: center; text-decoration: none; color: inherit;
-}.app-caption{ margin-top: var(--space-2); font-size: var(--font-size-small); color: var(--text-strong); text-align: center; }.textarea{ resize: vertical; max-height: 60vh; }/* --- iPad Animation --- */
+}.app-caption{ margin-top: var(--space-2); font-size: var(--font-size-small); color: var(--text-strong); text-align: center; }.download-row + p.app-caption{ margin-top: var(--space-1); }.textarea{ resize: vertical; max-height: 60vh; }/* --- iPad Animation --- */
 .ipad-embed{
   --screen-left: 12.25%; --screen-top: 2.444444%; --screen-width: 75.5%; --screen-height: 95.111111%;
   --nudge-x: 0; --nudge-y: 0; --scale: 1.000;
