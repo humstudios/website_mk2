@@ -128,7 +128,7 @@
     max-width: 75%;
   }
 }</style>
-<script defer="" src="/assets/js/enhancements.js"></script><meta content="index,follow" name="robots"/><meta content="Hum Studios" property="og:site_name"/><meta content="1200" property="og:image:width"/><meta content="630" property="og:image:height"/><meta content="Hum Studios characters in a colorful, welcoming title card." name="twitter:image:alt"/>
+<meta content="index,follow" name="robots"/><meta content="Hum Studios" property="og:site_name"/><meta content="1200" property="og:image:width"/><meta content="630" property="og:image:height"/><meta content="Hum Studios characters in a colorful, welcoming title card." name="twitter:image:alt"/>
 <!-- 1) Organization -->
 <script type="application/ld+json">{
   "@context": "https://schema.org",
@@ -528,6 +528,11 @@
 
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduce) return; // keep the poster; no motion
+
+  // Save-Data: honour the user's data preference — keep the poster, never fetch/play the hero video.
+  var conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  var reduceData = window.matchMedia && window.matchMedia('(prefers-reduced-data: reduce)').matches;
+  if ((conn && conn.saveData) || reduceData) return;
 
   function showVideo(){
     if (!container.classList.contains('is-playing')){

@@ -128,8 +128,6 @@
   --footer-space: clamp(150px, 38vw, 400px);
 
   /* Component Tokens */
-  --logo-width-min: 7.5em;
-  --logo-width-max: 8em;
   --hamburger-size: 1.8em;
   --hamburger-bar-height: 0.21em;
   --hamburger-gap: 0.3125em;
@@ -169,7 +167,6 @@
     --gradient-mid: #5aa2cf;
     --gradient-end: #3a7ab4;
   }}
-@media (min-width: 25em){ :root { --logo-width-max: 10em; }}
 @media (min-width: 40em){ :root { --container-padding-x: var(--space-5); --radius-card: 2rem; }}
 @media (min-width: 48em){
   :root {
@@ -317,7 +314,7 @@ main{
   margin-bottom: var(--hero-gap-top);
   z-index: var(--z-header);
   column-gap: var(--space-2);
-}.logo{ display: block; width: clamp(var(--logo-width-min), 8vw, var(--logo-width-max)); height: auto; }.logo img{
+}.logo{ display: block; width: 135px; height: auto; }@media (min-width: 48em){ .logo{ width: 180px; } }.logo img{
   display: block;
   transform-origin: center center;
   filter: drop-shadow(0 4px 14px rgba(255, 255, 245, 0.3)) drop-shadow(0 0 8px rgba(255, 255, 245, 0.45));
@@ -569,21 +566,21 @@ content: "";
   to  { transform: translateX(var(--to)); }
 }
 
-.cloud1{ top: 2.3%; left: -15vw; width: 10em;   --from: -20vw; --to: 110vw; --delay: -17s; --duration: 90s; }
-.cloud2{ top: 25%;  left: -2vw;  width: 8.5em;  --from: -12vw; --to: 160vw; --delay: -35s; --duration: 75s; }
-.cloud3{ top: 31%;  left: -8vw;  width: 7.5em;  --from: -8vw;  --to: 140vw; --delay: -5s;  --duration: 67s; }
-.cloud4{ top: 42%;  left: -5vw;  width: 9em;    --from: -5vw;  --to: 105vw; --delay: -33s; --duration: 83s; }
-.cloud5{ top: 57%;  left: -12vw; width: 7.5em;  --from: -12vw; --to: 160vw; --delay: -25s; --duration: 67s; }
+.cloud1{ top: 2.3%; left: -15vw; width: 10em;   --from: -20vw; --to: 110vw; --delay: -17s; --duration: 98s; }
+.cloud2{ top: 22%;  left: -2vw;  width: 8.5em;  --from: -12vw; --to: 160vw; --delay: -35s; --duration: 86s; }
+.cloud3{ top: 31%;  left: -8vw;  width: 7.5em;  --from: -8vw;  --to: 140vw; --delay: -5s;  --duration: 60s; }
+.cloud4{ top: 42%;  left: -5vw;  width: 9em;    --from: -5vw;  --to: 105vw; --delay: -33s; --duration: 62s; }
+.cloud5{ top: 57%;  left: -12vw; width: 7.5em;  --from: -12vw; --to: 160vw; --delay: -25s; --duration: 70s; }
 .cloud6{ top: 72%;  left: -12vw; width: 7em;    --from: -8vw;  --to: 140vw; --delay: -55s; --duration: 55s; }
-.cloud7{ top: 87%;  left: -20vw; width: 9em;    --from: -20vw; --to: 120vw; --delay: -30s; --duration: 83s; }
+.cloud7{ top: 87%;  left: -20vw; width: 9em;    --from: -20vw; --to: 120vw; --delay: -30s; --duration: 79s; }
 @media (min-width: 48em){
-.cloud1 { width: 12.5em;  --duration: 180s; }
-.cloud2{ width: 10.625em; --duration: 140s; }
-.cloud3{ width: 9.375em; --duration: 105s; }
-.cloud4{ width: 11.25em;  --duration: 165s; }
-.cloud5{ width: 9.375em; --duration: 135s; }
-.cloud6{ width: 8.75em;  --duration: 110s; }
-.cloud7{ width: 11.25em;  --duration: 165s; }}
+.cloud1 { width: 12.5em;  --duration: 195s; }
+.cloud2{ width: 10.625em; --duration: 166s; }
+.cloud3{ width: 9.375em; --duration: 115s; }
+.cloud4{ width: 11.25em;  --duration: 120s; }
+.cloud5{ width: 9.375em; --duration: 134s; }
+.cloud6{ width: 8.75em;  --duration: 105s; }
+.cloud7{ width: 11.25em;  --duration: 153s; }}
 @media (min-width: 80em){ .clouds { opacity: calc(var(--clouds-opacity) - 0.05); }}
 
 /* Sprite icon utility (inline <svg class="icon"><use ...>) */

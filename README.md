@@ -18,7 +18,6 @@ assets/
     styles.css          # Global design tokens + layout
   js/
     early-theme.session.js   # Inline theme init (prevents FOUC)
-    enhancements.js          # General progressive enhancement
     hum-menu.clean.js        # Hamburger / mobile nav
     consent.js               # Cookie consent UI
     consent-bind.js          # Binds "change cookie settings" controls to the consent UI
