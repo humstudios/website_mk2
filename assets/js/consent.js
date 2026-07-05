@@ -58,14 +58,16 @@
 
     var h = document.createElement('h3');
     h.className = 'consent-banner__title';
+    h.id = 'consent-banner-title';
     h.textContent = 'Cookie settings';
+    el.setAttribute('aria-labelledby', 'consent-banner-title');
 
     var p = document.createElement('p');
     p.className = 'consent-banner__text';
     p.textContent = '';
 var s = document.createElement('strong'); s.textContent = 'Optional:'; p.appendChild(s);
 p.append(' Let us remember your theme between visits. ');
-var a = document.createElement('a'); a.href = '/cookies.html'; a.className = 'consent-banner__link'; a.textContent = 'Learn more'; p.appendChild(a);
+var a = document.createElement('a'); a.href = '/cookies.html'; a.className = 'consent-banner__link'; a.textContent = 'Learn more about cookies'; p.appendChild(a);
 
 
     var controls = document.createElement('div');
