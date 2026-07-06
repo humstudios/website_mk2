@@ -1,0 +1,13 @@
+{
+  "name": "Hum Studios",
+  "short_name": "Hum Studios",
+  "description": "Interactive, ad-free digital picture books for preschoolers and kids.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#4891c3",
+  "theme_color": "#4891c3",
+  "icons": [
+    { "src": "/assets/img/icons/android-chrome-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/img/icons/android-chrome-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
