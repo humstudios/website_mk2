@@ -1160,6 +1160,30 @@ h3 {
 .card :is(ul, ol):last-child {
   margin-block-end: 0;
 }
+.card .faq-list {
+  max-width: var(--measure);
+  margin-inline: auto;
+  text-align: start;
+}
+.card .faq-list dt {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-body);
+  font-weight: 700;
+  color: var(--color-heading);
+  margin-block-start: var(--space-5);
+}
+.card .faq-list dt:first-child {
+  margin-block-start: 0;
+}
+.card .faq-list dd {
+  margin: var(--space-1) 0 0;
+  line-height: 1.5;
+}
+@media (min-width: 48em) {
+  .card .faq-list dd {
+    line-height: 1.6;
+  }
+}
 .card a {
   color: var(--accent);
   overflow-wrap: break-word;

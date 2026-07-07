@@ -8,6 +8,30 @@
 //
 // NOTE: Keep only ONE routing layer: use Pages Functions OR a root _worker.js (not both).
 
+// --- Regional pricing for No Pets Allowed! (App Store Connect price list, checked 2026-07)
+// Eurozone members priced at €2.99; Canada is CA$3.99 (not $2.99); everywhere else on the
+// App Store's default USD tier is $2.99.
+const EUR_COUNTRIES = new Set([
+  "AT", "BE", "CY", "EE", "FI", "FR", "DE", "GR", "HR", "IE",
+  "IT", "LV", "LT", "LU", "MT", "NL", "PT", "SK", "SI", "ES",
+]);
+
+function priceForCountry(country) {
+  if (country === "GB") return "£2.99";
+  if (country === "CA") return "CA$3.99";
+  if (EUR_COUNTRIES.has(country)) return "€2.99";
+  return "$2.99";
+}
+
+class PriceRewriter {
+  constructor(text) {
+    this.text = text;
+  }
+  element(element) {
+    element.setInnerContent(this.text);
+  }
+}
+
 export async function onRequest(context) {
   const { request, env, next } = context;
   const url = new URL(request.url);
@@ -72,5 +96,15 @@ export async function onRequest(context) {
   }
 
   const assetURL = new URL(assetPath + url.search, url.origin);
-  return env.ASSETS.fetch(new Request(assetURL.toString(), request));
+  const response = await env.ASSETS.fetch(new Request(assetURL.toString(), request));
+
+  // --- Rewrite the displayed price on the homepage to match the visitor's region
+  if (url.pathname === "/" && (response.headers.get("content-type") || "").includes("text/html")) {
+    const country = request.cf?.country || "US";
+    return new HTMLRewriter()
+      .on(".price", new PriceRewriter(priceForCountry(country)))
+      .transform(response);
+  }
+
+  return response;
 }
