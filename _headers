@@ -55,13 +55,17 @@
 
 
 # =============================================================================
-# Images & video — 30 days
-# Filenames are descriptive but not content-hashed, so avoid immutable.
-# 30 days balances good cache hit rate against the ability to push updates.
+# Images & video — 1 year
+# Filenames are descriptive but not content-hashed, so NOT immutable: a hard
+# refresh, a Cloudflare cache purge, or renaming the file will still push an
+# update. These assets change rarely, so a long browser cache is a safe win
+# for returning visitors (satisfies Lighthouse "use efficient cache lifetimes").
+# NOTE: if you replace an image in place (same filename), returning visitors
+# may see the cached copy for up to a year — rename it or purge to force-update.
 # =============================================================================
 
 /assets/img/*
-  Cache-Control: public, max-age=2592000
+  Cache-Control: public, max-age=31536000
 
 
 # =============================================================================
