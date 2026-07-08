@@ -32,6 +32,82 @@ class PriceRewriter {
   }
 }
 
+// --- Live App Store rating (No Pets Allowed!, UK storefront), cached ~6h at the edge.
+// Returns { value, count } or null (null => leave the number-free badge fallback and
+// strip aggregateRating from the schema, so we never show a stale/invalid figure).
+const APP_ID = "1205476898";
+
+async function getRating(context) {
+  const cache = caches.default;
+  const cacheKey = new Request("https://rating-cache.humstudios.com/app-" + APP_ID);
+  const hit = await cache.match(cacheKey);
+  if (hit) { try { return await hit.json(); } catch (e) {} }
+  try {
+    const api = await fetch(
+      "https://itunes.apple.com/lookup?id=" + APP_ID + "&country=gb",
+      { cf: { cacheTtl: 0 } }
+    );
+    if (api.ok) {
+      const data = await api.json();
+      const app = data.results && data.results[0];
+      if (app && app.userRatingCount > 0 && app.averageUserRating > 0) {
+        const result = {
+          value: Math.round(app.averageUserRating * 10) / 10,
+          count: app.userRatingCount,
+        };
+        const toCache = new Response(JSON.stringify(result), {
+          headers: { "Content-Type": "application/json", "Cache-Control": "max-age=21600" },
+        });
+        if (context && context.waitUntil) context.waitUntil(cache.put(cacheKey, toCache.clone()));
+        return result;
+      }
+    }
+  } catch (e) { /* network/parse failure -> null */ }
+  return null;
+}
+
+// Fills the visible rating badge; if no rating, leaves the static fallback untouched.
+class RatingBadgeRewriter {
+  constructor(rating) { this.rating = rating; }
+  element(el) {
+    if (!this.rating) return;
+    const v = this.rating.value.toFixed(1);
+    const n = this.rating.count;
+    const full = Math.round(this.rating.value);
+    const stars = "★".repeat(full) + "☆".repeat(5 - full);
+    el.setAttribute("aria-label", "Rated " + v + " out of 5 from " + n + " App Store ratings");
+    el.setInnerContent(
+      '<span class="app-rating__stars">' + stars + "</span>" +
+      '<span class="app-rating__num">' + v + "</span>" +
+      '<span class="app-rating__count">' + n + " App Store ratings</span>",
+      { html: true }
+    );
+  }
+}
+
+// Fills the aggregateRating placeholders in the JSON-LD; if no rating, removes the
+// whole aggregateRating property so the schema stays valid.
+class SchemaRatingRewriter {
+  constructor(rating) { this.rating = rating; this.buf = ""; }
+  text(chunk) {
+    this.buf += chunk.text;
+    if (chunk.lastInTextNode) {
+      let out = this.buf;
+      if (this.rating) {
+        out = out
+          .replace("__RATING_VALUE__", this.rating.value.toFixed(1))
+          .replace("__RATING_COUNT__", String(this.rating.count));
+      } else {
+        out = out.replace(/\s*"aggregateRating":\s*\{[^}]*\},/, "");
+      }
+      chunk.replace(out, { html: false });
+      this.buf = "";
+    } else {
+      chunk.remove();
+    }
+  }
+}
+
 export async function onRequest(context) {
   const { request, env, next } = context;
   const url = new URL(request.url);
@@ -58,9 +134,10 @@ export async function onRequest(context) {
 
   const hasExt = (p) => (p.split("/").pop() || "").includes(".");
 
-  // --- Canonical host + HTTPS
+  // --- Canonical host + HTTPS (skip for local dev so `wrangler pages dev` works)
   const CANON = "www.humstudios.com";
-  if (url.hostname !== CANON || url.protocol !== "https:") {
+  const isLocal = url.hostname === "localhost" || url.hostname === "127.0.0.1";
+  if (!isLocal && (url.hostname !== CANON || url.protocol !== "https:")) {
     url.hostname = CANON;
     url.protocol = "https:";
     return Response.redirect(url.toString(), 301);
@@ -101,8 +178,11 @@ export async function onRequest(context) {
   // --- Rewrite the displayed price on the homepage to match the visitor's region
   if (url.pathname === "/" && (response.headers.get("content-type") || "").includes("text/html")) {
     const country = request.cf?.country || "US";
+    const rating = await getRating(context);
     return new HTMLRewriter()
       .on(".price", new PriceRewriter(priceForCountry(country)))
+      .on(".app-rating", new RatingBadgeRewriter(rating))
+      .on("script#app-schema", new SchemaRatingRewriter(rating))
       .transform(response);
   }
 

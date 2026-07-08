@@ -117,8 +117,8 @@
 }</script>
 <!-- 2) WebSite (homepage only) -->
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","@id":"https://www.humstudios.com/#website","url":"https://www.humstudios.com/","name":"Hum Studios","publisher":{"@id":"https://www.humstudios.com/#org"},"inLanguage":"en-GB"}</script>
-<!-- 3) MobileApplication (No Pets Allowed!) -->
-<script type="application/ld+json">
+<!-- 3) MobileApplication (No Pets Allowed!) — aggregateRating injected at the edge from Apple's live UK numbers -->
+<script type="application/ld+json" id="app-schema">
 {
   "@context": "https://schema.org",
   "@type": "MobileApplication",
@@ -131,6 +131,7 @@
   "url": "https://apps.apple.com/app/id1205476898",
   "installUrl": "https://apps.apple.com/app/id1205476898",
   "downloadUrl": "https://apps.apple.com/app/id1205476898",
+  "aggregateRating": {"@type": "AggregateRating", "ratingValue": "__RATING_VALUE__", "ratingCount": "__RATING_COUNT__", "bestRating": "5", "worstRating": "1"},
   "offers": [
     { "@type": "Offer", "price": "2.99", "priceCurrency": "USD" },
     { "@type": "Offer", "price": "2.99", "priceCurrency": "GBP" },
@@ -141,6 +142,18 @@
   "inLanguage": "en-GB"
 }
 </script>
+<style id="social-proof-css">
+.app-rating{display:flex;width:fit-content;margin:.35rem auto 0;justify-content:center;align-items:center;gap:.4rem;flex-wrap:wrap;font-size:.95rem;font-weight:500;text-decoration:none;color:inherit}
+.app-rating:hover{text-decoration:underline}
+.app-rating__stars{color:#f5a623;letter-spacing:1px;font-size:1.05em}
+.app-rating__num{font-weight:700}
+.app-rating__count{opacity:.72;font-weight:400}
+.review-card .review{max-width:58ch;margin:1.5rem auto 0;text-align:center}
+.review-card .review__stars{color:#f5a623;letter-spacing:2px;font-size:1.15rem;margin:0 0 .3rem}
+.review-card .review__title{font-weight:700;margin:0 0 .15rem}
+.review-card .review__quote{margin:0 0 .7rem;font-style:italic;line-height:1.55}
+.review-card .review__cite{font-size:.9rem;font-weight:600;opacity:.8}
+</style>
 <!-- 4) FAQPage (No Pets Allowed!) -->
 <script type="application/ld+json">
 {
@@ -272,10 +285,10 @@
 <div class="download-row">
 <a href="https://apps.apple.com/app/id1205476898" aria-label="Download our free demo on the App Store" target="_blank" rel="noopener noreferrer">
 <img alt="" aria-hidden="true" height="40" src="/assets/img/logos/appstorebadge.svg" width="120"/>
-<span class="app-caption">Download our free demo!</span>
+<span class="app-caption">Download our free demo for iPhone and iPad.</span>
 </a>
 </div>
-<p class="app-caption">Available on the App Store for iPhone and iPad.</p>
+<a class="app-rating" data-app-rating href="https://apps.apple.com/app/id1205476898" target="_blank" rel="noopener noreferrer" aria-label="See our reviews on the App Store">Loved on the App Store ↗</a>
 <p>Spark your child’s imagination with fun, interactive picture books from Hum Studios. Designed for preschoolers and kids of all ages, our stories blend reading skills and entertainment in a way that will have them laughing and learning. Written, illustrated and animated by people, not by AI!</p>
 <p>Designed for tablets and phones, our app is completely ad and subscription-free.</p>
 <p class="u-center-text">
@@ -325,6 +338,15 @@
 </div>
 <h2>It’s a game as well as a book</h2>
 <p>Find the butterflies! Hidden within the story are five butterflies. As your child reads the adventure, they’re invited to find all of them! The great thing about the book being digital is every time your child reads it, the butterflies are hidden in different places.</p>
+</section>
+<section class="card review-card">
+<h2>Loved by parents</h2>
+<figure class="review">
+<p class="review__title">“Absolutely Delightful from Start to Finish!”</p>
+<p class="review__stars" aria-hidden="true">★★★★★</p>
+<blockquote class="review__quote">“The voice narration is warm, engaging and a pleasure to listen to… The rhyming is clever and flows naturally, making it fun and memorable for young listeners… a high-quality story that both children and parents can enjoy together.”</blockquote>
+<figcaption class="review__cite">— SelinaKerindi, App Store review</figcaption>
+</figure>
 </section>
 <section class="card">
 <h2>No ads, no subscriptions or hidden charges, ever!</h2>
