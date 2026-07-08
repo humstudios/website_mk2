@@ -143,11 +143,11 @@
 }
 </script>
 <style id="social-proof-css">
-.app-rating{display:flex;width:fit-content;margin:.35rem auto 0;justify-content:center;align-items:center;gap:.4rem;flex-wrap:wrap;font-size:.95rem;font-weight:500;text-decoration:none;color:inherit}
+.app-rating{display:flex;width:fit-content;margin:.15rem auto .6rem;justify-content:center;align-items:center;gap:.1rem .4rem;flex-wrap:wrap;text-align:center;font-size:.95rem;font-weight:500;text-decoration:none;color:inherit}
 .app-rating:hover{text-decoration:underline}
-.app-rating__stars{color:#f5a623;letter-spacing:1px;font-size:1.05em}
-.app-rating__num{font-weight:700}
-.app-rating__count{opacity:.72;font-weight:400}
+.app-rating__stars{color:#f5a623;letter-spacing:1px;font-size:1.25em}
+.app-rating__num{font-weight:700;font-size:1.1em}
+.app-rating__count{flex-basis:100%;opacity:.72;font-weight:400;font-size:.82em}
 .review-card .review{max-width:58ch;margin:1.5rem auto 0;text-align:center}
 .review-card .review__stars{color:#f5a623;letter-spacing:2px;font-size:1.15rem;margin:0 0 .3rem}
 .review-card .review__title{font-weight:700;margin:0 0 .15rem}
@@ -163,12 +163,7 @@
     {
       "@type": "Question",
       "name": "Is it safe for young kids?",
-      "acceptedAnswer": {"@type": "Answer", "text": "Yes. There are no third-party trackers, no chat features, and nothing more to buy once you've unlocked the story."}
-    },
-    {
-      "@type": "Question",
-      "name": "Is No Pets Allowed! really ad-free?",
-      "acceptedAnswer": {"@type": "Answer", "text": "Yes! No ads and no pop-ups – nothing interrupts the story."}
+      "acceptedAnswer": {"@type": "Answer", "text": "Yes. There are no ads or pop-ups, no third-party trackers, no chat features, and nothing more to buy once you've unlocked the story – nothing interrupts the story."}
     },
     {
       "@type": "Question",
@@ -355,28 +350,44 @@
 </section>
 <section class="card">
 <h2>Frequently asked questions</h2>
-<dl class="faq-list">
-<dt>Is it safe for young kids?</dt>
-<dd>Yes. There are no third-party trackers, no chat features, and nothing more to buy once you’ve unlocked the story.</dd>
-<dt>Is No Pets Allowed! really ad-free?</dt>
-<dd>Yes! No ads and no pop-ups – nothing interrupts the story.</dd>
-<dt>How much does it cost, and is it a subscription?</dt>
-<dd>Just <span class="price">$2.99</span>, as a one-off payment. There’s no subscription and no recurring charges – buy once, own it forever.</dd>
-<dt>What age is it for?</dt>
-<dd>It’s designed for preschoolers and young readers who love animal stories, and can be enjoyed solo or read together with a parent.</dd>
-<dt>Can I try it before buying?</dt>
-<dd>Yes! Download the first 9 pages for free to meet Jessie and all her animal friends.</dd>
-<dt>Is the app noisy?</dt>
-<dd>No. There are just two gentle sound effects – a soft buzz when you tap a butterfly, and a happy “ta-da!” when all five are found – plus optional narration and a music soundtrack you can switch on or off. No blaring noise, no jarring surprises.</dd>
-<dt>Does it work offline?</dt>
-<dd>Yes. Once the story’s downloaded you don’t need an internet connection, so it’s perfect for car rides, flights and holidays.</dd>
-<dt>Can the app read the story aloud?</dt>
-<dd>Yes! You can have the app narrate the story, or read it aloud together with your child – with a playful music soundtrack if you want it.</dd>
-<dt>Was No Pets Allowed! made using AI?</dt>
-<dd>No – it’s written, illustrated and animated by a team who’ve worked at Disney and Universal, alongside BAFTA award-winning animators.</dd>
-<dt>Is it available on Android?</dt>
-<dd>Not yet – it’s currently available on the App Store for iPhone and iPad.</dd>
-</dl>
+<div class="faq-list">
+<details class="faq-item">
+<summary>Is it safe for young kids?</summary>
+<p class="faq-answer">Yes. There are no ads or pop-ups, no third-party trackers, no chat features, and nothing more to buy once you’ve unlocked the story – nothing interrupts the story.</p>
+</details>
+<details class="faq-item">
+<summary>How much does it cost, and is it a subscription?</summary>
+<p class="faq-answer">Just <span class="price">$2.99</span>, as a one-off payment. There’s no subscription and no recurring charges – buy once, own it forever.</p>
+</details>
+<details class="faq-item">
+<summary>What age is it for?</summary>
+<p class="faq-answer">It’s designed for preschoolers and young readers who love animal stories, and can be enjoyed solo or read together with a parent.</p>
+</details>
+<details class="faq-item">
+<summary>Can I try it before buying?</summary>
+<p class="faq-answer">Yes! Download the first 9 pages for free to meet Jessie and all her animal friends.</p>
+</details>
+<details class="faq-item">
+<summary>Is the app noisy?</summary>
+<p class="faq-answer">No. There are just two gentle sound effects – a soft buzz when you tap a butterfly, and a happy “ta-da!” when all five are found – plus optional narration and a music soundtrack you can switch on or off. No blaring noise, no jarring surprises.</p>
+</details>
+<details class="faq-item">
+<summary>Does it work offline?</summary>
+<p class="faq-answer">Yes. Once the story’s downloaded you don’t need an internet connection, so it’s perfect for car rides, flights and holidays.</p>
+</details>
+<details class="faq-item">
+<summary>Can the app read the story aloud?</summary>
+<p class="faq-answer">Yes! You can have the app narrate the story, or read it aloud together with your child – with a playful music soundtrack if you want it.</p>
+</details>
+<details class="faq-item">
+<summary>Was No Pets Allowed! made using AI?</summary>
+<p class="faq-answer">No – it’s written, illustrated and animated by a team who’ve worked at Disney and Universal, alongside BAFTA award-winning animators.</p>
+</details>
+<details class="faq-item">
+<summary>Is it available on Android?</summary>
+<p class="faq-answer">Not yet – it’s currently available on the App Store for iPhone and iPad.</p>
+</details>
+</div>
 </section>
 <section class="card">
 <h2>Coming Soon! The Bad Witch’s Birthday</h2>

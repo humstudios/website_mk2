@@ -1163,25 +1163,63 @@ h3 {
 .card .faq-list {
   max-width: var(--measure);
   margin-inline: auto;
+  margin-block-start: var(--space-5);
   text-align: start;
 }
-.card .faq-list dt {
+.card .faq-item {
+  border-block-end: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+}
+.card .faq-item:first-child {
+  border-block-start: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+}
+.card .faq-item > summary {
   font-family: var(--font-sans);
   font-size: var(--font-size-body);
   font-weight: 700;
   color: var(--color-heading);
-  margin-block-start: var(--space-5);
+  padding: var(--space-3) 0;
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
 }
-.card .faq-list dt:first-child {
-  margin-block-start: 0;
+.card .faq-item > summary::-webkit-details-marker {
+  display: none;
 }
-.card .faq-list dd {
-  margin: var(--space-1) 0 0;
+.card .faq-item > summary::after {
+  content: "";
+  flex: 0 0 auto;
+  width: 0.55em;
+  height: 0.55em;
+  margin-inline-end: 0.15em;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: translateY(-0.15em) rotate(45deg);
+  transition: transform 0.2s ease;
+}
+.card .faq-item[open] > summary::after {
+  transform: translateY(0.1em) rotate(-135deg);
+}
+.card .faq-item > summary:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-xs);
+}
+.card .faq-answer {
+  margin: 0;
+  padding: 0 0 var(--space-4);
   line-height: 1.5;
 }
 @media (min-width: 48em) {
-  .card .faq-list dd {
+  .card .faq-answer {
     line-height: 1.6;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card .faq-item > summary::after {
+    transition: none;
   }
 }
 .card a {
