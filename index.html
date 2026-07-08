@@ -24,45 +24,10 @@
 <meta content="Interactive stories for kids - Hum Studios creates ad-free, fun digital picture books for preschoolers that blend reading and entertainment." name="twitter:description"/>
 <meta content="https://www.humstudios.com/assets/og/hum-studios-interactive-stories-for-kids-og-1200x630.jpg" name="twitter:image"/>
 <link as="font" crossorigin="" href="/assets/fonts/Overpass-Regular-400.woff2" rel="preload" type="font/woff2"/>
-<link as="font" crossorigin="" href="/assets/fonts/Atma-Bold-700.woff2" rel="preload" type="font/woff2"/><link as="image" href="/assets/img/icons/icons-sprite.svg" rel="preload" type="image/svg+xml"/>
+<link as="font" crossorigin="" href="/assets/fonts/Atma-Bold-700.woff2" rel="preload" type="font/woff2"/>
 <script src="/assets/js/early-theme.session.js"></script>
-<script>
-/* LCP poster dynamic preload: choose WebP if supported, else JPEG */
-(function(){
-  function addPreload(isWebP){
-    var link = document.createElement('link');
-    link.rel = 'preload';
-    link.as = 'image';
-    link.setAttribute('fetchpriority','high');
-    link.setAttribute('imagesizes','100vw');
-    var base = 'assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero';
-    if (isWebP){
-      link.href = base + '-720w.webp';
-      link.type = 'image/webp';
-      link.setAttribute('imagesrcset',
-        base + '-480w.webp 480w, ' +
-        base + '-720w.webp 720w, ' +
-        base + '-1080w.webp 1080w'
-      );
-    } else {
-      link.href = base + '-720w.jpg';
-      link.type = 'image/jpeg';
-      link.setAttribute('imagesrcset',
-        base + '-480w.jpg 480w, ' +
-        base + '-720w.jpg 720w, ' +
-        base + '-1080w.jpg 1080w'
-      );
-    }
-    document.head.appendChild(link);
-  }
-  try{
-    var img = new Image();
-    img.onload = function(){ addPreload(img.width>0 && img.height>0); };
-    img.onerror = function(){ addPreload(false); };
-    img.src = 'data:image/webp;base64,UklGRiIAAABXRUJQVlA4ICAAAADwAQCdASoIAAgAAkA0JaQAA3AA/vuUAAA=';
-  }catch(e){ addPreload(false); }
-})();
-</script>
+<!-- LCP hero preload: static WebP srcset, type-gated so non-WebP browsers skip it and fall back to the <img> below. Matches the .hero-poster <source type="image/webp">. -->
+<link rel="preload" as="image" type="image/webp" fetchpriority="high" imagesizes="100vw" imagesrcset="/assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-480w.webp 480w, /assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-720w.webp 720w, /assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-1080w.webp 1080w" href="/assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-720w.webp"/>
 <style id="critical-hero-css">/* Critical hero layout (poster-as-LCP + crossfade; video slightly smaller so poster remains LCP) */
 .card--hero-placeholder { padding: 0; }
 
