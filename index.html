@@ -11,16 +11,16 @@
 <meta content="light dark" name="color-scheme"/>
 <meta content="#FFFCF5" media="(prefers-color-scheme: light)" name="theme-color"/>
 <meta content="#0b1220" media="(prefers-color-scheme: dark)" name="theme-color"/>
-<title>Interactive Stories | Hum Studios</title>
+<title>Interactive Stories for Kids | Hum Studios</title>
 <meta content="Interactive stories for kids - Hum Studios creates fun, ad-free digital picture books for preschoolers that blend reading and entertainment." name="description"/>
-<meta content="Interactive Stories | Hum Studios" property="og:title"/>
+<meta content="Interactive Stories for Kids | Hum Studios" property="og:title"/>
 <meta content="Interactive stories for kids - Hum Studios creates fun, ad-free digital picture books for preschoolers that blend reading and entertainment." property="og:description"/>
 <meta content="website" property="og:type"/>
 <meta content="https://www.humstudios.com/" property="og:url"/>
 <meta content="https://www.humstudios.com/assets/og/hum-studios-interactive-stories-for-kids-og-1200x630.jpg" property="og:image"/>
 <meta content="Hum Studios characters in a colorful, welcoming title card." property="og:image:alt"/>
 <meta content="summary_large_image" name="twitter:card"/>
-<meta content="Interactive Stories | Hum Studios" name="twitter:title"/>
+<meta content="Interactive Stories for Kids | Hum Studios" name="twitter:title"/>
 <meta content="Interactive stories for kids - Hum Studios creates ad-free, fun digital picture books for preschoolers that blend reading and entertainment." name="twitter:description"/>
 <meta content="https://www.humstudios.com/assets/og/hum-studios-interactive-stories-for-kids-og-1200x630.jpg" name="twitter:image"/>
 <link as="font" crossorigin="" href="/assets/fonts/Overpass-Regular-400.woff2" rel="preload" type="font/woff2"/>
@@ -159,18 +159,19 @@
   "@type": "MobileApplication",
   "@id": "https://www.humstudios.com/#app",
   "name": "No Pets Allowed!",
-  "description": "An interactive, ad-free and subscription-free digital picture book for preschoolers and kids. Part of Hum Studios' Jessie Adventures series — written, illustrated and animated by people, not AI.",
+  "description": "An interactive, ad-free and subscription-free digital picture book for preschoolers and kids. Part of Hum Studios' Jessie Adventures series – written, illustrated and animated by people, not AI.",
   "applicationCategory": "EducationApplication",
   "applicationSubCategory": "Children's Interactive Book",
   "operatingSystem": "iOS",
   "url": "https://apps.apple.com/app/id1205476898",
   "installUrl": "https://apps.apple.com/app/id1205476898",
   "downloadUrl": "https://apps.apple.com/app/id1205476898",
-  "offers": {
-    "@type": "Offer",
-    "price": "2.99",
-    "priceCurrency": "USD"
-  },
+  "offers": [
+    { "@type": "Offer", "price": "2.99", "priceCurrency": "USD" },
+    { "@type": "Offer", "price": "2.99", "priceCurrency": "GBP" },
+    { "@type": "Offer", "price": "2.99", "priceCurrency": "EUR" },
+    { "@type": "Offer", "price": "3.99", "priceCurrency": "CAD" }
+  ],
   "publisher": { "@id": "https://www.humstudios.com/#org" },
   "inLanguage": "en-GB"
 }
@@ -183,33 +184,53 @@
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "Is No Pets Allowed! really ad-free?",
-      "acceptedAnswer": {"@type": "Answer", "text": "Yes! There are no ads and no subscription. One in-app purchase unlocks the full story — buy once, own it forever."}
-    },
-    {
-      "@type": "Question",
-      "name": "Is No Pets Allowed! safe for young kids?",
+      "name": "Is it safe for young kids?",
       "acceptedAnswer": {"@type": "Answer", "text": "Yes. There are no third-party trackers, no chat features, and nothing more to buy once you've unlocked the story."}
     },
     {
       "@type": "Question",
-      "name": "Was No Pets Allowed! made using AI?",
-      "acceptedAnswer": {"@type": "Answer", "text": "No — it's written, illustrated and animated by a team who've worked at Disney and Universal, alongside BAFTA award-winning animators."}
+      "name": "Is No Pets Allowed! really ad-free?",
+      "acceptedAnswer": {"@type": "Answer", "text": "Yes! No ads and no pop-ups – nothing interrupts the story."}
     },
     {
       "@type": "Question",
-      "name": "What age is No Pets Allowed! for?",
+      "name": "How much does it cost, and is it a subscription?",
+      "acceptedAnswer": {"@type": "Answer", "text": "Just $2.99, as a one-off payment. There's no subscription and no recurring charges – buy once, own it forever."}
+    },
+    {
+      "@type": "Question",
+      "name": "What age is it for?",
       "acceptedAnswer": {"@type": "Answer", "text": "It's designed for preschoolers and young readers who love animal stories, and can be enjoyed solo or read together with a parent."}
     },
     {
       "@type": "Question",
-      "name": "Is No Pets Allowed! available on Android?",
-      "acceptedAnswer": {"@type": "Answer", "text": "Not yet — it's currently available on the App Store for iPhone and iPad."}
+      "name": "Can I try it before buying?",
+      "acceptedAnswer": {"@type": "Answer", "text": "Yes! Download the first 9 pages for free to meet Jessie and all her animal friends."}
     },
     {
       "@type": "Question",
-      "name": "Can I try No Pets Allowed! before buying?",
-      "acceptedAnswer": {"@type": "Answer", "text": "Yes. Download the first 9 pages for free to meet Jessie and all her animal friends."}
+      "name": "Is the app noisy?",
+      "acceptedAnswer": {"@type": "Answer", "text": "No. There are just two gentle sound effects – a soft buzz when you tap a butterfly, and a happy “ta-da!” when all five are found – plus optional narration and a music soundtrack you can switch on or off. No blaring noise, no jarring surprises."}
+    },
+    {
+      "@type": "Question",
+      "name": "Does it work offline?",
+      "acceptedAnswer": {"@type": "Answer", "text": "Yes. Once the story's downloaded you don't need an internet connection, so it's perfect for car rides, flights and holidays."}
+    },
+    {
+      "@type": "Question",
+      "name": "Can the app read the story aloud?",
+      "acceptedAnswer": {"@type": "Answer", "text": "Yes! You can have the app narrate the story, or read it aloud together with your child – with a playful music soundtrack if you want it."}
+    },
+    {
+      "@type": "Question",
+      "name": "Was No Pets Allowed! made using AI?",
+      "acceptedAnswer": {"@type": "Answer", "text": "No – it's written, illustrated and animated by a team who've worked at Disney and Universal, alongside BAFTA award-winning animators."}
+    },
+    {
+      "@type": "Question",
+      "name": "Is it available on Android?",
+      "acceptedAnswer": {"@type": "Answer", "text": "Not yet – it's currently available on the App Store for iPhone and iPad."}
     }
   ]
 }
@@ -277,7 +298,7 @@
 </video>
 <noscript><picture>
 <source sizes="100vw" srcset="/assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-480w.webp 480w, /assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-720w.webp 720w, /assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-1080w.webp 1080w" type="image/webp"/>
-<img alt="Playful picture-book cast—girl, elephant, crocodile and penguin wave hello." decoding="async" height="540" loading="lazy" sizes="100vw" src="/assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-720w.jpg" srcset="/assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-480w.jpg 480w, /assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-720w.jpg 720w, /assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-1080w.jpg 1080w" width="720"/>
+<img alt="Playful picture-book cast – girl, elephant, crocodile and penguin wave hello." decoding="async" height="540" loading="lazy" sizes="100vw" src="/assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-720w.jpg" srcset="/assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-480w.jpg 480w, /assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-720w.jpg 720w, /assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-1080w.jpg 1080w" width="720"/>
 </picture></noscript>
 </div>
 </div>
@@ -291,15 +312,15 @@
 </div>
 <p class="app-caption">Available on the App Store for iPhone and iPad.</p>
 <p>Spark your child’s imagination with fun, interactive picture books from Hum Studios. Designed for preschoolers and kids of all ages, our stories blend reading skills and entertainment in a way that will have them laughing and learning. Written, illustrated and animated by people, not by AI!</p>
-<p>An environmentally friendly alternative to traditional paper picture books, our digital books are designed for tablets and phones – and are completely ad and subscription-free.</p>
+<p>Designed for tablets and phones, our app is completely ad and subscription-free.</p>
 <p class="u-center-text">
 <a class="btn-link" href="/about/"><strong>Learn more about Hum →</strong></a>
 </p>
 </section>
 <section class="card">
 <h2 class="smart-wrap no-balance">Our first adventure:<wbr/> <span class="nb">No Pets Allowed!</span></h2>
-<p id="adventure-desc">Jessie is a young girl who loves animals but lives in a building where no pets are allowed. When the local zoo closes down and an elephant and its friends turn up at Jessie’s apartment looking for a new place to live, Jessie is over the moon—but she needs to keep the animals hidden from the neighbors.</p>
-<video class="demo-video" data-poster-webp="/assets/img/animation/no-pets-allowed-interactive-animal-story-poster-800w.webp" aria-label="No Pets Allowed! — interactive story demo" id="adventureVideo" loop="" muted="" playsinline="" poster="/assets/img/animation/no-pets-allowed-interactive-animal-story-poster-800w.jpg" preload="none" data-defer-inview="">
+<p id="adventure-desc">Jessie is a young girl who loves animals but lives in a building where no pets are allowed. When the local zoo closes down and an elephant and its friends turn up at Jessie’s apartment looking for a new place to live, Jessie is over the moon – but she needs to keep the animals hidden from the neighbors.</p>
+<video class="demo-video" data-poster-webp="/assets/img/animation/no-pets-allowed-interactive-animal-story-poster-800w.webp" aria-label="No Pets Allowed! – interactive story demo" id="adventureVideo" loop="" muted="" playsinline="" poster="/assets/img/animation/no-pets-allowed-interactive-animal-story-poster-800w.jpg" preload="none" data-defer-inview="">
 <!-- small phones -->
 <!-- larger phones and up -->
 <source media="(min-width: 425px)" src="/assets/img/animation/no-pets-allowed-interactive-animal-story-600p.webm" type="video/webm"/>
@@ -321,27 +342,10 @@
 <p class="app-caption">Available on the App Store for iPhone and iPad.</p>
 </section>
 <section class="card">
-<h2>Frequently asked questions</h2>
-<dl class="faq-list">
-<dt>Is No Pets Allowed! really ad-free?</dt>
-<dd>Yes! There are no ads and no subscription. One in-app purchase unlocks the full story — buy once, own it forever.</dd>
-<dt>Is it safe for young kids?</dt>
-<dd>Yes. There are no third-party trackers, no chat features, and nothing more to buy once you’ve unlocked the story.</dd>
-<dt>Was No Pets Allowed! made using AI?</dt>
-<dd>No — it’s written, illustrated and animated by a team who’ve worked at Disney and Universal, alongside BAFTA award-winning animators.</dd>
-<dt>What age is it for?</dt>
-<dd>It’s designed for preschoolers and young readers who love animal stories, and can be enjoyed solo or read together with a parent.</dd>
-<dt>Is it available on Android?</dt>
-<dd>Not yet — it’s currently available on the App Store for iPhone and iPad.</dd>
-<dt>Can I try it before buying?</dt>
-<dd>Yes! Download the first 9 pages for free to meet Jessie and all her animal friends.</dd>
-</dl>
-</section>
-<section class="card">
 <h2>How our digital books work</h2>
 <p>“No Pets Allowed!” is the first in Hum Studios’ interactive book series. Our books work just like traditional ones, with the pages turning when you swipe the screen on your tablet or phone. Unlike a regular book, though, if you tap the screen, the characters come alive and play out the scene! You can have the app narrate the story or read the book aloud with your child, with a playful music soundtrack if you want it.</p>
 <div class="media-spot animate ipad-ish">
-<video data-poster-webp="/assets/img/animation/how-interactive-picture-books-work-poster-800w.webp" aria-label="How our interactive picture books work — demo" id="howVideo" loop="" muted="" playsinline="" poster="/assets/img/animation/how-interactive-picture-books-work-poster-800w.jpg" preload="none" data-defer-inview="">
+<video data-poster-webp="/assets/img/animation/how-interactive-picture-books-work-poster-800w.webp" aria-label="How our interactive picture books work – demo" id="howVideo" loop="" muted="" playsinline="" poster="/assets/img/animation/how-interactive-picture-books-work-poster-800w.jpg" preload="none" data-defer-inview="">
 <!-- small phones -->
 <!-- larger phones and up -->
 <source media="(min-width: 425px)" src="/assets/img/animation/how-interactive-picture-books-work-600p.webm" type="video/webm"/>
@@ -359,8 +363,33 @@
 </section>
 <section class="card">
 <h2>No ads, no subscriptions or hidden charges, ever!</h2>
-<p>As parents ourselves, we wanted to create a fun interactive book for kids that was also worry-free for their parents. That’s why our books are ad and subscription-free. Buy once, own it forever — one in-app purchase unlocks the whole story, with nothing more to buy after that. You don’t even need to have an internet connection to use it.</p>
+<p>As parents ourselves, we wanted to create a fun interactive book for kids that was also worry-free for their parents. That’s why our books are ad and subscription-free. Buy once, own it forever – one in-app purchase unlocks the whole story, with nothing more to buy after that. You don’t even need to have an internet connection to use it.</p>
 <h3>It’s fun, it’s educational, it’s safe – and it’s only <span class="price">$2.99</span>!</h3>
+</section>
+<section class="card">
+<h2>Frequently asked questions</h2>
+<dl class="faq-list">
+<dt>Is it safe for young kids?</dt>
+<dd>Yes. There are no third-party trackers, no chat features, and nothing more to buy once you’ve unlocked the story.</dd>
+<dt>Is No Pets Allowed! really ad-free?</dt>
+<dd>Yes! No ads and no pop-ups – nothing interrupts the story.</dd>
+<dt>How much does it cost, and is it a subscription?</dt>
+<dd>Just <span class="price">$2.99</span>, as a one-off payment. There’s no subscription and no recurring charges – buy once, own it forever.</dd>
+<dt>What age is it for?</dt>
+<dd>It’s designed for preschoolers and young readers who love animal stories, and can be enjoyed solo or read together with a parent.</dd>
+<dt>Can I try it before buying?</dt>
+<dd>Yes! Download the first 9 pages for free to meet Jessie and all her animal friends.</dd>
+<dt>Is the app noisy?</dt>
+<dd>No. There are just two gentle sound effects – a soft buzz when you tap a butterfly, and a happy “ta-da!” when all five are found – plus optional narration and a music soundtrack you can switch on or off. No blaring noise, no jarring surprises.</dd>
+<dt>Does it work offline?</dt>
+<dd>Yes. Once the story’s downloaded you don’t need an internet connection, so it’s perfect for car rides, flights and holidays.</dd>
+<dt>Can the app read the story aloud?</dt>
+<dd>Yes! You can have the app narrate the story, or read it aloud together with your child – with a playful music soundtrack if you want it.</dd>
+<dt>Was No Pets Allowed! made using AI?</dt>
+<dd>No – it’s written, illustrated and animated by a team who’ve worked at Disney and Universal, alongside BAFTA award-winning animators.</dd>
+<dt>Is it available on Android?</dt>
+<dd>Not yet – it’s currently available on the App Store for iPhone and iPad.</dd>
+</dl>
 </section>
 <section class="card">
 <h2>Coming Soon! The Bad Witch’s Birthday</h2>
@@ -461,8 +490,8 @@
   {
     "@context": "https://schema.org",
     "@type": "VideoObject",
-    "name": "Elephant, Crocodile, Girl & Penguin — Hero Animation",
-    "description": "Playful picture-book cast—girl, elephant, crocodile and penguin wave hello.",
+    "name": "Elephant, Crocodile, Girl & Penguin – Hero Animation",
+    "description": "Playful picture-book cast – girl, elephant, crocodile and penguin wave hello.",
     "thumbnailUrl": [
       "https://www.humstudios.com/assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-720w.jpg",
       "https://www.humstudios.com/assets/img/animation/interactive-storybook-elephant-crocodile-girl-hero-720w.webp"
@@ -473,7 +502,7 @@
   {
     "@context": "https://schema.org",
     "@type": "VideoObject",
-    "name": "No Pets Allowed! — Interactive Demo",
+    "name": "No Pets Allowed! – Interactive Demo",
     "@id": "#no-pets-allowed-video",
     "description": "No Pets Allowed! interactive picture-book frame with characters mid-action.",
     "thumbnailUrl": [
@@ -588,7 +617,7 @@
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduce) return; // keep the poster; no motion
 
-  // Save-Data: honour the user's data preference — keep the poster, never fetch/play the hero video.
+  // Save-Data: honour the user's data preference – keep the poster, never fetch/play the hero video.
   var conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
   var reduceData = window.matchMedia && window.matchMedia('(prefers-reduced-data: reduce)').matches;
   if ((conn && conn.saveData) || reduceData) return;
