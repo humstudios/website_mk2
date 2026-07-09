@@ -73,11 +73,11 @@ class RatingBadgeRewriter {
     if (!this.rating) return;
     const v = this.rating.value.toFixed(1);
     const n = this.rating.count;
-    const full = Math.round(this.rating.value);
-    const stars = "★".repeat(full) + "☆".repeat(5 - full);
+    // Snap the star fill to the nearest half-star; the exact figure sits alongside.
+    const pct = (Math.round(this.rating.value * 2) / 2 / 5) * 100;
     el.setAttribute("aria-label", "Rated " + v + " out of 5 from " + n + " App Store ratings");
     el.setInnerContent(
-      '<span class="app-rating__stars">' + stars + "</span>" +
+      '<span class="app-rating__stars" style="--fill:' + pct + '%"></span>' +
       '<span class="app-rating__num">' + v + "</span>" +
       '<span class="app-rating__count">' + n + " App Store ratings</span>",
       { html: true }

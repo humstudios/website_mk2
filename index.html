@@ -145,7 +145,9 @@
 <style id="social-proof-css">
 .app-rating{display:flex;width:fit-content;margin:.15rem auto .6rem;justify-content:center;align-items:center;gap:.1rem .4rem;flex-wrap:wrap;text-align:center;font-size:.95rem;font-weight:500;text-decoration:none;color:inherit}
 .app-rating:hover{text-decoration:underline}
-.app-rating__stars{color:#f5a623;letter-spacing:1px;font-size:1.25em}
+.app-rating__stars{--fill:100%;position:relative;display:inline-block;font-size:1.25em;line-height:1;color:#f5a623;white-space:nowrap}
+.app-rating__stars::before{content:"★★★★★";opacity:.28}
+.app-rating__stars::after{content:"★★★★★";position:absolute;left:0;top:0;width:var(--fill);overflow:hidden}
 .app-rating__num{font-weight:700;font-size:1.1em}
 .app-rating__count{flex-basis:100%;opacity:.72;font-weight:400;font-size:.82em}
 .review-card .review{max-width:58ch;margin:1.5rem auto 0;text-align:center}
@@ -340,7 +342,7 @@
 <p class="review__title">“Absolutely Delightful from Start to Finish!”</p>
 <p class="review__stars" aria-hidden="true">★★★★★</p>
 <blockquote class="review__quote">“The voice narration is warm, engaging and a pleasure to listen to… The rhyming is clever and flows naturally, making it fun and memorable for young listeners… a high-quality story that both children and parents can enjoy together.”</blockquote>
-<figcaption class="review__cite">— SelinaKerindi, App Store review</figcaption>
+<figcaption class="review__cite">App Store review</figcaption>
 </figure>
 </section>
 <section class="card">
@@ -351,39 +353,39 @@
 <section class="card">
 <h2>Frequently asked questions</h2>
 <div class="faq-list">
-<details class="faq-item">
+<details class="faq-item" name="faq">
 <summary>Is it safe for young kids?</summary>
 <p class="faq-answer">Yes. There are no ads or pop-ups, no third-party trackers, no chat features, and nothing more to buy once you’ve unlocked the story – nothing interrupts the story.</p>
 </details>
-<details class="faq-item">
+<details class="faq-item" name="faq">
 <summary>How much does it cost, and is it a subscription?</summary>
 <p class="faq-answer">Just <span class="price">$2.99</span>, as a one-off payment. There’s no subscription and no recurring charges – buy once, own it forever.</p>
 </details>
-<details class="faq-item">
+<details class="faq-item" name="faq">
 <summary>What age is it for?</summary>
 <p class="faq-answer">It’s designed for preschoolers and young readers who love animal stories, and can be enjoyed solo or read together with a parent.</p>
 </details>
-<details class="faq-item">
+<details class="faq-item" name="faq">
 <summary>Can I try it before buying?</summary>
 <p class="faq-answer">Yes! Download the first 9 pages for free to meet Jessie and all her animal friends.</p>
 </details>
-<details class="faq-item">
+<details class="faq-item" name="faq">
 <summary>Is the app noisy?</summary>
 <p class="faq-answer">No. There are just two gentle sound effects – a soft buzz when you tap a butterfly, and a happy “ta-da!” when all five are found – plus optional narration and a music soundtrack you can switch on or off. No blaring noise, no jarring surprises.</p>
 </details>
-<details class="faq-item">
+<details class="faq-item" name="faq">
 <summary>Does it work offline?</summary>
 <p class="faq-answer">Yes. Once the story’s downloaded you don’t need an internet connection, so it’s perfect for car rides, flights and holidays.</p>
 </details>
-<details class="faq-item">
+<details class="faq-item" name="faq">
 <summary>Can the app read the story aloud?</summary>
 <p class="faq-answer">Yes! You can have the app narrate the story, or read it aloud together with your child – with a playful music soundtrack if you want it.</p>
 </details>
-<details class="faq-item">
+<details class="faq-item" name="faq">
 <summary>Was No Pets Allowed! made using AI?</summary>
 <p class="faq-answer">No – it’s written, illustrated and animated by a team who’ve worked at Disney and Universal, alongside BAFTA award-winning animators.</p>
 </details>
-<details class="faq-item">
+<details class="faq-item" name="faq">
 <summary>Is it available on Android?</summary>
 <p class="faq-answer">Not yet – it’s currently available on the App Store for iPhone and iPad.</p>
 </details>
@@ -640,4 +642,17 @@
   } else {
     window.addEventListener('load', function(){ setTimeout(startHeroVideo, 200); }, { once:true });
   }
+})();</script>
+<script>(function(){
+  // Native `name` on <details> gives exclusive-accordion behaviour in modern
+  // browsers. This fallback covers older engines (e.g. Safari < 17.4) so opening
+  // one FAQ answer closes any other that's open.
+  if ('name' in document.createElement('details')) return;
+  var items = document.querySelectorAll('.faq-item[name="faq"]');
+  items.forEach(function(d){
+    d.addEventListener('toggle', function(){
+      if (!d.open) return;
+      items.forEach(function(other){ if (other !== d) other.open = false; });
+    });
+  });
 })();</script></body></html>
