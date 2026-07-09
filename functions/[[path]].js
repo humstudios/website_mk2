@@ -200,11 +200,14 @@ export async function onRequest(context) {
   // --- Rewrite the displayed price on the homepage to match the visitor's region
   if (url.pathname === "/" && (response.headers.get("content-type") || "").includes("text/html")) {
     const country = request.cf?.country || "US";
-    const rating = await getRating(context);
+    // --- Live star ratings temporarily disabled 2026-07-09 (Dave). Price rewrite stays on.
+    //     To re-enable: uncomment the getRating call + the two rating rewriters below, and
+    //     restore the badge + aggregateRating in index.html (see notes there).
+    // const rating = await getRating(context);
     return new HTMLRewriter()
       .on(".price", new PriceRewriter(priceForCountry(country)))
-      .on(".app-rating", new RatingBadgeRewriter(rating))
-      .on("script#app-schema", new SchemaRatingRewriter(rating))
+      // .on(".app-rating", new RatingBadgeRewriter(rating))
+      // .on("script#app-schema", new SchemaRatingRewriter(rating))
       .transform(response);
   }
 
