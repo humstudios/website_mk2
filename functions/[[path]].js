@@ -37,11 +37,22 @@ class PriceRewriter {
 // strip aggregateRating from the schema, so we never show a stale/invalid figure).
 const APP_ID = "1205476898";
 
+// Two-tier cache so a transient Apple failure doesn't wipe the rating:
+//  - FRESH  (6h):  normal path; a hit here is served immediately.
+//  - GOOD  (48h):  "last known good" fallback. On a failed/invalid fetch we
+//                  serve this instead of null, so cold PoPs (and crawlers like
+//                  Googlebot) still see the rating. The 48h max-age is enforced
+//                  by the Cache API itself — once the last-good copy is older
+//                  than 48h it stops being returned, so we never show a figure
+//                  more than ~2 days stale, then cleanly fall back to stripping.
 async function getRating(context) {
   const cache = caches.default;
-  const cacheKey = new Request("https://rating-cache.humstudios.com/app-" + APP_ID);
-  const hit = await cache.match(cacheKey);
-  if (hit) { try { return await hit.json(); } catch (e) {} }
+  const freshKey = new Request("https://rating-cache.humstudios.com/app-" + APP_ID);
+  const goodKey = new Request("https://rating-cache.humstudios.com/app-" + APP_ID + "-lastgood");
+
+  const fresh = await cache.match(freshKey);
+  if (fresh) { try { return await fresh.json(); } catch (e) {} }
+
   try {
     const api = await fetch(
       "https://itunes.apple.com/lookup?id=" + APP_ID + "&country=gb",
@@ -55,14 +66,25 @@ async function getRating(context) {
           value: Math.round(app.averageUserRating * 10) / 10,
           count: app.userRatingCount,
         };
-        const toCache = new Response(JSON.stringify(result), {
+        const body = JSON.stringify(result);
+        const fresh6h = new Response(body, {
           headers: { "Content-Type": "application/json", "Cache-Control": "max-age=21600" },
         });
-        if (context && context.waitUntil) context.waitUntil(cache.put(cacheKey, toCache.clone()));
+        const good48h = new Response(body, {
+          headers: { "Content-Type": "application/json", "Cache-Control": "max-age=172800" },
+        });
+        if (context && context.waitUntil) {
+          context.waitUntil(cache.put(freshKey, fresh6h.clone()));
+          context.waitUntil(cache.put(goodKey, good48h.clone()));
+        }
         return result;
       }
     }
-  } catch (e) { /* network/parse failure -> null */ }
+  } catch (e) { /* network/parse failure -> fall through to last-good */ }
+
+  // Fetch failed or returned no usable rating: serve last-good if still <48h old.
+  const good = await cache.match(goodKey);
+  if (good) { try { return await good.json(); } catch (e) {} }
   return null;
 }
 
