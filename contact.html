@@ -38,7 +38,38 @@
 <meta content="#FFFCF5" media="(prefers-color-scheme: light)" name="theme-color"/>
 <meta content="#0b1220" media="(prefers-color-scheme: dark)" name="theme-color"/>
 <meta content="index,follow" name="robots"/>
-<script async="" src="https://challenges.cloudflare.com/turnstile/v0/api.js">
+<script>
+/* Explicitly render Turnstile so the widget follows the SITE theme (not the OS),
+   and sizes flexibly to match the form fields. Defined before api.js loads. */
+window.onloadTurnstile = function () {
+  var el = document.querySelector('.cf-turnstile');
+  if (!el || !window.turnstile) return;
+  var widgetId;
+  function siteTheme() {
+    var t = document.documentElement.getAttribute('data-theme');
+    if (t === 'dark' || t === 'light') return t;
+    return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+  }
+  function render() {
+    widgetId = window.turnstile.render(el, {
+      sitekey: el.getAttribute('data-sitekey'),
+      action: 'contact',
+      theme: siteTheme(),
+      size: 'flexible',
+      retry: 'auto',
+      callback: function (tok) { if (window.enableSubmit) window.enableSubmit(tok); },
+      'error-callback': function (code) { if (window.tsError) window.tsError(code); }
+    });
+  }
+  render();
+  // Re-render on theme toggle so the widget matches the page.
+  document.addEventListener('hum:themechange', function () {
+    try { window.turnstile.remove(widgetId); } catch (e) {}
+    render();
+  });
+};
+</script>
+<script async="" defer="" src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadTurnstile">
 </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.humstudios.com/"},{"@type":"ListItem","position":2,"name":"Contact","item":"https://www.humstudios.com/contact/"}]}</script>
 <link href="https://www.humstudios.com/contact/" rel="canonical"/><script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","@id":"https://www.humstudios.com/#org","name":"Hum Studios","url":"https://www.humstudios.com/","logo":{"@type":"ImageObject","url":"https://www.humstudios.com/assets/og/hum-studios-logo-112x112.png","width":112,"height":112},"sameAs":["https://www.instagram.com/hum_studios_uk/","https://www.facebook.com/humstudiosltd"]}</script>
@@ -205,7 +236,7 @@
        </label>
 <input autocomplete="off" id="website" name="website" tabindex="-1" type="text"/>
 </div>
-<div class="cf-turnstile" data-action="contact" data-callback="enableSubmit" data-error-callback="tsError" data-retry="auto" data-sitekey="0x4AAAAAABzCutgVX0rn7kxw">
+<div class="cf-turnstile" data-sitekey="0x4AAAAAABzCutgVX0rn7kxw">
 </div>
 <noscript>
 <p class="no-js-alert" style="margin-top:0.75rem;padding:0.75rem;border:1px solid #eab308;background:#fffbe6;border-radius:0.5rem;">

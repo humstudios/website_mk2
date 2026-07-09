@@ -1160,6 +1160,13 @@ h3 {
 .card :is(ul, ol):last-child {
   margin-block-end: 0;
 }
+/* Mobile: the browser-default ~40px list indent sits too far right on top of the
+   card padding — pull bullets in to a small indent. Desktop keeps the default. */
+@media (max-width: 47.99em) {
+  .card :is(ul, ol) {
+    padding-inline-start: 1.25rem;
+  }
+}
 .card .faq-list {
   max-width: var(--measure);
   margin-inline: auto;
