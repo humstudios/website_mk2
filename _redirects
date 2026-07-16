@@ -1,0 +1,14 @@
+# =============================================================================
+# Hum Studios — Cloudflare Pages _redirects
+# =============================================================================
+# Short, shareable links for social bios (TikTok, Instagram, Pinterest, etc.).
+# Format: <from-path>  <to-url>  <status>
+# 302 = temporary: keeps browsers/proxies from permanently caching the target,
+# so the destination can be changed later (e.g. a dual iOS/Android landing
+# page once the Android app ships) without stale redirects lingering.
+# =============================================================================
+
+# App download — points at the App Store using the geo-neutral /app/id form
+# (no /gb/), so visitors are sent to their own regional store automatically.
+/app      https://apps.apple.com/app/id1205476898   302
+/app/     https://apps.apple.com/app/id1205476898   302
