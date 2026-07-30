@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 
 <html lang="en-GB">
-<head><meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
 <link href="/favicon.ico" rel="icon" sizes="32x32"/>
 <link href="/assets/img/icons/favicon.svg" rel="icon" type="image/svg+xml"/>
 <link href="/assets/img/icons/apple-touch-icon-180.png" rel="apple-touch-icon"/>
@@ -10,21 +9,23 @@
 <link href="/assets/img/icons/favicon-192.png" rel="icon" type="image/png" sizes="192x192"/>
 <link href="/site.webmanifest" rel="manifest"/>
 <meta content="summary_large_image" name="twitter:card"/>
-<meta content="App Support | Hum Studios" name="twitter:title"/>
-<meta content="Get support for Hum Studios interactive storybook apps for kids." name="twitter:description"/>
-<title>App Support | Hum Studios</title>
+<meta content="Free Printables! | Alphabet Cards for Kids | Hum Studios" name="twitter:title"/>
+<meta content="Free printable alphabet cards for kids, ready to print at home on A4. Bright, funny letter cards for a nursery wall, playroom or classroom." name="twitter:description"/>
+<title>Free Printables! | Alphabet Cards for Kids | Hum Studios</title>
 <meta content="light dark" name="color-scheme"/>
 <meta content="#FFFCF5" media="(prefers-color-scheme: light)" name="theme-color"/>
 <meta content="#0b1220" media="(prefers-color-scheme: dark)" name="theme-color"/>
-<meta content="Get help and support for Hum Studios interactive storybook apps for kids." name="description"/>
-<meta content="App Support | Hum Studios" property="og:title"/>
-<meta content="Get help and support for Hum Studios interactive storybook apps for kids." property="og:description"/>
+<meta content="Free printable alphabet cards for kids. Print them at home on A4, stick them on the wall. Written and illustrated by people, not AI. No sign-up needed." name="description"/>
+<!-- Color scheme & theme colors for browser UI -->
+<!-- Favicons (relative so they work on GitHub Pages, IONOS, and local) -->
+<!-- Fonts (keep consistent with site) -->
+<meta content="Free Printables! | Alphabet Cards for Kids | Hum Studios" property="og:title"/>
+<meta content="Free printable alphabet cards for kids, ready to print at home on A4. Bright, funny letter cards for a nursery wall, playroom or classroom." property="og:description"/>
 <meta content="website" property="og:type"/>
-<meta content="https://www.humstudios.com/support/" property="og:url"/>
+<meta content="https://www.humstudios.com/free-printables/" property="og:url"/>
 <link as="font" crossorigin="" href="/assets/fonts/Overpass-Regular-400.woff2" rel="preload" type="font/woff2"/>
 <link as="font" crossorigin="" href="/assets/fonts/Atma-Bold-700.woff2" rel="preload" type="font/woff2"/>
 <link as="image" href="/assets/img/icons/icons-sprite-v2.svg" rel="preload" type="image/svg+xml"/>
-<link as="image" fetchpriority="high" href="/assets/img/cardpics/arnie-elephant-dancing-800w.webp" rel="preload"/>
 <script src="/assets/js/early-theme.session.js"></script>
 <link href="/assets/css/styles.css" rel="stylesheet"/>
 <meta content="index,follow" name="robots"/>
@@ -36,8 +37,79 @@
 <meta content="https://www.humstudios.com/assets/og/hum-studios-interactive-stories-for-kids-og-1200x630.jpg" name="twitter:image"/>
 <meta content="Hum Studios – interactive picture books for kids" name="twitter:image:alt"/>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","@id":"https://www.humstudios.com/#org","name":"Hum Studios","url":"https://www.humstudios.com/","logo":{"@type":"ImageObject","url":"https://www.humstudios.com/assets/og/hum-studios-logo-112x112.png","width":112,"height":112},"sameAs":["https://www.instagram.com/humstudiosltd/","https://www.facebook.com/humstudiosltd","https://www.tiktok.com/@humstudiosltd","https://www.youtube.com/@humstudiosltd","https://www.pinterest.com/humstudiosltd/"]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.humstudios.com/"},{"@type":"ListItem","position":2,"name":"Support","item":"https://www.humstudios.com/support/"}]}</script>
-<link href="https://www.humstudios.com/support/" rel="canonical"/></head>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.humstudios.com/"},{"@type":"ListItem","position":2,"name":"Free Printables","item":"https://www.humstudios.com/free-printables/"}]}</script>
+<link href="https://www.humstudios.com/free-printables/" rel="canonical"/>
+<!-- Page-scoped styles: printables grid. Kept local so styles.css is untouched. -->
+<style>
+  .printables-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+    gap: var(--space-5);
+    margin: var(--space-5) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .printable-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .printable-item__thumb {
+    display: block;
+    width: 100%;
+    max-width: 15rem;
+    border-radius: var(--radius-card);
+    border: 0.0625em solid var(--light-card-border);
+    overflow: hidden;
+    background: #fff;
+    line-height: 0;
+    transition:
+      transform var(--transition-normal) var(--transition-ease),
+      box-shadow var(--transition-normal) var(--transition-ease);
+  }
+  html[data-theme="dark"] .printable-item__thumb {
+    border-color: var(--card-border);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .printable-item__thumb:hover {
+      transform: translateY(-0.125em);
+      box-shadow: var(--shadow-1-hover);
+    }
+  }
+  .printable-item__thumb img {
+    width: 100%;
+    height: auto;
+    display: block;
+    /* Reserves the card's shape before the image decodes, so the grid
+       does not reflow as thumbnails load in. */
+    aspect-ratio: 600 / 750;
+    object-fit: cover;
+  }
+  .printable-item__title {
+    margin: 0;
+    font-weight: 600;
+  }
+  .printable-item__meta {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+  }
+  html[data-theme="dark"] .printable-item__meta {
+    color: inherit;
+    opacity: 0.75;
+  }
+  .printables-coming {
+    margin-top: var(--space-5);
+    font-style: italic;
+    color: var(--text-muted);
+  }
+  html[data-theme="dark"] .printables-coming {
+    color: inherit;
+    opacity: 0.75;
+  }
+</style>
+</head>
 <body>
 <a class="skip-link" href="#main">Skip to main content</a>
 <!-- Permanent site backdrop (replaces body::before) -->
@@ -65,7 +137,7 @@
 <nav aria-label="Main" class="top-nav desktop">
 <a href="/"><svg aria-hidden="true" class="icon" focusable="false"><use href="/assets/img/icons/icons-sprite-v2.svg#house"></use></svg>Home</a>
 <a href="/about/"><svg aria-hidden="true" class="icon" focusable="false"><use href="/assets/img/icons/icons-sprite-v2.svg#person"></use></svg>About</a>
-<a href="/free-printables/"><svg aria-hidden="true" class="icon" focusable="false"><use href="/assets/img/icons/icons-sprite-v2.svg#printer"></use></svg>Free Printables!</a>
+<a aria-current="page" href="/free-printables/"><svg aria-hidden="true" class="icon" focusable="false"><use href="/assets/img/icons/icons-sprite-v2.svg#printer"></use></svg>Free Printables!</a>
 </nav>
 <!-- Mobile Hamburger Button -->
 <button aria-controls="mobileMenu" aria-expanded="false" aria-label="Toggle menu" class="hamburger" id="hamburgerBtn" type="button">
@@ -77,7 +149,7 @@
 <nav aria-hidden="true" aria-label="Mobile" class="mobile-nav pushdown" hidden="" id="mobileMenu">
 <a href="/"><svg aria-hidden="true" class="icon" focusable="false"><use href="/assets/img/icons/icons-sprite-v2.svg#house"></use></svg>Home</a>
 <a href="/about/"><svg aria-hidden="true" class="icon" focusable="false"><use href="/assets/img/icons/icons-sprite-v2.svg#person"></use></svg>About</a>
-<a href="/free-printables/"><svg aria-hidden="true" class="icon" focusable="false"><use href="/assets/img/icons/icons-sprite-v2.svg#printer"></use></svg>Free Printables!</a>
+<a aria-current="page" href="/free-printables/"><svg aria-hidden="true" class="icon" focusable="false"><use href="/assets/img/icons/icons-sprite-v2.svg#printer"></use></svg>Free Printables!</a>
 <a href="/contact/"><svg aria-hidden="true" class="icon" focusable="false"><use href="/assets/img/icons/icons-sprite-v2.svg#bubble"></use></svg>Contact</a>
 <a href="/privacy/"><svg aria-hidden="true" class="icon" focusable="false"><use href="/assets/img/icons/icons-sprite-v2.svg#shield"></use></svg>Privacy</a>
 <a href="/cookies/"><svg aria-hidden="true" class="icon" focusable="false"><use href="/assets/img/icons/icons-sprite-v2.svg#cookie"></use></svg>Cookies</a>
@@ -94,13 +166,39 @@
 </span>
 </button>
 </div>
-<p class="hero-headline">Little Stories,<wbr/> Big Adventures!</p>
+<p class="hero-headline">Little Stories,<wbr/> Big Adventures!</p>
 </header>
 <main id="main" role="main">
 <section class="card">
-<h1>App Support</h1>
-<img alt="Liz the penguin waves hello" class="card-cartoon" decoding="async" fetchpriority="high" height="1394" loading="eager" src="/assets/img/cardpics/Liz_wave.webp" width="800"/>
-<p>If you have any problems installing or operating the app, please use our <a class="btn-link" href="/contact/"><strong>Contact Page</strong></a> to get in touch and we’ll do our best to help.</p>
+<h1>Free Printables!</h1>
+<p>Free alphabet cards for kids, ready to print at home. One letter per page, bright enough to spot from across the room, and sized for A4 or smaller so any home printer can handle them. Stick them on a bedroom wall, a playroom door or a classroom display.</p>
+<p>No sign-up, no email address, no catch. Just click a letter to download the PDF!</p>
+<h2>The alphabet cards</h2>
+<ul class="printables-grid">
+<li class="printable-item">
+<a class="printable-item__thumb" href="/assets/printables/hum-alphabet-a-a4.pdf" download>
+<img alt="Illustrated alphabet card: a large red letter A above the words is for Apple, with a red apple, a girl and an elephant, inside a white daisy border." decoding="async" height="750" loading="lazy" src="/assets/img/printables/hum-alphabet-a-600w.webp" width="600"/>
+</a>
+<p class="printable-item__title"><a href="/assets/printables/hum-alphabet-a-a4.pdf" download>A is for Apple</a></p>
+<p class="printable-item__meta">PDF, A4</p>
+</li>
+</ul>
+<p class="printables-coming">New letters added regularly, all the way to Z.</p>
+<h2>Printing tips</h2>
+<ul class="list-disc-left">
+<li>Print at 100% or "actual size" for the sharpest result. "Fit to page" also works fine.</li>
+<li>The cards are set up for A4 and print just as well on US Letter. On Letter, choose "fit to page" and you will get a slightly wider white margin.</li>
+<li>Want a smaller card? Choose A5 and everything scales down together, giving you a neat half-size version.</li>
+<li>Ordinary printer paper is fine. Thicker card stock holds up better if they are going somewhere busy.</li>
+</ul>
+<h2>Using them</h2>
+<p>Free for personal and classroom use. Print as many as you like for your home, nursery or school. Please do not sell them or host the files anywhere else, but do feel free to link to this page.</p>
+<h2>Where the characters come from</h2>
+<p>Most of the characters on these cards come from our interactive story app <strong>"No Pets Allowed!"</strong>. Jessie lives in a tower block where there are no pets allowed, which is awkward, because there is an elephant hiding behind her washing machine and a crocodile arriving in the elevator. Other animals turn up from time to time, usually without warning.</p>
+<p>Written, illustrated and animated by people, not AI. No ads, no subscriptions, no internet needed once downloaded. Made for kids!</p>
+<p class="u-center-text">
+<a aria-label="Download No Pets Allowed! from the App Store" class="btn-link" href="/app"><strong>Try the free demo →</strong></a>
+</p>
 <p class="u-center-text">
 <a aria-label="Go to Hum Studios homepage" class="btn-link" href="/"><strong>← Back</strong></a>
 </p>
@@ -112,8 +210,8 @@
 <div class="footer-content">
 <nav aria-label="Footer" class="footer-nav">
 <ul class="footer-links">
-<li><a href="/contact/">Contact</a></li>       
-<li><a aria-current="page" href="/support/">Support</a></li>
+<li><a href="/contact/">Contact</a></li>
+<li><a href="/support/">Support</a></li>
 <li><a href="/privacy/">Privacy</a></li>
 <li><a href="/cookies/">Cookies</a></li>
 </ul>

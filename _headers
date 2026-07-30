@@ -69,6 +69,19 @@
 
 
 # =============================================================================
+# PRINTABLE PDFs — 30 days
+# Same trade-off as images, but a shorter window: a card may need a corrected
+# reprint, and 30 days is short enough that a fix reaches people without a
+# filename change. Content-Disposition makes the browser download rather than
+# open the PDF in a viewer tab, which is what the download links expect.
+# =============================================================================
+
+/assets/printables/*
+  Cache-Control: public, max-age=2592000
+  Content-Disposition: attachment
+
+
+# =============================================================================
 # CSS & JS — 1 day, with 7-day stale-while-revalidate
 # Files aren't content-hashed, so we can't cache forever. 1 day is fresh
 # enough to pick up fixes quickly; stale-while-revalidate lets the browser
