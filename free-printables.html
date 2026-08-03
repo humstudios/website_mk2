@@ -59,7 +59,13 @@
     display: block;
     width: 100%;
     max-width: 15rem;
-    border-radius: var(--radius-card);
+    /* Square corners, deliberately (Dave, 2026-08-03) - this page only.
+       The card artwork already has its own rounded white panel inside the
+       daisy border, so a second, tighter radius on the outer edge put two
+       different curves within a few pixels of each other. The thumbnail is
+       also a picture OF a printed sheet, which has square corners. Cards
+       elsewhere on the site keep var(--radius-card). */
+    border-radius: 0;
     border: 0.0625em solid var(--light-card-border);
     overflow: hidden;
     background: #fff;
