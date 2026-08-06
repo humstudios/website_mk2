@@ -92,18 +92,16 @@
     aspect-ratio: 600 / 750;
     object-fit: cover;
   }
+  /* The title is now the item's last child, so `.card p:last-child` zeroes its
+     bottom margin and the flex gap is the only spacing under the thumbnail. */
   .printable-item__title {
     margin: 0;
     font-weight: 600;
   }
-  .printable-item__meta {
-    margin: 0;
-    font-size: 0.875rem;
-    color: var(--text-muted);
-  }
-  html[data-theme="dark"] .printable-item__meta {
-    color: inherit;
-    opacity: 0.75;
+  /* The App Store badge sits at the foot of the page now, so the "Back" link
+     below it needs the gap a paragraph would normally have supplied. */
+  .card .download-row + p {
+    margin-block-start: var(--space-5);
   }
   .printables-coming {
     margin-top: var(--space-5);
@@ -178,13 +176,7 @@
 <section class="card">
 <h1>Free Printables!</h1>
 <p>Free alphabet cards for kids, ready to print at home. One letter per page, bright enough to spot from across the room, and sized for A4 or smaller so any home printer can handle them. Stick them on a bedroom wall, a playroom door or a classroom display.</p>
-<p>No sign-up, no email address, no catch. Just click a letter to download the PDF!</p>
-<div class="download-row">
-<a href="/app" aria-label="Download the free No Pets Allowed! demo on the App Store" target="_blank" rel="noopener noreferrer">
-<img alt="" aria-hidden="true" height="40" src="/assets/img/logos/appstorebadge.svg" width="120"/>
-<span class="app-caption">The characters come from our story app "No Pets Allowed!". Free demo for iPhone and iPad.</span>
-</a>
-</div>
+<p>No sign-up, no email address, no catch. Just click a card to download the PDF! They are free for personal and classroom use, so print as many as you like. Please do not sell them or host the files anywhere else, but do feel free to link to this page.</p>
 <h2>The alphabet cards</h2>
 <ul class="printables-grid">
 <li class="printable-item">
@@ -192,7 +184,12 @@
 <img alt="Illustrated alphabet card: a large red letter A above the words is for Apple, with a red apple, a girl and an elephant, inside a white daisy border." decoding="async" height="750" loading="lazy" src="/assets/img/printables/hum-alphabet-a-600w.webp" width="600"/>
 </a>
 <p class="printable-item__title"><a href="/assets/printables/hum-alphabet-a-a4.pdf" download>A is for Apple</a></p>
-<p class="printable-item__meta">PDF, A4</p>
+</li>
+<li class="printable-item">
+<a class="printable-item__thumb" href="/assets/printables/hum-alphabet-b-a4.pdf" download>
+<img alt="Illustrated alphabet card: a large purple letter B above the words is for Bee, with a smiling bumblebee, a girl and a crocodile, inside a starry night border." decoding="async" height="750" loading="lazy" src="/assets/img/printables/hum-alphabet-b-600w.webp" width="600"/>
+</a>
+<p class="printable-item__title"><a href="/assets/printables/hum-alphabet-b-a4.pdf" download>B is for Bee</a></p>
 </li>
 </ul>
 <p class="printables-coming">New letters added regularly, all the way to Z.</p>
@@ -203,14 +200,15 @@
 <li>Want a smaller card? Choose A5 and everything scales down together, giving you a neat half-size version.</li>
 <li>Ordinary printer paper is fine. Thicker card stock holds up better if they are going somewhere busy.</li>
 </ul>
-<h2>Using them</h2>
-<p>Free for personal and classroom use. Print as many as you like for your home, nursery or school. Please do not sell them or host the files anywhere else, but do feel free to link to this page.</p>
 <h2>Where the characters come from</h2>
 <p>Most of the characters on these cards come from our interactive story app <strong>"No Pets Allowed!"</strong>. Jessie lives in a tower block where there are no pets allowed, which is awkward, because there is an elephant hiding behind her washing machine and a crocodile arriving in the elevator. Other animals turn up from time to time, usually without warning.</p>
 <p>Written, illustrated and animated by people, not AI. No ads, no subscriptions, no internet needed once downloaded. Made for kids!</p>
-<p class="u-center-text">
-<a aria-label="Download No Pets Allowed! from the App Store" class="btn-link" href="/app"><strong>Try the free demo →</strong></a>
-</p>
+<div class="download-row">
+<a href="/app" aria-label="Download the free No Pets Allowed! demo on the App Store" target="_blank" rel="noopener noreferrer">
+<img alt="" aria-hidden="true" height="40" src="/assets/img/logos/appstorebadge.svg" width="120"/>
+<span class="app-caption">Free demo for iPhone and iPad.</span>
+</a>
+</div>
 <p class="u-center-text">
 <a aria-label="Go to Hum Studios homepage" class="btn-link" href="/"><strong>← Back</strong></a>
 </p>

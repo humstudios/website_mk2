@@ -32,3 +32,6 @@ Thumbs.db
 # --- Env files (if you add later) ---
 .env
 .env.*
+
+# --- Claude Code local config ---
+.claude/
